@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Changelog — Lawyer Assistant — Lawyer Assistant Docs</title>
+<meta name="description" content="Lawyer Assistant changelog: recent feature history — API providers, context hints, launcher automation, GPU manager, pipeline editor, and UI improvements."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/changelog.html"/>
+<meta name="keywords" content="changelog, release notes, recent features, api providers, context hint, launcher automation"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Changelog — Lawyer Assistant — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Lawyer Assistant changelog: recent feature history — API providers, context hints, launcher automation, GPU manager, pipeline editor, and UI improvements."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/changelog.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Changelog — Lawyer Assistant — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Lawyer Assistant changelog: recent feature history — API providers, context hints, launcher automation, GPU manager, pipeline editor, and UI improvements."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Changelog — Lawyer Assistant", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/changelog.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the most recent feature work?", "acceptedAnswer": {"@type": "Answer", "text": "Recent highlights include API provider support (Claude, Groq, DeepSeek, and more), right-click 'Ask assistant about selection' context hints, the automated launcher with Ollama setup, a GPU memory manager, and the visual pipeline editor."}}, {"@type": "Question", "name": "Where can I find what changed in a given area?", "acceptedAnswer": {"@type": "Answer", "text": "The changelog is organized chronologically with sections per feature area, and each entry links to the doc that describes it in depth — check it before asking what's new."}}, {"@type": "Question", "name": "How often is it updated?", "acceptedAnswer": {"@type": "Answer", "text": "Every meaningful change to the app is recorded here, so the changelog reflects the current state of features better than any single doc."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link active" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Changelog — Lawyer Assistant</span></div>
+    <h1>Changelog — Lawyer Assistant</h1>
+    <div class="doc-intro">Recent feature history, derived from the git history and the current working tree. This document exists so agents (and humans) can answer <strong>"what changed recently?"</strong> without digging through <code>git log</code>.</div>
+    
+
+<blockquote>Conventions: date groups are newest-first; within a group, commits are listed oldest-first (chronological). Items marked <strong>Unreleased (working tree)</strong> are implemented but not yet committed. Cross-references go to the <a href="readme.html">knowledge base</a>.</blockquote>
+<hr/>
+<h2 id="unreleased-working-tree">Unreleased (working tree)</h2>
+<p>Work completed on top of the latest commit (<code>52a822a</code>). Mostly the <strong>documentation set</strong> and the <strong>pipeline-editor feature pack</strong>.</p>
+<h3 id="documentation-set-this-session">Documentation set (this session)</h3>
+<ul><li><strong>Full knowledge base</strong> added under <code>docs/</code>: <code>README.md</code> (index), <code>QUICKSTART.md</code>, <code>TROUBLESHOOTING.md</code>, <code>ARCHITECTURE.md</code>, <code>BACKEND.md</code>, <code>FRONTEND.md</code>, <code>PIPELINE_EDITOR.md</code>, <code>GLOSSARY.md</code>, <code>AGENT_KNOWLEDGE_BASE.md</code>, and this <code>CHANGELOG.md</code> — every doc fact-checked against the source.</li><li><strong><code>AGENTS.md</code></strong> at the repo root: read order, topic → source-file table, known traps, and answering etiquette for AI agents.</li><li><strong>Root <code>README.md</code></strong> rewritten as the current non-technical user guide (install + use via the launcher), replacing the old CLI-era content.</li><li><strong>Docs aligned with the unified repo layout</strong> — every structure reference in <code>docs/</code> now matches the current tree: the whole Python side under <code>backend/</code>, the whole frontend + Electron shell under <code>frontend/</code>, plus the <code>launcher/</code> (setup page), <code>assets/</code> (screenshots) and <code>docs/</code>. Stale CLI/Flask-era path claims removed.</li></ul>
+<h3 id="pipeline-editor-feature-pack">Pipeline editor feature pack</h3>
+<ul><li><strong>Sub-node split</strong>: the <em>Search Documents</em> and <em>Scan Document</em> nodes were decomposed into sub-nodes (<code>dense</code>, <code>sparse</code>, <code>rerank</code>, <code>ingest</code>, <code>scan</code>) so users can remove individual stages (e.g. disable reranking).</li><li><strong>Bypass removal</strong>: removing a sub-node auto-wires a tagged bypass edge (<code>bypass-&lt;nodeId&gt;-…</code>) so the remaining nodes still connect.</li><li><strong>Per-node toggle re-enable</strong>: re-enable a removed sub-node from the palette without clearing the layout; the original edges are rewired automatically.</li><li><strong>Persistence</strong>: node/edge layout saved to <code>localStorage</code> (<code>pipeline-layout-v1</code>) with debounced saves, so removals/edges survive reloads; a <strong>Reset to default</strong> button restores the original flow.</li><li><strong>Export/import</strong>: the layout can be exported/imported as a <strong>JSON file</strong> (versioned format) to share retrieval configurations across machines.</li><li><strong>Zero-node guard</strong>: validation prevents committing an empty pipeline.</li><li><strong>Backend runtime config</strong>: <code>POST /api/pipeline/config</code> applies the layout JSON to retrieval at runtime — rerank on/off from the <code>rerank</code> node, <code>search_mode</code> (hybrid/dense/sparse) + fusion weights from the dense/sparse nodes, and <code>top_k</code>/<code>top_k_retrieval</code>/weight overrides. Runtime-only (resets on restart); <code>GET</code> reads it, <code>DELETE</code> resets. See <a href="pipeline-json.html"><code>PIPELINE_JSON.md</code></a> §10.</li></ul>
+<h3 id="workspace-folders-working-tree">Workspace folders (working tree)</h3>
+<ul><li><strong>Select a folder = select the workspace.</strong> The "Work in a folder" button now opens a <strong>native Electron directory dialog</strong> (<code>folder:select</code> IPC, absolute path) instead of only reading the folder name from a <code>webkitdirectory</code> input.</li><li><strong>New backend workspace API</strong>: <code>POST/GET/DELETE /api/workspace</code> and <code>POST /api/workspace/ingest</code>. Setting a workspace re-points storage — raw uploads land directly in the folder, and <code>processed</code>/<code>chroma_db</code>/<code>bm25_index</code> live under it — so search &amp; ingestion are isolated per workspace instead of the static project <code>data/</code>.</li><li><strong>Frontend wiring</strong>: <code>App.tsx</code> sets the workspace on pick, refreshes the discovered file list, and passes workspace file <strong>absolute paths</strong> on send (no byte re-upload); <code>WorkspacePanel</code> shows a workspace card with an <strong>Ingest all files</strong> action. Browser fallback (no Electron bridge) keeps the old <code>webkitdirectory</code> behavior.</li><li>Runtime-only: the override resets on restart / DELETE.</li></ul>
+<h3 id="ui-fixes-this-session">UI fixes (this session)</h3>
+<ul><li><strong>Chat input container</strong> height reduced ~50%.</li><li><strong>Attachment (+) button</strong> wired to the upload backend, and <strong>drag-and-drop</strong> of files onto the composer added (committed as <code>fe7e13a</code>).</li></ul>
+<h3 id="citation-integrity-amp-retrieval-warnings-working-tree">Citation integrity &amp; retrieval warnings (working tree)</h3>
+<ul><li><strong>Citation schema validation</strong> (<code>sanitize_citations</code> in <code>backend/legal_retrieval/utils.py</code>, applied on both routers' done events and in <code>chat.py</code>/<code>pipeline.py</code>): a citation marker must be an integer in <code>[1, len(sources)]</code>. Malformed markers like <code>[18]</code> (no such source) and <code>[1.9]</code> / <code>[14]</code> / <code>[10.2]</code> (in-document section numbers leaking into citation output) are stripped before reaching the UI.</li><li><strong>Citation content verification</strong>: each <code>[N]</code> is checked against the cited chunk's actual text — the chunk must share enough of the claim's distinctive content words (lexical-entailment heuristic). A chunk that does not support the sentence loses its citation marker, so one top-ranked chunk can no longer be cited for five unrelated clause types.</li><li><strong>Answer prompt hardened</strong> (<code>prompts_intent.py</code> "answer" + <code>router.py</code> system prompt): explicit rules against leaking section numbers into <code>[N]</code> markers, against reusing one source for unrelated clauses, and a <strong>document-scope rule</strong> — when results span multiple unrelated companies/entities, section the answer by document instead of blending into one false "this Agreement" narrative, and state the ambiguity.</li><li><strong>Retrieval-quality caveats</strong> (<code>derive_retrieval_warning</code>): done events now carry <code>retrieval_warning</code> when the top score is below 70% (weak match) or results span multiple documents; the UI renders it as a visible banner above the answer (client-side fallback for legacy messages).</li></ul>
+<h3 id="answer-transparency-amp-trust-fixes-this-session">Answer-transparency &amp; trust fixes (this session)</h3>
+<ul><li><strong>Abstain signal shipped end-to-end</strong>: the backend now emits <code>answer_found: false</code> on the done event (both routers + <code>/api/chat</code> response) whenever the pipeline abstains. The UI trusts this signal and:<ul><li>hides the confidence percentage bar and the real citation chips on abstained answers,</li><li>shows a muted <strong>"Closest match found (not used)"</strong> row instead of a real citation when chunks were retrieved but rejected,</li><li>shows the three-state <code>ConfidenceBadge</code> (Found / Partial / Not Found) instead of a raw percentage on real answers.</li></ul></li><li><strong>Step counts moved to a debug view</strong>: "Process (27 steps, 0 tools)" and "Pipeline (N steps)" labels no longer appear in the default user-facing view; step/tool counts live inside the collapsible process section only.</li><li><strong>Temp/lock files filtered</strong> (<code>~$…</code> Word locks, <code>.~lock…<em>#</code> LibreOffice locks, <code></em>.tmp/<em>.temp/</em>.bak/<em>.swp/</em>.part</code>): excluded from directory ingestion (<code>ingestion.py</code>, <code>retrieval.py</code>), from <code>VectorStore.list_files</code> (retroactive — already-indexed junk no longer lists), and from the workspace file listing.</li></ul>
+<h3 id="security-hardening-amp-ci-this-session">Security hardening &amp; CI (this session)</h3>
+<ul><li><strong>Content-Security-Policy injected</strong> into the renderer HTML by a Vite plugin (<code>contentSecurityPolicy()</code> in <code>frontend/vite.config.ts</code>): production ships <code>script-src 'self'</code> (no inline scripts, no <code>unsafe-eval</code>), development allows <code>'unsafe-inline'</code> + the HMR websocket — both modes silence Electron's insecure-CSP warning.</li><li><strong><code>webkitdirectory</code> warning fixed</strong> — the folder-picker input passes the Chrome-only attribute as a string with a proper <code>react</code> module type augmentation instead of <code>@ts-ignore</code>.</li><li><strong>CSP regression guard in CI</strong> — <code>frontend/scripts/check-csp.mjs</code> fails the build (exit 1) when <code>dist/index.html</code> is missing its CSP meta tag or any policy contains <code>unsafe-eval</code>. Wired into <code>npm run build</code> (frontend self-check) and added as a standalone <code>check:csp</code> script + a <strong>GitHub Actions workflow</strong> (<code>.github/workflows/ci.yml</code>) that installs, builds, and verifies the CSP on push/PR — the security posture can't regress silently.</li><li><strong>Electron renderer security guard</strong> — <code>frontend/electron/scripts/check-electron-security.mjs</code> statically scans the main-process sources (<code>frontend/electron/src/main</code>) and fails the build when any <code>BrowserWindow</code> does not set <code>sandbox: true</code>, <code>contextIsolation: true</code>, and <code>nodeIntegration: false</code> explicitly (or uses an unverifiable spread/variable <code>webPreferences</code>), or when the <code>no-sandbox</code> command-line switch is used anywhere. <code>window.ts</code> now sets <code>sandbox: true</code> explicitly. Wired into <code>npm run build</code> (electron self-check), a <code>check:security</code> entry, and a dedicated <strong><code>electron-security</code> job</strong> in the CI workflow — CSP covers what the renderer may load, these flags cover what it can do.</li></ul>
+<hr/>
+<h2 id="2026-07-31-light-mode-amp-drag-and-drop">2026-07-31 — light mode &amp; drag-and-drop</h2>
+<table><thead><tr><th>Commit</th><th>Change</th></tr></thead><tbody><tr><td><code>4d59014</code></td><td><strong>Light/dark mode fixes</strong> — hard-coded colors corrected so text never matches its background</td></tr><tr><td><code>fe7e13a</code></td><td><strong>Drag-and-drop file upload</strong> — drop documents onto the chat input area (in addition to the picker)</td></tr><tr><td><code>52a822a</code></td><td><strong>Default to light mode</strong> — app opens in light mode; <code>html.light</code> class bridged with the theme store</td></tr></tbody></table>
+<h2 id="2026-07-30-pipeline-editor-chain-of-thought-retrieval-tuning">2026-07-30 — pipeline editor, chain of thought, retrieval tuning</h2>
+<table><thead><tr><th>Commit</th><th>Change</th></tr></thead><tbody><tr><td><code>1482664</code></td><td><strong>Pipeline editor</strong> — custom nodes added; nodes can be removed on the canvas</td></tr><tr><td><code>0733f80</code></td><td><strong>Chain of thought</strong> — agent reasoning steps surfaced to the user</td></tr><tr><td><code>4a188e4</code></td><td><strong>Procedure visible</strong> — the agent's procedure persists and is shown to the user</td></tr><tr><td><code>b57ba86</code></td><td><strong>Ranking optimized</strong></td></tr><tr><td><code>fb84828</code></td><td><strong>Playbook and agent combined</strong> — compliance scanning integrated with the agent loop</td></tr><tr><td><code>7828f6a</code></td><td><strong>Router logic enhanced</strong></td></tr><tr><td><code>7cd76b9</code></td><td><strong>Full paragraph save to ChromaDB</strong> — paragraphs stored as retrieval units</td></tr><tr><td><code>0455021</code></td><td><strong>UI improved</strong> with more confidentiality terms</td></tr><tr><td><code>2093a26</code></td><td><strong>UI enhanced</strong></td></tr><tr><td><code>c167f93</code></td><td><strong>Animation enhanced</strong></td></tr></tbody></table>
+<h2 id="2026-07-29-streaming-approval-dashboard">2026-07-29 — streaming, approval dashboard</h2>
+<table><thead><tr><th>Commit</th><th>Change</th></tr></thead><tbody><tr><td><code>76886c5</code></td><td><strong>UI enhanced</strong></td></tr><tr><td><code>c60ee4a</code></td><td><strong>Loop state mismatch solved</strong></td></tr><tr><td><code>de43a6f</code></td><td><strong>Approval &amp; processing dashboard</strong> added (human-in-the-loop UI)</td></tr><tr><td><code>82f0825</code></td><td><strong>Streaming reply</strong> added — SSE token streaming to the chat</td></tr></tbody></table>
+<h2 id="2026-07-28-pipeline-loop-amp-centralized-prompting">2026-07-28 — pipeline loop &amp; centralized prompting</h2>
+<table><thead><tr><th>Commit</th><th>Change</th></tr></thead><tbody><tr><td><code>da0bc85</code></td><td><strong>Dense + sparse results mixed</strong> before reranking</td></tr><tr><td><code>7667190</code></td><td><strong>Centralized prompt</strong> — pipeline restructured with verify / generate / post-generate nodes</td></tr><tr><td><code>1ae9603</code></td><td><strong>Pipeline loop added</strong> + UI</td></tr></tbody></table>
+<h2 id="2026-07-27-benchmarking">2026-07-27 — benchmarking</h2>
+<table><thead><tr><th>Commit</th><th>Change</th></tr></thead><tbody><tr><td><code>2a8af23</code></td><td><strong>Benchmarking added to the docs</strong> (<code>backend/benchmark/</code> harness, golden eval)</td></tr></tbody></table>
+<h2 id="2026-07-26-initial-release">2026-07-26 — initial release</h2>
+<table><thead><tr><th>Commit</th><th>Change</th></tr></thead><tbody><tr><td><code>4fd5ee7</code></td><td><strong>First commit</strong> — project scaffold</td></tr></tbody></table>
+<hr/>
+<h2 id="how-to-keep-this-file-accurate">How to keep this file accurate</h2>
+<ul><li>When a new feature ships, add an entry at the top (Unreleased → dated block on commit).</li><li>If you are an agent answering "what changed recently?", read this file first, then verify against <code>git log</code> and the feature docs linked above.</li><li>Deep dives: <a href="pipeline-editor.html"><code>PIPELINE_EDITOR.md</code></a> (editor), <a href="backend.html"><code>BACKEND.md</code></a> (engine), <a href="frontend.html"><code>FRONTEND.md</code></a> (UI), <a href="troubleshooting.html"><code>TROUBLESHOOTING.md</code></a> (known failures).</li></ul>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>What is the most recent feature work?</h3><p>Recent highlights include API provider support (Claude, Groq, DeepSeek, and more), right-click 'Ask assistant about selection' context hints, the automated launcher with Ollama setup, a GPU memory manager, and the visual pipeline editor.</p></div><div class="faq-item"><h3>Where can I find what changed in a given area?</h3><p>The changelog is organized chronologically with sections per feature area, and each entry links to the doc that describes it in depth — check it before asking what's new.</p></div><div class="faq-item"><h3>How often is it updated?</h3><p>Every meaningful change to the app is recorded here, so the changelog reflects the current state of features better than any single doc.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Setup Launcher — Lawyer Assistant Docs</title>
+<meta name="description" content="The Lawyer Assistant launcher: setup page on port 8770, dependency and model installs, Ollama automation, provider picker, and Install/Launch flow."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/launcher.html"/>
+<meta name="keywords" content="launcher setup, ollama automation, model download, provider picker, install launch"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Setup Launcher — Lawyer Assistant Docs"/>
+<meta property="og:description" content="The Lawyer Assistant launcher: setup page on port 8770, dependency and model installs, Ollama automation, provider picker, and Install/Launch flow."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/launcher.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Setup Launcher — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="The Lawyer Assistant launcher: setup page on port 8770, dependency and model installs, Ollama automation, provider picker, and Install/Launch flow."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Setup Launcher", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/launcher.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What does the launcher do?", "acceptedAnswer": {"@type": "Answer", "text": "It creates a Python venv, installs backend and Electron dependencies, downloads the BGE-M3 and BGE-Reranker models, installs and starts Ollama if missing, and then launches the desktop app — all from one setup page on port 8770."}}, {"@type": "Question", "name": "Does it manage Ollama?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It installs Ollama silently if absent, starts 'ollama serve' as a background process, waits for http://localhost:11434 to respond, and pulls the configured LLM model before marking the step done."}}, {"@type": "Question", "name": "Is setup resumable?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — each step (venv, deps, models, Ollama) can be retried individually if it fails, and completed steps persist across launcher restarts, so you never redo the whole setup."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link active" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Setup Launcher</span></div>
+    <h1>Setup Launcher</h1>
+    <div class="doc-intro">A dependency-free launcher that prepares and opens <strong>Lawyer Assistant</strong>. Users pick one of two paths:</div>
+    
+
+<ul><li><strong>Run Locally</strong> — everything on this computer (private and offline). Needs a capable machine: <strong>minimum 16 GB RAM · 8 GB VRAM · ~14 GB disk</strong>.</li><li><strong>Use a Cloud Provider</strong> — pick a provider from a dropdown (OpenAI, Grok, DeepSeek, Kimi, Qwen, Mistral, Groq, OpenRouter, Together, Fireworks, Gemini, Cohere, Claude), paste its API key, and go. Parsing and the project index still live on this computer; only model calls (chat/answers and, for providers that offer them, embeddings/reranking) go to the provider.</li></ul>
+<p>The launcher itself needs <strong>only Python 3.10+</strong> — no packages to install — so it can run on a fresh machine and do the installing for you.</p>
+<h2 id="launching-the-launcher">Launching the launcher</h2>
+<p>Windows: double-click <code>launch.bat</code> macOS/Linux: <code>./launch.sh</code></p>
+<p>Or from any OS:</p>
+<pre><span class="lang">bash</span><code>python launcher/launch.py</code></pre>
+<p>This starts a tiny server on <code>http://127.0.0.1:8770</code> (a free port is picked if that one is busy) and opens the setup page in a <strong>native Electron window</strong> — it reuses the Electron binary installed for the desktop app, so the setup UI feels like part of the app, not a website. On a truly fresh machine where Electron has never been installed, it falls back to your default browser instead (the setup page installs Electron as part of the one-time setup).</p>
+<p>The server is bound to <code>127.0.0.1</code> only — nothing is exposed to the network. Closing the launcher window stops the Python launcher server automatically. External links in the launcher (python.org, nodejs.org, ollama.com) always open in the system browser.</p>
+<h2 id="the-launch-pad-two-buttons-plain-words">The launch pad — two buttons, plain words</h2>
+<p>The page is built for non-technical users; there is no setup checklist to walk through by hand.</p>
+<ul><li><strong>Local card</strong> — shows a short <strong>guide message</strong> (what's missing, or "everything is ready") plus exactly two buttons:<ul><li><strong>⬇️ Install</strong> — installs everything in one go (Python env, libraries, models, Node deps, Ollama). It never auto-launches.</li><li><strong>🚀 Launch</strong> — enabled <strong>only when everything is ready</strong> (<code>ready_local</code>: Python env + deps + all models + Node + frontend deps). When it's greyed out the guide message says exactly what to install first.</li><li><strong>⬇️ Individual model downloads</strong> is tucked behind a collapsed <code>&lt;details&gt;</code> for the rare case someone wants to grab one missing model.</li></ul></li><li><strong>API card</strong> — a <strong>provider dropdown</strong> (OpenAI, Grok, DeepSeek, Kimi, Qwen, Mistral, Groq, OpenRouter, Together, Fireworks, Gemini, Cohere, Claude) with per-provider defaults, an <strong>API key</strong> field, <strong>Test connection</strong> and <strong>💾 Save &amp; Launch</strong>. No model box to fill in: once a key is pasted, the launcher calls that provider's models endpoint and fills a <strong>dropdown with every model the key can actually use</strong> (defaulting to a sensible preset), so non-technical users never type a model name by hand. The list refreshes automatically when the key changes and after a successful connection test. Saved keys are never echoed back — each saved provider shows only a ✓ badge chip, clickable to reuse that key without re-typing it.</li></ul>
+<p>The minimums for local mode (<strong>16 GB RAM · 8 GB VRAM</strong>) are stated in the card subtitle and in the guide message, so nobody starts a 14 GB download on a machine that can't run it.</p>
+<h2 id="tabs-launch-pad-and-system-check">Tabs — Launch pad and System check</h2>
+<p>The page has two tabs. <strong>🚀 Launch pad</strong> (the default) is the two-button view above. <strong>🩺 System check</strong> holds the detailed hardware report — the readiness score, RAM / disk / VRAM tiles, GPU-vs-CPU model placement and any warnings — so curious users can inspect the machine without cluttering the simple launch view. The report refreshes every time the tab is opened.</p>
+<h2 id="python-environment-detection">Python environment detection</h2>
+<p>Local mode reuses whatever Python environment already exists instead of creating a fresh one. Detection priority (used everywhere the backend actually runs — state checks, deps check, model downloads and app launch):</p>
+<ol><li><code>.venv</code> at the repo root (the launcher-created env)</li><li><code>venv</code> (classic name)</li><li>any system Python 3.10+ on PATH</li></ol>
+<p>When the app is launched, the detected interpreter is forwarded to the Electron process as <code>LAWYER_PYTHON</code>; the Electron bridge (<code>venv-manager.ts</code>) and the CLI backend runner (<code>scripts/run-backend.mjs</code>) both honor it, so the backend always runs with the exact environment the launcher detected. The launcher UI shows which one is active (<code>.venv</code> / <code>venv</code> / system Python).</p>
+<h2 id="model-downloads-per-model">Model downloads — per-model</h2>
+<p>The <strong>Local</strong> card lists every model individually with its download status and size, so you can grab exactly what's missing instead of re-running the whole setup:</p>
+<ul><li><strong>BGE-M3</strong> (embeddings, ≈2.5 GB) → <code>models/bge-m3</code></li><li><strong>BGE-Reranker-v2-m3</strong> (≈1.5 GB) → <code>models/bge-reranker-v2-m3</code></li><li><strong>Ollama LLM</strong> (≈5.5 GB pull) — <code>ollama pull lfm2.5:8b</code></li></ul>
+<p>Each missing model has its own <strong>⬇️ Download</strong> button (plus a <strong>Download all missing</strong> shortcut). Downloads stream live progress into the same log console and progress bar the full setup uses, and only fetch what you asked for.</p>
+<h2 id="what-run-locally-does">What "Run Locally" does</h2>
+<p>Clicking <strong>⬇️ Install</strong> streams each step live to the log console:</p>
+<ol><li><strong>Python</strong> — detects a system Python 3.10+.</li><li><strong>Virtual environment</strong> — reuses <code>.venv</code> or <code>venv</code> if either exists, otherwise creates <code>.venv</code> at the repo root.</li><li><strong>Python libraries</strong> — <code>pip install -r backend/requirements.txt</code> plus <code>python-multipart</code> (needed for uploads), into the detected environment.</li><li><strong>AI models</strong> — downloads the <em>missing</em> HuggingFace models only (<code>BAAI/bge-m3</code> → <code>models/bge-m3</code>, <code>BAAI/bge-reranker-v2-m3</code> → <code>models/bge-reranker-v2-m3</code>) — already-present ones are skipped, so a retry after a partial download finishes the remainder quickly.</li><li><strong>Node.js</strong> — detects Node; the app UI needs it.</li><li><strong>App dependencies</strong> — <code>npm install</code> in <code>frontend/</code> and <code>frontend/electron/</code>.</li><li><strong>Ollama</strong> — fully automated: if the CLI is missing, the official installer is downloaded and run <strong>silently</strong> (Windows: <code>OllamaSetup.exe /S</code>; macOS/Linux: the official install script). The daemon is then started via <code>ollama serve</code> in the background (if it isn't already answering on <code>http://localhost:11434</code>) and the launcher waits until the HTTP API responds before moving on. The preferred model (<code>lfm2.5:8b</code>, override with <code>LAWYER_OLLAMA_MODEL</code>) is pulled automatically when absent. Non-fatal: search/scan still work without the LLM, but the step now installs, starts and pulls by itself instead of asking you to click through an installer.</li><li>Install <strong>finishes</strong> — it does NOT launch the app. The user then clicks <strong>🚀 Launch</strong> (enabled by the fresh state), which calls <code>POST /api/launch</code> and starts <code>npm run dev</code> (Electron) detached, passing the detected Python as <code>LAWYER_PYTHON</code>; logs go to <code>launcher/logs/app-*.log</code>.</li></ol>
+<p>A second setup or model-download request while one is running gets <code>409</code>. Failed steps are marked in red and can be retried without redoing the ones that succeeded (already-downloaded models and installed deps are detected and skipped).</p>
+<h2 id="what-use-a-cloud-provider-does">What "Use a Cloud Provider" does</h2>
+<ol><li><strong>Pick a provider</strong> from the dropdown (or click a ✓ chip for a provider whose key is already saved).</li><li>Paste the <strong>API key</strong> (e.g. Anthropic <code>sk-ant-…</code>, OpenAI <code>sk-…</code>, Groq <code>gsk_…</code>). The model dropdown is pre-filled with a provider default.</li><li><strong>Test connection</strong> — the launcher sends a one-token <code>ping</code> to that provider's API (<code>POST /api/api/configure</code> with <code>test: true</code>) and reports latency. The key is never shown again after entry and never written to logs.</li><li><strong>💾 Save &amp; Launch</strong> — validates, writes <code>backend/api_config.json</code> (<code>enabled: true</code>, provider set, git-ignored) and opens the app.</li></ol>
+<p>The backend's API-provider mode (<code>docs/API_PROVIDER.md</code>) handles the provider's chat/answers; embeddings/reranking go to the provider when it offers them, otherwise they stay local (BGE-M3 / BGE-Reranker). A full end-to-end smoke test (<code>POST /api/api/smoke-test</code>) is still available server-side for advanced debugging.</p>
+<h2 id="configuration-file">Configuration file</h2>
+<p>The launcher reads/writes <code>backend/api_config.json</code> — the same file the backend's API-provider mode reads (see <code>docs/API_PROVIDER.md</code>). It is git-ignored so API keys never get committed.</p>
+<h2 id="files">Files</h2>
+<pre><code>launch.bat           # Windows double-click entry (root)
+launch.sh            # macOS/Linux entry (root)
+launcher/
+  launch.py          # cross-platform entry: start server + open Electron/browser
+  electron_main.js   # minimal Electron window that shows the launcher page
+  server.py          # stdlib-only HTTP server (state, system-check, setup SSE, models, configure, smoke-test, launch)
+  _download_models.py# venv-run helper; downloads models with progress lines (supports a single model id)
+  static/index.html  # the setup UI (single file, no build step)
+  test_launcher.py   # pytest suite (no network — HTTP is mocked)
+  logs/              # app + setup logs (created at runtime)
+  downloads/         # Ollama installer cache (created at runtime)</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<ul><li><strong>"Python is not installed"</strong> — install Python 3.10+ from python.org and tick <em>Add Python to PATH</em>, then relaunch.</li><li><strong>Model download fails</strong> — check the log console; retry — the helper resumes (already-downloaded files are detected and skipped).</li><li><strong><code>npm install</code> fails in <code>frontend/electron</code></strong> — often a transient Electron binary download issue; retry. The app needs these deps to launch.</li><li><strong>Ollama missing</strong> — the launcher downloads the official installer and runs it silently, then starts <code>ollama serve</code> and waits for <code>localhost:11434</code> to respond before pulling the model. If the silent install fails, install manually from ollama.com, then click Retry. Chat needs Ollama; search/scan don't.</li><li><strong>Ollama server down after install</strong> — the launcher auto-starts <code>ollama serve</code> in the background and logs to <code>launcher/logs/ollama-serve.log</code> if it can't bind the port.</li><li><strong>Launcher port busy</strong> — a free port is chosen automatically; the browser opens the right one.</li></ul>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>What does the launcher do?</h3><p>It creates a Python venv, installs backend and Electron dependencies, downloads the BGE-M3 and BGE-Reranker models, installs and starts Ollama if missing, and then launches the desktop app — all from one setup page on port 8770.</p></div><div class="faq-item"><h3>Does it manage Ollama?</h3><p>Yes. It installs Ollama silently if absent, starts 'ollama serve' as a background process, waits for http://localhost:11434 to respond, and pulls the configured LLM model before marking the step done.</p></div><div class="faq-item"><h3>Is setup resumable?</h3><p>Yes — each step (venv, deps, models, Ollama) can be retried individually if it fails, and completed steps persist across launcher restarts, so you never redo the whole setup.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

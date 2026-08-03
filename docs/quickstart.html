@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Quickstart — run the desktop app — Lawyer Assistant Docs</title>
+<meta name="description" content="Clone, install, and run Lawyer Assistant in minutes. Launcher setup, model downloads, first query, and verification — the fastest path from zero to a cited legal search."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/quickstart.html"/>
+<meta name="keywords" content="lawyer assistant quickstart, legal AI install, local legal AI setup, first query legal search, lawyer assistant launcher"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Quickstart — run the desktop app — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Clone, install, and run Lawyer Assistant in minutes. Launcher setup, model downloads, first query, and verification — the fastest path from zero to a cited legal search."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/quickstart.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Quickstart — run the desktop app — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Clone, install, and run Lawyer Assistant in minutes. Launcher setup, model downloads, first query, and verification — the fastest path from zero to a cited legal search."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Quickstart — run the desktop app", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/quickstart.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I install Lawyer Assistant?", "acceptedAnswer": {"@type": "Answer", "text": "Run the launcher — it creates a Python environment, installs dependencies, downloads the BGE-M3 embedding and BGE-Reranker models, sets up Ollama with a default LLM, then opens the desktop app. On Windows, double-click launch.bat; on macOS/Linux, run launch.sh."}}, {"@type": "Question", "name": "How do I run my first legal search?", "acceptedAnswer": {"@type": "Answer", "text": "After the launcher finishes, pick a project folder, ingest your documents with 'Ingest all files', then ask a question in plain English. The app retrieves from your documents and returns a cited answer you can verify against the exact source passages."}}, {"@type": "Question", "name": "Do I need a GPU?", "acceptedAnswer": {"@type": "Answer", "text": "No. Lawyer Assistant runs on CPU out of the box — slower for embedding but fully functional. If you have an NVIDIA GPU with enough VRAM, the GPU manager automatically uses it and shares memory between the embedding, reranking, and LLM models."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link active" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Quickstart — run the desktop app</span></div>
+    <h1>Quickstart — run the desktop app</h1>
+    <div class="doc-intro">This guide walks a new developer from a fresh clone to asking their first legal question in the desktop app. (The root <code>README.md</code> is the non-technical guide for end users — see the launcher at <code>launch.bat</code> / <code>launch.sh</code>.)</div>
+    
+
+<blockquote><strong>Prefer watching?</strong> <code>npm run dev</code> does everything: it starts the Python backend (auto-creating the venv), the Vite dev server, and the Electron window. The only manual step is installing Node dependencies.</blockquote>
+<hr/>
+<h2 id="1-prerequisites">1. Prerequisites</h2>
+<table><thead><tr><th>Tool</th><th>Why</th><th>Version</th></tr></thead><tbody><tr><td><strong>Python</strong></td><td>Backend + models (Electron creates the <code>.venv</code> for you, but Python 3 must be on PATH)</td><td>3.11+</td></tr><tr><td><strong>Node.js</strong></td><td>Vite, React build, Electron</td><td>18+ (npm 9+)</td></tr><tr><td><strong>Git</strong></td><td>Clone the repo</td><td>any</td></tr><tr><td><strong>GPU (optional)</strong></td><td>GPU-accelerated embedding (falls back to CPU)</td><td>NVIDIA + CUDA</td></tr></tbody></table>
+<p>For LLM-powered answers you also need <strong>Ollama</strong> running locally (<code>http://localhost:11434</code>) with a model pulled (the launcher's default is <code>lfm2.5:8b</code>). If Ollama isn't running, retrieval still works; answers report the model as "unavailable".</p>
+<h2 id="2-clone-amp-install">2. Clone &amp; install</h2>
+<pre><span class="lang">bash</span><code>git clone https://github.com/haal-lab/Lawyer-Assistant.git
+cd Lawyer-Assistant
+
+# Install Node dependencies (three workspaces)
+npm install                 # root — provides `npm run dev` (start alias)
+cd frontend &amp;&amp; npm install
+cd frontend/electron &amp;&amp; npm install
+cd ..</code></pre>
+<p><strong>Python is handled automatically.</strong> On first <code>npm run dev</code>, the Electron main process (<code>frontend/electron/src/main/venv-manager.ts</code>) checks for <code>.venv</code>; if missing it creates it with system Python and installs <code>requirements.txt</code>. It falls back to system Python if venv creation fails.</p>
+<h2 id="3-run-the-app">3. Run the app</h2>
+<p>From the repo root, one command starts the whole desktop app:</p>
+<pre><span class="lang">bash</span><code>npm run dev        # or: npm start</code></pre>
+<p><code>dev</code> launches <strong>Electron only</strong> — and Electron boots everything else itself:</p>
+<table><thead><tr><th>Process</th><th>Who starts it</th><th>Port</th></tr></thead><tbody><tr><td>Backend</td><td>Electron's Python bridge (<code>frontend/electron/src/main/python-bridge.ts</code>) — uses <code>.venv</code> via the venv manager, runs <code>backend/main.py</code></td><td><strong>8765</strong></td></tr><tr><td>Frontend</td><td>Electron's Vite launcher (<code>frontend/electron/src/main/vite-dev-server.ts</code>)</td><td><strong>5173</strong></td></tr><tr><td>Electron</td><td><code>npm run dev</code> (the single process you start)</td><td>— (loads the Vite URL)</td></tr></tbody></table>
+<blockquote>Why only Electron? The Electron main process already spawns the backend and Vite itself (see <code>frontend/electron/src/main/index.ts</code>). A <code>concurrently</code> triple-start would launch duplicates that fight over ports 8765/5173. Need just the backend or frontend for browser-only dev? Use the piecemeal scripts instead: <code>npm run dev:backend</code>, <code>npm run dev:frontend</code>, or <code>npm run dev:web</code> (backend + frontend, no Electron window).</blockquote>
+<ol><li>Electron kills any stale processes on ports 8765/5173.</li><li>It spawns the Python backend and <strong>polls <code>/api/health</code> until ready</strong> (30s timeout, 500ms interval).</li><li>It starts Vite and opens the Electron window.</li><li>The app's BootLoader runs its own health check; the UI appears when the backend responds <code>{status: "ok"}</code>.</li></ol>
+<blockquote>First launch is slower: creating the venv + installing Python deps happens once. The backend also <strong>warms up</strong> models (BGE-M3 embedder, BGE-Reranker, Ollama, classifier references) in a background thread at startup, so the first query is fast after that.</blockquote>
+<h2 id="4-add-documents-ingestion">4. Add documents (ingestion)</h2>
+<p>Two ways:</p>
+<h3 id="a-in-the-app-per-file-easy">A. In the app (per-file, easy)</h3>
+<ol><li>Click the <strong>+</strong> (attach) button in the chat input bar — or drag &amp; drop a file (PDF, image, TXT, etc.) onto the input area.</li><li><strong>Pick a project folder first</strong> (the "Work in a folder" button) — chat, upload and scan all require an active workspace; there is no default <code>data/</code> folder anymore.</li><li>Send a message. The file is uploaded to <code>/api/upload</code> (saved into the project folder itself), ingested into ChromaDB, and indexed for BM25.</li><li>Attach files <strong>without typing</strong> and it runs a default batch-scan prompt ("Scan these documents for compliance issues: …").</li></ol>
+<p>Up to <strong>5 files</strong> per message (or a whole folder — up to 50 supported docs — via the folder picker in the input bar).</p>
+<h3 id="b-bulk-initial-ingest-cli-one-time-corpus">B. Bulk initial ingest (CLI, one-time corpus)</h3>
+<p>With the app's venv active (or your own):</p>
+<pre><span class="lang">bash</span><code>.venv\Scripts\activate        # Windows
+# .venv/bin/activate          # macOS/Linux
+
+# Ingest everything in data/raw/ (PDFs, images, Dataset_BA.json)
+cd backend &amp;&amp; python scripts/ingest_all.py
+
+# Useful flags:
+cd backend &amp;&amp; python scripts/ingest_all.py --reset            # wipe ChromaDB first
+cd backend &amp;&amp; python scripts/ingest_all.py --device cpu       # force CPU
+cd backend &amp;&amp; python scripts/ingest_all.py --skip-json        # skip Dataset_BA.json
+cd backend &amp;&amp; python scripts/ingest_all.py --batch-size 32    # lower GPU memory</code></pre>
+<p>Pipeline: <strong>collect chunks</strong> (Docling parse + structure-aware chunking) → <strong>embed with BGE-M3</strong> → <strong>save to ChromaDB</strong> → <strong>build the BM25 index</strong> (<code>backend/scripts/ingest_all.py</code> does all four phases).</p>
+<h2 id="5-ask-your-first-question">5. Ask your first question</h2>
+<p>Type a legal question in the input bar, e.g.:</p>
+<pre><code>What is rescission under the civil code?</code></pre>
+<p>What happens (visible live in the UI):</p>
+<ol><li>The <strong>intent router</strong> classifies the message and writes a plan.</li><li>The agent calls <code>search_documents</code> (dense + sparse + rerank) and <code>verify_relevance</code>.</li><li>Retrieved chunks are cited inline; the answer streams in with chain-of-thought, tool cards, and statuses in the message.</li><li>The <strong>Sources panel</strong> lists cited documents (file, page, section, score); click one to open the source viewer. The <strong>Pipeline Editor</strong> (Pipeline button in the Sources header) lights up the active node live.</li></ol>
+<h2 id="6-compliance-scan-playbook">6. Compliance scan (playbook)</h2>
+<p>Open the scan panel, pick a document + playbook, and run a scan. Chunks are classified by clause type and checked against the playbook rules; findings (flags) appear with severity and can be resolved / dismissed / escalated. See <a href="backend.html"><code>BACKEND.md</code></a> §6.</p>
+<h2 id="7-verify-it-works">7. Verify it works</h2>
+<pre><span class="lang">bash</span><code># Backend health (while the app is running)
+curl http://localhost:8765/api/health
+# → {"status":"ok","service":"lawyer-assistant"}
+
+# Frontend typecheck
+cd frontend &amp;&amp; npm run typecheck</code></pre>
+<h2 id="8-troubleshooting-quick">8. Troubleshooting (quick)</h2>
+<table><thead><tr><th>Symptom</th><th>Fix</th></tr></thead><tbody><tr><td>Boot screen stuck on "loading"</td><td>Backend didn't start — check the Electron console; ensure Python 3 is on PATH</td></tr><tr><td>"Could not reach the backend server"</td><td>Port 8765 blocked/stale process — restart <code>npm run dev</code> (it kills stale 8765/5173 listeners)</td></tr><tr><td>Answers say model "unavailable"</td><td>Ollama isn't running or has no model — start Ollama, <code>ollama pull lfm2.5:8b</code></td></tr><tr><td>Empty results</td><td>Corpus not ingested — run <code>cd backend &amp;&amp; python scripts/ingest_all.py</code> or attach files in the app</td></tr><tr><td>GPU out of memory</td><td><code>cd backend &amp;&amp; python scripts/ingest_all.py --batch-size 32</code></td></tr></tbody></table>
+<blockquote>Stuck on something else? The full guide — <a href="troubleshooting.html"><code>TROUBLESHOOTING.md</code></a> — covers 12 failure scenarios with diagnostics commands (netstat/lsof, curl health checks, Ollama checks).</blockquote>
+<h2 id="9-next-steps">9. Next steps</h2>
+<ul><li><strong>Troubleshooting</strong> → <a href="troubleshooting.html"><code>TROUBLESHOOTING.md</code></a></li><li><strong>Architecture</strong> → <a href="architecture.html"><code>ARCHITECTURE.md</code></a></li><li><strong>Backend/API/agents</strong> → <a href="backend.html"><code>BACKEND.md</code></a></li><li><strong>Frontend/UI/stores</strong> → <a href="frontend.html"><code>FRONTEND.md</code></a></li><li><strong>Pipeline editor</strong> → <a href="pipeline-editor.html"><code>PIPELINE_EDITOR.md</code></a></li><li><strong>Terminology</strong> → <a href="glossary.html"><code>GLOSSARY.md</code></a></li><li><strong>Agent Q&amp;A</strong> → <a href="agent-knowledge-base.html"><code>AGENT_KNOWLEDGE_BASE.md</code></a></li></ul>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>How do I install Lawyer Assistant?</h3><p>Run the launcher — it creates a Python environment, installs dependencies, downloads the BGE-M3 embedding and BGE-Reranker models, sets up Ollama with a default LLM, then opens the desktop app. On Windows, double-click launch.bat; on macOS/Linux, run launch.sh.</p></div><div class="faq-item"><h3>How do I run my first legal search?</h3><p>After the launcher finishes, pick a project folder, ingest your documents with 'Ingest all files', then ask a question in plain English. The app retrieves from your documents and returns a cited answer you can verify against the exact source passages.</p></div><div class="faq-item"><h3>Do I need a GPU?</h3><p>No. Lawyer Assistant runs on CPU out of the box — slower for embedding but fully functional. If you have an NVIDIA GPU with enough VRAM, the GPU manager automatically uses it and shares memory between the embedding, reranking, and LLM models.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

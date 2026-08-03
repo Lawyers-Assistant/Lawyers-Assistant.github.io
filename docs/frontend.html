@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Frontend — React UI, stores, streaming &amp; theming — Lawyer Assistant Docs</title>
+<meta name="description" content="Lawyer Assistant frontend: React layout, Zustand stores, SSE streaming chat, source panels, pipeline editor, theming, and the Electron shell."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/frontend.html"/>
+<meta name="keywords" content="lawyer assistant frontend, react legal AI, zustand store, SSE streaming UI, pipeline editor, resizable panels"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Frontend — React UI, stores, streaming &amp; theming — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Lawyer Assistant frontend: React layout, Zustand stores, SSE streaming chat, source panels, pipeline editor, theming, and the Electron shell."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/frontend.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Frontend — React UI, stores, streaming &amp; theming — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Lawyer Assistant frontend: React layout, Zustand stores, SSE streaming chat, source panels, pipeline editor, theming, and the Electron shell."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Frontend — React UI, stores, streaming &amp; theming", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/frontend.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How is the frontend organized?", "acceptedAnswer": {"@type": "Answer", "text": "Vite + React with Zustand stores for chat state, provider status, and working sets. Components live under frontend/src/components — Chat, Sources, Pipeline, Sidebar, Scan, and UI — with an Electron preload bridge for desktop APIs."}}, {"@type": "Question", "name": "How does streaming rendering work?", "acceptedAnswer": {"@type": "Answer", "text": "The chat store consumes SSE events from the backend; streaming message components render tokens live while reasoning streams into a separate chain-of-thought panel, and a skeleton message shows while the pipeline boots."}}, {"@type": "Question", "name": "Can I resize panels?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — every major panel (sources, sidebar, working set, chat) has a drag handle, and sizes persist per session. The docs cover the panel storage helpers and right-panel tabs."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link active" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Frontend — React UI, stores, streaming &amp; theming</span></div>
+    <h1>Frontend — React UI, stores, streaming &amp; theming</h1>
+    <div class="doc-intro">The frontend is a <strong>Vite + React 18 + TypeScript</strong> SPA with Tailwind CSS, Zustand state management, ReactFlow for the pipeline editor, and react-markdown for rendering answers. It talks only to the FastAPI backend at <code>http://localhost:8765</code>.</div>
+    
+
+<hr/>
+<h2 id="1-layout-frontend-src-app-tsx">1. Layout (<code>frontend/src/App.tsx</code>)</h2>
+<pre><code>BootLoader ──(health check /api/health)──▶ App
+App
+├── Sidebar                 (conversations, theme toggle, workspace toggle)
+├── main
+│   ├── ChatArea            (messages, streaming answer, statuses, thinking,
+│   │                        tool calls, citations)
+│   ├── ApprovalBar         (human-in-the-loop approve/reject, when pending)
+│   └── InputBar            (send, attach files, folder pick, drag-and-drop)
+└── Right panel (one at a time)
+    ├── SourcesPanel        (sources, pipeline dashboard, execution log,
+    │                        working set, memo export)
+    ├── WorkspacePanel      (discovered folder files)
+    └── PipelineEditor      (visual pipeline canvas, 560px panel)
+Plus: CommandPalette (Cmd/Ctrl+K), SourceViewerModal (citation detail)</code></pre>
+<ul><li>Boot gates the whole UI on <code>/api/health</code> succeeding (BootLoader shows loading/error with retry).</li><li>Keyboard shortcuts: keys 1–5 select sources, arrows navigate, Esc closes modals, Cmd/Ctrl+K toggles the command palette.</li></ul>
+<hr/>
+<h2 id="2-chat-flow-app-handlesend">2. Chat flow (<code>App.handleSend</code>)</h2>
+<ol><li>Ensure a conversation exists; append the user message; start streaming.</li><li>If <code>pendingFiles</code> exist → <code>uploadFile()</code> each (sequential, with status events), collect <code>uploadedPaths</code>/<code>uploadedNames</code>; if the user typed nothing, the query becomes a default batch-scan prompt ("Scan these documents for compliance issues: …").</li><li><code>streamChat({query, mode, top_k, conversation_id, attached_file_paths, attached_filenames})</code> — an async generator parsing SSE lines.</li><li>Event switch:<ul><li><code>meta</code> — ignored</li><li><code>intent</code> — status line with icon + confidence</li><li><code>status</code> → <code>addStreamingStatus</code></li><li><code>thinking</code> → <code>appendStreamingThinking</code> (chain-of-thought)</li><li><code>tool_call</code> / <code>tool_result</code> → streaming tool cards</li><li><code>plan</code> → plan result line (the routing directive, humanized)</li><li><code>node_start</code> / <code>node_complete</code> → execution log (pipeline nodes)</li><li><code>sources</code> → <code>setSources</code></li><li><code>interrupted</code> → <code>setApprovalPending</code> (shows ApprovalBar)</li><li><code>resumed</code> → clear approval, continue</li><li><code>token</code> → <code>appendStreamingToken</code></li><li><code>done</code> → <code>finalizeStreamingMessage(sources, execNodes)</code></li></ul></li><li>If the stream ends without <code>done</code> and no approval is pending, finalize anyway (interrupt fallback).</li></ol>
+<p><code>handleResume(approved)</code> calls <code>resumeChat(threadId, response, 5)</code> and feeds the same event pipeline.</p>
+<hr/>
+<h2 id="3-state-management-frontend-src-store-chatstore-ts">3. State management (<code>frontend/src/store/chatStore.ts</code>)</h2>
+<p>Zustand store, persisted <strong>per project</strong>: the storage key is <code>freebuff-chat-storage</code> plus a per-project hash suffix (<code>freebuff-chat-storage:&lt;project-hash&gt;</code>, re-pointed via <code>projectStorage.ts</code> when the workspace changes), and the same data is also saved server-side to the project's <code>workspace/history.json</code> (only <code>conversations</code> + <code>activeConversationId</code> + starred messages are persisted; streaming state is ephemeral; <code>Date</code> objects are rehydrated via <code>rehydrateDates</code>).</p>
+<p>Key state:</p>
+<ul><li><code>conversations[]</code>, <code>activeConversationId</code>, <code>messages[]</code>, <code>sources[]</code></li><li>Streaming: <code>streamingAnswer</code>, <code>streamingNodes</code>, <code>streamingStatuses</code>, <code>streamingThinking</code>, <code>streamingToolCalls</code>, <code>isStreaming</code>, <code>streamStartedAt</code></li><li>HITL: <code>approvalPending</code>, <code>approvalThreadId</code>, <code>approvalDescription</code>, <code>approvalToolName</code>, <code>approvalStartedAt</code>, <code>lastApprovalLatencyMs</code></li><li>Actions: create/select/delete conversation (auto-titles from the first user message), addMessage, all streaming append/update actions, <code>finalizeStreamingMessage</code> (computes <code>PipelineMetrics</code>: totalMs, approvalLatencyMs, retryCount, nodeTimings; stores thinking/statuses/ toolCalls on the message), <code>setApprovalPending</code>/<code>clearApprovalPending</code>, <code>getLiveMetrics</code>.</li></ul>
+<hr/>
+<h2 id="4-api-layer-frontend-src-services-api-ts">4. API layer (<code>frontend/src/services/api.ts</code>)</h2>
+<ul><li><code>API_BASE_URL = 'http://localhost:8765'</code></li><li><code>api.healthCheck()</code>, <code>api.chat()</code>, <code>api.getDocuments()</code></li><li><code>uploadFile(file)</code> → FormData to <code>/api/upload</code> (requires an active workspace)</li><li><code>streamChat(req)</code> / <code>resumeChat(threadId, response, topK)</code> — SSE parsers yielding typed <code>StreamEvent</code>s</li><li>Workspace: <code>setWorkspace</code>, <code>getWorkspace</code>, <code>clearWorkspace</code>, <code>streamWorkspaceIngest</code> (SSE with <code>ingest_start</code>/<code>ingest_progress</code>/ <code>ingest_done</code>/<code>ingest_cancelled</code>/<code>ingest_error</code>), <code>cancelWorkspaceIngest</code>, <code>getWorkspaceWatchStatus</code>, <code>getWorkspaceHistory</code>, <code>saveWorkspaceHistory</code></li><li>GPU profile: <code>getGpuProfile</code>, <code>saveGpuProfile</code></li><li>Scan: <code>fetchPlaybooks</code>, <code>fetchDocuments</code>, <code>fetchFlags</code>, <code>resolveFlag</code>, <code>streamScan(documentId, playbookId)</code>, <code>streamScanUpload(file, playbookId)</code></li></ul>
+<hr/>
+<h2 id="5-right-panel-components">5. Right-panel components</h2>
+<h3 id="sourcespanel-components-sources-sourcespanel-tsx-360px">SourcesPanel (<code>components/Sources/SourcesPanel.tsx</code>, 360px)</h3>
+<ul><li><strong>PipelineDashboard</strong> — metrics for recent messages (queries, avg time, approval latency, retry count).</li><li><strong>PipelineExecution</strong> — the execution log of the current/last query (nodes, statuses, elapsed ms).</li><li><strong>SourceItem</strong> list — each source shows file, page, section, score; click opens the <strong>SourceViewerModal</strong>.</li><li><strong>WorkingSetPanel</strong> — pinned/selected sources.</li><li><strong>Memo export</strong> — <code>buildMemoFromCurrentConversation()</code> → copies a legal memorandum to the clipboard ("Memo" button).</li></ul>
+<h3 id="workspacepanel">WorkspacePanel</h3>
+<p>Shows files discovered from a selected folder (supported document extensions only, capped at 50) with per-file remove and clear-all.</p>
+<h3 id="scanpanel-components-scan-scanpanel-tsx">ScanPanel (<code>components/Scan/ScanPanel.tsx</code>)</h3>
+<ul><li>Document + playbook selectors; "Start Scan" (50MB upload cap).</li><li>Live progress bar (current/total, phase, %), streaming statuses.</li><li>Result summary card (chunks, classified, flags, timing).</li><li>Flags list with severity colors/icons and resolve/dismiss/escalate (optimistic update, revert on failure).</li><li>Auto-scans an attached file once when opened with <code>initialFile</code>.</li></ul>
+<h3 id="chat-components-components-chat">Chat components (<code>components/Chat/</code>)</h3>
+<p><code>ChatArea</code>, <code>Message</code>, <code>StreamingMessage</code> (react-markdown + GFM), <code>SkeletonMessage</code>, <code>TypingIndicator</code>, <code>InputBar</code> (attachment chip list, drag- and-drop), <code>ApprovalBar</code>, <code>ScanFlagsCard</code> (compliance flags on the answer), <code>ConfidenceMeter</code>, <code>AnswerTransparency</code>, <code>InlineCitation</code>, <code>BootLoader</code>, <code>ScanProgressBar</code>.</p>
+<hr/>
+<h2 id="6-streaming-ux">6. Streaming UX</h2>
+<ul><li>Tokens append live into <code>streamingAnswer</code>; the streaming message card shows statuses, chain-of-thought, tool calls with results, and inline citations.</li><li>Node statuses (<code>node_start</code>/<code>node_complete</code>) drive the execution log and the pipeline editor's live highlighting.</li><li>On <code>done</code>, the message is finalized and stored with its sources, execution log, metrics, thinking, statuses, and tool calls.</li></ul>
+<hr/>
+<h2 id="7-theming-light-amp-dark">7. Theming (light &amp; dark)</h2>
+<ul><li>Default is <strong>light parchment</strong>; <code>useTheme</code> toggles <code>html.light</code> on the root element (persisted).</li><li>All colors are CSS variables in <code>index.css</code> (<code>--bg-primary</code>, <code>--bg-secondary</code>, <code>--bg-card</code>, <code>--text-primary/secondary/muted</code>, <code>--accent</code>/brass family, <code>--border-color</code>, <code>--text-info</code>, <code>--severity-warn</code>).</li><li>An <code>html.light</code> "bridge" remaps Tailwind utility classes (<code>text-gray-*</code>, <code>text-white</code>, severity colors, placeholder, hover variants) so components styled for dark mode stay readable on parchment. No opacity-variant color classes remain; white text only appears on accent/gradient/amber backgrounds.</li><li>Fonts: Newsreader (display/serif headings), Plus Jakarta Sans (UI), JetBrains Mono (labels).</li></ul>
+<hr/>
+<h2 id="8-tooling-amp-scripts">8. Tooling &amp; scripts</h2>
+<ul><li><code>frontend/package.json</code>: <code>dev</code> (vite), <code>build</code> (tsc &amp;&amp; vite build), <code>lint</code>, <code>typecheck</code> (<code>tsc --noEmit</code>).</li><li>Root <code>package.json</code>: <code>dev</code> runs the Electron app (<code>frontend/electron</code>), which boots the backend and Vite itself; <code>build</code>/<code>package</code>/<code>package:win|mac|linux</code> via electron-builder.</li></ul>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>How is the frontend organized?</h3><p>Vite + React with Zustand stores for chat state, provider status, and working sets. Components live under frontend/src/components — Chat, Sources, Pipeline, Sidebar, Scan, and UI — with an Electron preload bridge for desktop APIs.</p></div><div class="faq-item"><h3>How does streaming rendering work?</h3><p>The chat store consumes SSE events from the backend; streaming message components render tokens live while reasoning streams into a separate chain-of-thought panel, and a skeleton message shows while the pipeline boots.</p></div><div class="faq-item"><h3>Can I resize panels?</h3><p>Yes — every major panel (sources, sidebar, working set, chat) has a drag handle, and sizes persist per session. The docs cover the panel storage helpers and right-panel tabs.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

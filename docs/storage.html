@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Storage — Database Schemas, Data Models &amp; Persistence — Lawyer Assistant Docs</title>
+<meta name="description" content="Where Lawyer Assistant stores data: raw uploads, processed chunks, vector index, BM25 index, chat history, compliance flags, logs, and clearing it all."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/storage.html"/>
+<meta name="keywords" content="data storage, vector index location, chat history storage, compliance flags, logs rotation, clear data"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Storage — Database Schemas, Data Models &amp; Persistence — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Where Lawyer Assistant stores data: raw uploads, processed chunks, vector index, BM25 index, chat history, compliance flags, logs, and clearing it all."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/storage.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Storage — Database Schemas, Data Models &amp; Persistence — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Where Lawyer Assistant stores data: raw uploads, processed chunks, vector index, BM25 index, chat history, compliance flags, logs, and clearing it all."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Storage — Database Schemas, Data Models &amp; Persistence", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/storage.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is stored and where?", "acceptedAnswer": {"@type": "Answer", "text": "Per-project: raw uploads, processed chunks, the vector index, and BM25 index in the project's data folder. Global: chat history, compliance flags, and config in the app data directory. Logs rotate at 10MB with 5 backups."}}, {"@type": "Question", "name": "What is NOT stored?", "acceptedAnswer": {"@type": "Answer", "text": "API keys stay in git-ignored config (never committed), no telemetry or analytics is collected, and documents are never uploaded to external servers in local mode."}}, {"@type": "Question", "name": "How do I clear data?", "acceptedAnswer": {"@type": "Answer", "text": "The doc lists exact paths and commands to clear per-project data (workspace), global data (conversations, flags), and logs — plus the 14GB model folder if you want a full reset."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link active" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Storage — Database Schemas, Data Models &amp; Persistence</span></div>
+    <h1>Storage — Database Schemas, Data Models &amp; Persistence</h1>
+    <div class="doc-intro">Complete reference for all data storage in Lawyer Assistant: database schemas, file formats, data models, and persistence strategies.</div>
+    
+
+<hr/>
+<h2 id="1-storage-overview">1. Storage overview</h2>
+<h3 id="storage-locations">Storage locations</h3>
+<table><thead><tr><th>Data Type</th><th>Storage</th><th>Location</th><th>Persistence</th></tr></thead><tbody><tr><td><strong>Vector embeddings</strong></td><td>ChromaDB</td><td><code>&lt;workspace&gt;/workspace/chroma_db/</code> or <code>data/chroma_db/</code></td><td>Permanent</td></tr><tr><td><strong>Sparse index</strong></td><td>BM25 (pickle)</td><td><code>&lt;workspace&gt;/workspace/bm25_index/</code> or <code>data/bm25_index/</code></td><td>Permanent</td></tr><tr><td><strong>Chat history</strong></td><td>JSON</td><td><code>&lt;workspace&gt;/workspace/history.json</code></td><td>Permanent (per-project)</td></tr><tr><td><strong>LangGraph threads</strong></td><td>SQLite</td><td><code>data/conversations.db</code></td><td>Permanent (project-independent)</td></tr><tr><td><strong>Compliance flags</strong></td><td>SQLite</td><td><code>data/flags.db</code></td><td>Permanent (project-independent)</td></tr><tr><td><strong>Logs</strong></td><td>Text file</td><td><code>logs/legal_retrieval.log</code></td><td>Rotating (10MB, 5 backups)</td></tr><tr><td><strong>Frontend state</strong></td><td>localStorage</td><td>Browser storage</td><td>Session (per-project scoped)</td></tr><tr><td><strong>Models</strong></td><td>PyTorch/Transformers</td><td><code>models/bge-m3/</code>, <code>models/bge-reranker-v2-m3/</code></td><td>Permanent</td></tr><tr><td><strong>Temp files</strong></td><td>Filesystem</td><td><code>&lt;workspace&gt;/workspace/processed/</code></td><td>Temporary</td></tr></tbody></table>
+<h3 id="workspace-vs-global-storage">Workspace vs global storage</h3>
+<p><strong>Workspace-scoped</strong> (per-project):</p>
+<ul><li>Vector store (ChromaDB)</li><li>BM25 index</li><li>Chat history + working set + GPU profile</li><li>Raw uploads</li></ul>
+<p><strong>Global</strong> (shared across projects):</p>
+<ul><li>LangGraph conversation threads</li><li>Compliance flags</li><li>Models</li><li>Logs</li></ul>
+<hr/>
+<h2 id="2-chromadb-schema-vector-store">2. ChromaDB schema (vector store)</h2>
+<h3 id="collection-structure">Collection structure</h3>
+<p><strong>Collection name:</strong> <code>legal_chunks</code></p>
+<p><strong>Distance metric:</strong> Cosine (dot product for L2-normalized vectors)</p>
+<p><strong>Index:</strong> HNSW (Hierarchical Navigable Small World)</p>
+<h3 id="document-schema">Document schema</h3>
+<p>Each document in ChromaDB represents <strong>one chunk</strong>:</p>
+<pre><span class="lang">python</span><code>{
+  "id": "abc123...def",              # chunk_id (SHA1 hash)
+  "embedding": [0.023, -0.045, ...], # 1024-dim float32 vector (L2-normalized)
+  "document": "The contract may be rescinded...",  # chunk text
+  "metadata": {
+    "file_name": "contract_law.pdf",
+    "page_number": 12,
+    "section_title": "Remedies",
+    "source_text": "The contract may be rescinded under the following conditions: ..."
+  }
+}</code></pre>
+<h3 id="metadata-fields">Metadata fields</h3>
+<table><thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>file_name</code></td><td>str</td><td>Source document filename (e.g., "contract.pdf")</td></tr><tr><td><code>page_number</code></td><td>int</td><td>Page number in source document (1-indexed)</td></tr><tr><td><code>section_title</code></td><td>str</td><td>Section/heading text (empty if no section)</td></tr><tr><td><code>source_text</code></td><td>str</td><td>Full original paragraph (for SourceViewerModal)</td></tr></tbody></table>
+<h3 id="chunk-id-generation">Chunk ID generation</h3>
+<pre><span class="lang">python</span><code>import hashlib
+
+def generate_chunk_id(file_name: str, page: int, section: str, text: str) -&gt; str:
+    """Stable, collision-free chunk ID."""
+    key = f"{file_name}|{page}|{section}|{text[:200]}"
+    return hashlib.sha1(key.encode()).hexdigest()</code></pre>
+<p><strong>Properties:</strong></p>
+<ul><li>Stable (same input → same ID)</li><li>Collision-resistant (SHA1)</li><li>Unique per (file, page, section, text prefix)</li></ul>
+<h3 id="collection-metadata">Collection metadata</h3>
+<pre><span class="lang">python</span><code>collection.metadata = {
+    "hnsw:space": "cosine",
+    "hnsw:construction_ef": 100,
+    "hnsw:M": 16,
+    "hnsw:search_ef": 128,
+}</code></pre>
+<h3 id="querying-chromadb">Querying ChromaDB</h3>
+<pre><span class="lang">python</span><code>from chromadb import PersistentClient
+
+client = PersistentClient(path="data/chroma_db")
+collection = client.get_collection("legal_chunks")
+
+# Query by vector
+results = collection.query(
+    query_embeddings=[[0.023, -0.045, ...]],  # 1024-dim
+    n_results=50,
+    include=["documents", "metadatas", "distances"]
+)
+
+# Query by text (auto-embedding)
+results = collection.query(
+    query_texts=["What is rescission?"],
+    n_results=50
+)
+
+# Filter by metadata
+results = collection.query(
+    query_texts=["payment terms"],
+    where={"file_name": "contract_A.pdf"},
+    n_results=10
+)</code></pre>
+<h3 id="chromadb-file-structure">ChromaDB file structure</h3>
+<pre><code>data/chroma_db/
+├── chroma.sqlite3              # Main database (metadata, IDs)
+├── 00000000-0000-0000-0000-000000000000/  # Collection directory
+│   ├── data_level0.bin         # HNSW layer 0
+│   ├── data_level1.bin         # HNSW layer 1
+│   ├── length.bin              # Vector lengths
+│   └── link_lists.bin          # HNSW links
+└── ...</code></pre>
+<hr/>
+<h2 id="3-bm25-index-schema-sparse-retrieval">3. BM25 index schema (sparse retrieval)</h2>
+<h3 id="file-format">File format</h3>
+<p><strong>File:</strong> <code>data/bm25_index/bm25_index.pkl</code> (Python pickle)</p>
+<h3 id="structure">Structure</h3>
+<pre><span class="lang">python</span><code>{
+  "bm25": BM25Okapi,              # BM25 model instance
+  "chunk_ids": List[str],         # Chunk IDs (parallel to docs)
+  "documents": List[str],         # Chunk texts (tokenized)
+  "metadata": {
+    "version": "1.0",
+    "created_at": "2026-08-03T14:23:45",
+    "num_docs": 18820,
+    "vocab_size": 47234
+  }
+}</code></pre>
+<h3 id="bm25okapi-parameters">BM25Okapi parameters</h3>
+<pre><span class="lang">python</span><code>from rank_bm25 import BM25Okapi
+
+bm25 = BM25Okapi(
+    corpus=tokenized_docs,  # List[List[str]]
+    k1=1.5,                 # Term frequency saturation
+    b=0.75,                 # Length normalization
+    epsilon=0.25            # IDF floor
+)</code></pre>
+<h3 id="tokenization">Tokenization</h3>
+<p>Simple whitespace tokenization:</p>
+<pre><span class="lang">python</span><code>def tokenize(text: str) -&gt; List[str]:
+    """BM25 tokenizer."""
+    return text.lower().split()</code></pre>
+<h3 id="querying-bm25">Querying BM25</h3>
+<pre><span class="lang">python</span><code>import pickle
+
+with open("data/bm25_index/bm25_index.pkl", "rb") as f:
+    data = pickle.load(f)
+
+bm25 = data["bm25"]
+chunk_ids = data["chunk_ids"]
+
+# Query
+query_tokens = tokenize("What is rescission?")
+scores = bm25.get_scores(query_tokens)
+
+# Top-K
+top_k_indices = np.argsort(scores)[::-1][:50]
+top_k_chunk_ids = [chunk_ids[i] for i in top_k_indices]
+top_k_scores = [scores[i] for i in top_k_indices]</code></pre>
+<hr/>
+<h2 id="4-workspace-history-schema-per-project">4. Workspace history schema (per-project)</h2>
+<h3 id="file-format">File format</h3>
+<p><strong>File:</strong> <code>&lt;workspace&gt;/workspace/history.json</code></p>
+<p><strong>Encoding:</strong> UTF-8</p>
+<p><strong>Format:</strong> JSON (pretty-printed, 2-space indent)</p>
+<h3 id="schema">Schema</h3>
+<pre><span class="lang">json</span><code>{
+  "conversations": [
+    {
+      "id": "1722567890123",
+      "title": "Contract Law Questions",
+      "messages": [
+        {
+          "id": "msg_1",
+          "role": "user",
+          "content": "What is rescission?",
+          "timestamp": "2026-08-03T14:23:45.123Z"
+        },
+        {
+          "id": "msg_2",
+          "role": "assistant",
+          "content": "Rescission is the unmaking of a contract...",
+          "timestamp": "2026-08-03T14:23:52.456Z",
+          "sources": [
+            {
+              "file_name": "contract_law.pdf",
+              "page": 12,
+              "section": "Remedies",
+              "score": 0.847,
+              "text": "Rescission is the unmaking..."
+            }
+          ],
+          "metrics": {
+            "totalMs": 7123,
+            "approvalLatencyMs": 0,
+            "retryCount": 0,
+            "nodeTimings": {}
+          },
+          "answer_found": true
+        }
+      ],
+      "created_at": "2026-08-03T14:23:45.123Z",
+      "updated_at": "2026-08-03T14:23:52.456Z"
+    }
+  ],
+  "activeConversationId": "1722567890123",
+  "working_set": [
+    {
+      "file_name": "contract_law.pdf",
+      "page": 12,
+      "section": "Remedies",
+      "text": "Rescission is...",
+      "pinned": true,
+      "timestamp": "2026-08-03T14:24:00.000Z"
+    }
+  ],
+  "gpu_profile": {
+    "residency_mode": "adaptive",
+    "keep_resident_free_mb": 1024,
+    "hot_min_uses": 2,
+    "hot_window_seconds": 120,
+    "max_resident": 2
+  }
+}</code></pre>
+<h3 id="field-descriptions">Field descriptions</h3>
+<p><strong>Conversations:</strong></p>
+<ul><li><code>id</code>: Unix timestamp (milliseconds)</li><li><code>title</code>: Auto-generated from first user message (max 50 chars)</li><li><code>messages</code>: Chronological message list</li><li><code>created_at</code>, <code>updated_at</code>: ISO 8601 timestamps</li></ul>
+<p><strong>Messages:</strong></p>
+<ul><li><code>role</code>: <code>"user"</code> | <code>"assistant"</code></li><li><code>sources</code>: Retrieved documents (only for assistant messages)</li><li><code>metrics</code>: Pipeline performance metrics</li><li><code>answer_found</code>: Boolean (abstain signal)</li></ul>
+<p><strong>Working set:</strong></p>
+<ul><li>Pinned/selected sources from conversations</li><li><code>pinned</code>: User explicitly pinned</li><li><code>timestamp</code>: When added to working set</li></ul>
+<p><strong>GPU profile:</strong></p>
+<ul><li>Per-project GPU residency settings</li><li>See <a href="gpu-management.html"><code>GPU_MANAGEMENT.md</code></a> §7</li></ul>
+<hr/>
+<h2 id="5-langgraph-conversations-schema-sqlite">5. LangGraph conversations schema (SQLite)</h2>
+<h3 id="database-file">Database file</h3>
+<p><strong>File:</strong> <code>data/conversations.db</code></p>
+<p><strong>Engine:</strong> SQLite3</p>
+<h3 id="schema">Schema</h3>
+<pre><span class="lang">sql</span><code>CREATE TABLE checkpoints (
+    thread_id TEXT NOT NULL,
+    checkpoint_id TEXT NOT NULL,
+    parent_id TEXT,
+    checkpoint BLOB NOT NULL,
+    metadata TEXT,
+    created_at REAL NOT NULL,
+    PRIMARY KEY (thread_id, checkpoint_id)
+);
+
+CREATE TABLE checkpoint_blobs (
+    thread_id TEXT NOT NULL,
+    checkpoint_id TEXT NOT NULL,
+    channel TEXT NOT NULL,
+    type TEXT NOT NULL,
+    blob BLOB NOT NULL,
+    PRIMARY KEY (thread_id, checkpoint_id, channel)
+);
+
+CREATE TABLE checkpoint_writes (
+    thread_id TEXT NOT NULL,
+    checkpoint_id TEXT NOT NULL,
+    task_id TEXT NOT NULL,
+    idx INTEGER NOT NULL,
+    channel TEXT NOT NULL,
+    type TEXT,
+    blob BLOB,
+    PRIMARY KEY (thread_id, checkpoint_id, task_id, idx)
+);</code></pre>
+<h3 id="checkpoints-table">Checkpoints table</h3>
+<table><thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>thread_id</code></td><td>TEXT</td><td>Conversation ID (same as <code>conversation_id</code> in history.json)</td></tr><tr><td><code>checkpoint_id</code></td><td>TEXT</td><td>Checkpoint UUID</td></tr><tr><td><code>parent_id</code></td><td>TEXT</td><td>Previous checkpoint (null for first)</td></tr><tr><td><code>checkpoint</code></td><td>BLOB</td><td>Serialized graph state (MessagePack)</td></tr><tr><td><code>metadata</code></td><td>TEXT</td><td>JSON metadata</td></tr><tr><td><code>created_at</code></td><td>REAL</td><td>Unix timestamp (seconds)</td></tr></tbody></table>
+<h3 id="thread-lifecycle">Thread lifecycle</h3>
+<ol><li><strong>New conversation</strong> → <code>thread_id</code> created</li><li><strong>Each tool call</strong> → new checkpoint saved</li><li><strong>Human-in-the-loop interrupt</strong> → checkpoint persists, thread pauses</li><li><strong>Resume</strong> → load checkpoint, continue graph execution</li><li><strong>Conversation ends</strong> → checkpoints remain (for future resume)</li></ol>
+<h3 id="querying-conversations">Querying conversations</h3>
+<pre><span class="lang">python</span><code>import sqlite3
+
+conn = sqlite3.connect("data/conversations.db")
+cursor = conn.cursor()
+
+# List all threads
+cursor.execute("SELECT DISTINCT thread_id FROM checkpoints")
+threads = cursor.fetchall()
+
+# Get latest checkpoint for a thread
+cursor.execute("""
+    SELECT checkpoint_id, created_at
+    FROM checkpoints
+    WHERE thread_id = ?
+    ORDER BY created_at DESC
+    LIMIT 1
+""", (thread_id,))</code></pre>
+<hr/>
+<h2 id="6-compliance-flags-schema-sqlite">6. Compliance flags schema (SQLite)</h2>
+<h3 id="database-file">Database file</h3>
+<p><strong>File:</strong> <code>data/flags.db</code></p>
+<p><strong>Engine:</strong> SQLite3</p>
+<h3 id="schema">Schema</h3>
+<pre><span class="lang">sql</span><code>CREATE TABLE flags (
+    flag_id TEXT PRIMARY KEY,
+    document_id TEXT NOT NULL,
+    chunk_id TEXT,
+    section_title TEXT,
+    page_number INTEGER,
+    rule_id TEXT NOT NULL,
+    rule_description TEXT NOT NULL,
+    severity TEXT NOT NULL,
+    clause_text TEXT NOT NULL,
+    reason TEXT,
+    confidence REAL,
+    status TEXT NOT NULL DEFAULT 'open',
+    created_at REAL NOT NULL,
+    updated_at REAL NOT NULL,
+    resolved_at REAL,
+    resolved_by TEXT
+);
+
+CREATE INDEX idx_document_id ON flags(document_id);
+CREATE INDEX idx_status ON flags(status);
+CREATE INDEX idx_severity ON flags(severity);</code></pre>
+<h3 id="flags-table">Flags table</h3>
+<table><thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead><tbody><tr><td><code>flag_id</code></td><td>TEXT</td><td>UUID (primary key)</td></tr><tr><td><code>document_id</code></td><td>TEXT</td><td>Source document filename</td></tr><tr><td><code>chunk_id</code></td><td>TEXT</td><td>Chunk ID (foreign key to ChromaDB)</td></tr><tr><td><code>section_title</code></td><td>TEXT</td><td>Section name</td></tr><tr><td><code>page_number</code></td><td>INTEGER</td><td>Page in source document</td></tr><tr><td><code>rule_id</code></td><td>TEXT</td><td>Playbook rule ID</td></tr><tr><td><code>rule_description</code></td><td>TEXT</td><td>Human-readable rule description</td></tr><tr><td><code>severity</code></td><td>TEXT</td><td><code>"high"</code> \</td></tr><tr><td><code>clause_text</code></td><td>TEXT</td><td>Flagged clause text (excerpt)</td></tr><tr><td><code>reason</code></td><td>TEXT</td><td>Why the clause was flagged</td></tr><tr><td><code>confidence</code></td><td>REAL</td><td>Classification confidence (0-1)</td></tr><tr><td><code>status</code></td><td>TEXT</td><td><code>"open"</code> \</td></tr><tr><td><code>created_at</code></td><td>REAL</td><td>Unix timestamp (when flagged)</td></tr><tr><td><code>updated_at</code></td><td>REAL</td><td>Unix timestamp (last status change)</td></tr><tr><td><code>resolved_at</code></td><td>REAL</td><td>Unix timestamp (when resolved)</td></tr><tr><td><code>resolved_by</code></td><td>TEXT</td><td>User who resolved (optional)</td></tr></tbody></table>
+<h3 id="flag-lifecycle">Flag lifecycle</h3>
+<ol><li><strong>Scan document</strong> → flags created with <code>status="open"</code></li><li><strong>User reviews</strong> → status changes:<ul><li><code>"resolved"</code> — issue fixed</li><li><code>"dismissed"</code> — false positive</li><li><code>"escalated"</code> — needs legal review</li></ul></li><li><strong>Resolved flags</strong> → <code>resolved_at</code> timestamp set</li></ol>
+<h3 id="querying-flags">Querying flags</h3>
+<pre><span class="lang">python</span><code>import sqlite3
+
+conn = sqlite3.connect("data/flags.db")
+cursor = conn.cursor()
+
+# All open high-severity flags
+cursor.execute("""
+    SELECT flag_id, document_id, rule_description, clause_text
+    FROM flags
+    WHERE status = 'open' AND severity = 'high'
+    ORDER BY created_at DESC
+""")
+
+# Flags for a specific document
+cursor.execute("""
+    SELECT flag_id, severity, rule_description
+    FROM flags
+    WHERE document_id = ?
+    ORDER BY severity, page_number
+""", (document_id,))</code></pre>
+<hr/>
+<h2 id="7-frontend-localstorage-schema">7. Frontend localStorage schema</h2>
+<h3 id="storage-keys-per-project-scoped">Storage keys (per-project scoped)</h3>
+<p>Frontend uses <strong>per-project scoped</strong> localStorage keys:</p>
+<table><thead><tr><th>Key Pattern</th><th>Purpose</th></tr></thead><tbody><tr><td><code>freebuff-chat-storage:&lt;hash&gt;</code></td><td>Chat state (Zustand store)</td></tr><tr><td><code>freebuff-working-set:&lt;hash&gt;</code></td><td>Pinned sources</td></tr><tr><td><code>pipeline-layout-v1</code></td><td>Pipeline editor layout (global)</td></tr></tbody></table>
+<p><strong>Hash suffix:</strong> SHA256 of workspace path → per-project isolation.</p>
+<h3 id="chat-storage-schema">Chat storage schema</h3>
+<p><strong>Key:</strong> <code>freebuff-chat-storage:&lt;hash&gt;</code></p>
+<pre><span class="lang">json</span><code>{
+  "state": {
+    "conversations": [ /* same as history.json */ ],
+    "activeConversationId": "1722567890123",
+    "sources": [ /* current query sources */ ],
+    "streamingAnswer": "",
+    "isStreaming": false,
+    "approvalPending": false
+  },
+  "version": 1
+}</code></pre>
+<p><strong>Zustand persist middleware</strong> auto-syncs to localStorage on state changes.</p>
+<h3 id="working-set-schema">Working set schema</h3>
+<p><strong>Key:</strong> <code>freebuff-working-set:&lt;hash&gt;</code></p>
+<pre><span class="lang">json</span><code>{
+  "sources": [
+    {
+      "file_name": "contract.pdf",
+      "page": 3,
+      "section": "Payment Terms",
+      "text": "Payment is due...",
+      "pinned": true,
+      "starred": false
+    }
+  ]
+}</code></pre>
+<h3 id="pipeline-layout-schema">Pipeline layout schema</h3>
+<p><strong>Key:</strong> <code>pipeline-layout-v1</code> (global, not per-project)</p>
+<pre><span class="lang">json</span><code>{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "dense",
+      "type": "denseRetrieval",
+      "position": {"x": 280, "y": 440},
+      "data": {"label": "Dense Retrieval"}
+    }
+  ],
+  "edges": [
+    {
+      "id": "planner-dense",
+      "type": "particle",
+      "source": "planner",
+      "target": "dense"
+    }
+  ]
+}</code></pre>
+<p>See <a href="pipeline-json.html"><code>PIPELINE_JSON.md</code></a> for full schema.</p>
+<hr/>
+<h2 id="8-log-file-format">8. Log file format</h2>
+<h3 id="file-location">File location</h3>
+<p><strong>File:</strong> <code>logs/legal_retrieval.log</code></p>
+<p><strong>Rotation:</strong> 10 MB per file, 5 backups</p>
+<h3 id="format">Format</h3>
+<pre><code>YYYY-MM-DD HH:MM:SS | LEVEL   | module.name | message</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code>2026-08-03 14:23:45 | INFO    | legal_retrieval.retrieval | Query: What is rescission?
+2026-08-03 14:23:46 | DEBUG   | legal_retrieval.embedder | Embedding batch size: 32
+2026-08-03 14:23:50 | INFO    | legal_retrieval.retrieval | Retrieved 50 results in 4.3s
+2026-08-03 14:23:52 | WARNING | legal_retrieval.reranker | Reranker score below threshold: 0.18
+2026-08-03 14:23:53 | ERROR   | legal_retrieval.llm | Ollama connection failed: [Errno 111]</code></pre>
+<h3 id="log-levels">Log levels</h3>
+<table><thead><tr><th>Level</th><th>Usage</th></tr></thead><tbody><tr><td><code>DEBUG</code></td><td>Verbose diagnostic info (not in production)</td></tr><tr><td><code>INFO</code></td><td>Key events (query, retrieval, ingestion)</td></tr><tr><td><code>WARNING</code></td><td>Recoverable issues (low scores, missing data)</td></tr><tr><td><code>ERROR</code></td><td>Failures (exceptions, API errors)</td></tr><tr><td><code>CRITICAL</code></td><td>Fatal errors (should never happen)</td></tr></tbody></table>
+<h3 id="parsing-logs">Parsing logs</h3>
+<pre><span class="lang">bash</span><code># All errors
+grep "ERROR" logs/legal_retrieval.log
+
+# Query latency
+grep "Retrieved.*results" logs/legal_retrieval.log | \
+  grep -oP "\d+\.\d+s"
+
+# Today's logs
+awk -v today="$(date +%Y-%m-%d)" '$1 == today' logs/legal_retrieval.log</code></pre>
+<hr/>
+<h2 id="9-model-storage">9. Model storage</h2>
+<h3 id="bge-m3-embedder">BGE-M3 (embedder)</h3>
+<p><strong>Location:</strong> <code>models/bge-m3/</code></p>
+<pre><code>models/bge-m3/
+├── config.json           # Model config (hidden size, num layers, etc.)
+├── pytorch_model.bin     # Model weights (~1.1 GB)
+├── tokenizer_config.json # Tokenizer settings
+├── vocab.txt             # Vocabulary (32k tokens)
+└── ...</code></pre>
+<h3 id="bge-reranker-v2-m3">BGE-Reranker-v2-M3</h3>
+<p><strong>Location:</strong> <code>models/bge-reranker-v2-m3/</code></p>
+<pre><code>models/bge-reranker-v2-m3/
+├── config.json           # Model config
+├── pytorch_model.bin     # Model weights (~2.2 GB)
+├── tokenizer_config.json
+├── vocab.txt
+└── ...</code></pre>
+<h3 id="model-download">Model download</h3>
+<p>First run downloads models from HuggingFace:</p>
+<pre><span class="lang">python</span><code>from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer(
+    "BAAI/bge-m3",
+    cache_folder="models/bge-m3",
+)</code></pre>
+<hr/>
+<h2 id="10-temporary-file-storage">10. Temporary file storage</h2>
+<h3 id="processed-directory">Processed directory</h3>
+<p><strong>Location:</strong> <code>&lt;workspace&gt;/workspace/processed/</code> or <code>data/processed/</code></p>
+<p><strong>Contents:</strong></p>
+<ul><li>Docling temporary images (PDF page images for OCR)</li><li>Intermediate parsing artifacts</li><li>Backup embeddings (crash recovery)</li></ul>
+<p><strong>Cleanup:</strong></p>
+<ul><li>Auto-cleaned on restart (old files removed)</li><li>Not included in workspace backups</li></ul>
+<hr/>
+<h2 id="11-data-migrations">11. Data migrations</h2>
+<h3 id="chromadb-version-migration">ChromaDB version migration</h3>
+<p>When upgrading ChromaDB:</p>
+<pre><span class="lang">python</span><code>from chromadb import PersistentClient
+
+# Old version
+old_client = PersistentClient(path="data/chroma_db_old")
+old_collection = old_client.get_collection("legal_chunks")
+
+# New version
+new_client = PersistentClient(path="data/chroma_db")
+new_collection = new_client.create_collection("legal_chunks")
+
+# Migrate data
+all_data = old_collection.get()
+new_collection.add(
+    ids=all_data["ids"],
+    embeddings=all_data["embeddings"],
+    documents=all_data["documents"],
+    metadatas=all_data["metadatas"]
+)</code></pre>
+<h3 id="history-json-schema-migration">History.json schema migration</h3>
+<p>Add new fields while preserving old data:</p>
+<pre><span class="lang">python</span><code>import json
+
+with open("workspace/history.json") as f:
+    data = json.load(f)
+
+# Migrate: add gpu_profile if missing
+if "gpu_profile" not in data:
+    data["gpu_profile"] = {
+        "residency_mode": "adaptive",
+        "keep_resident_free_mb": 1024,
+        "hot_min_uses": 2,
+        "hot_window_seconds": 120,
+        "max_resident": 2
+    }
+
+with open("workspace/history.json", "w") as f:
+    json.dump(data, f, indent=2)</code></pre>
+<hr/>
+<h2 id="12-backup-strategies">12. Backup strategies</h2>
+<h3 id="workspace-backup">Workspace backup</h3>
+<p>Backup entire workspace (per-project):</p>
+<pre><span class="lang">bash</span><code>tar -czf project-backup-$(date +%Y%m%d).tar.gz \
+  /path/to/project/workspace/</code></pre>
+<p><strong>Includes:</strong></p>
+<ul><li>ChromaDB index</li><li>BM25 index</li><li>Chat history + GPU profile</li><li>Processed temp files</li></ul>
+<h3 id="global-data-backup">Global data backup</h3>
+<p>Backup global databases:</p>
+<pre><span class="lang">bash</span><code>tar -czf global-backup-$(date +%Y%m%d).tar.gz \
+  data/conversations.db \
+  data/flags.db \
+  logs/</code></pre>
+<h3 id="model-backup">Model backup</h3>
+<p>Models are re-downloadable — backup not critical:</p>
+<pre><span class="lang">bash</span><code>tar -czf models-backup.tar.gz models/</code></pre>
+<hr/>
+<h2 id="13-storage-quotas-amp-limits">13. Storage quotas &amp; limits</h2>
+<table><thead><tr><th>Data</th><th>Typical Size</th><th>Max Size</th></tr></thead><tbody><tr><td><strong>ChromaDB (18K chunks)</strong></td><td>~500 MB</td><td>Unlimited</td></tr><tr><td><strong>BM25 index</strong></td><td>~15 MB</td><td>Unlimited</td></tr><tr><td><strong>history.json</strong></td><td>~1-5 MB</td><td>Unlimited</td></tr><tr><td><strong>conversations.db</strong></td><td>~10-50 MB</td><td>Unlimited</td></tr><tr><td><strong>flags.db</strong></td><td>~1-10 MB</td><td>Unlimited</td></tr><tr><td><strong>Logs (rotating)</strong></td><td>~50 MB</td><td>50 MB (10MB × 5)</td></tr><tr><td><strong>Models</strong></td><td>~14 GB</td><td>14 GB</td></tr><tr><td><strong>Temp files</strong></td><td>~100 MB</td><td>Auto-cleaned</td></tr></tbody></table>
+<hr/>
+<h2 id="14-related-documentation">14. Related documentation</h2>
+<table><thead><tr><th>Doc</th><th>Coverage</th></tr></thead><tbody><tr><td><a href="workspace.html"><code>WORKSPACE.md</code></a></td><td>Workspace storage, per-project isolation</td></tr><tr><td><a href="data-flow.html"><code>DATA_FLOW.md</code></a></td><td>Ingestion pipeline, chunk creation</td></tr><tr><td><a href="backend.html"><code>BACKEND.md</code></a></td><td>API persistence, SQLite operations</td></tr><tr><td><a href="configuration.html"><code>CONFIGURATION.md</code></a></td><td>Storage path configuration</td></tr><tr><td><a href="architecture.html"><code>ARCHITECTURE.md</code></a></td><td>Storage layout overview</td></tr></tbody></table>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>What is stored and where?</h3><p>Per-project: raw uploads, processed chunks, the vector index, and BM25 index in the project's data folder. Global: chat history, compliance flags, and config in the app data directory. Logs rotate at 10MB with 5 backups.</p></div><div class="faq-item"><h3>What is NOT stored?</h3><p>API keys stay in git-ignored config (never committed), no telemetry or analytics is collected, and documents are never uploaded to external servers in local mode.</p></div><div class="faq-item"><h3>How do I clear data?</h3><p>The doc lists exact paths and commands to clear per-project data (workspace), global data (conversations, flags), and logs — plus the 14GB model folder if you want a full reset.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

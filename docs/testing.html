@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Testing — Test Suites, Benchmarks &amp; Quality Assurance — Lawyer Assistant Docs</title>
+<meta name="description" content="Run the Lawyer Assistant test suite: phase-based unit tests for boot, chunking, embeddings, vector store, retrieval, API provider facade, and end-to-end chat flows."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/testing.html"/>
+<meta name="keywords" content="lawyer assistant tests, legal AI test suite, pytest RAG, chunking tests, retrieval tests, api provider tests"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Testing — Test Suites, Benchmarks &amp; Quality Assurance — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Run the Lawyer Assistant test suite: phase-based unit tests for boot, chunking, embeddings, vector store, retrieval, API provider facade, and end-to-end chat flows."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/testing.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Testing — Test Suites, Benchmarks &amp; Quality Assurance — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Run the Lawyer Assistant test suite: phase-based unit tests for boot, chunking, embeddings, vector store, retrieval, API provider facade, and end-to-end chat flows."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Testing — Test Suites, Benchmarks &amp; Quality Assurance", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/testing.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I run the backend tests?", "acceptedAnswer": {"@type": "Answer", "text": "From the backend folder, run pytest tests/ -v. The suite is organized by phase — boot, document types, chunking, embeddings, vector store, retrieval, and end-to-end chat — so a failure tells you exactly which pipeline stage regressed."}}, {"@type": "Question", "name": "Are there integration tests?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. test_integration_e2e.py runs the full chat flow against the real backend, and test_pipeline_streaming.py verifies SSE streaming events. A dedicated API-provider test file covers the cloud-mode facade with a mock server."}}, {"@type": "Question", "name": "Do tests require a GPU or models?", "acceptedAnswer": {"@type": "Answer", "text": "Most unit tests mock or stub the heavy models. Some phase tests load real embeddings and rerankers on CPU, which is slower but works on any machine. GPU-requiring behavior is isolated in the GPU manager tests."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link active" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Testing — Test Suites, Benchmarks &amp; Quality Assurance</span></div>
+    <h1>Testing — Test Suites, Benchmarks &amp; Quality Assurance</h1>
+    <div class="doc-intro">Comprehensive testing guide for Lawyer Assistant. The test suite uses a <strong>phase-based organization</strong> that mirrors the actual system architecture, making it easy to identify which layer a failure affects.</div>
+    
+
+<hr/>
+<h2 id="1-test-suite-organization">1. Test suite organization</h2>
+<p>Tests live in <code>backend/tests/</code> and are organized by <strong>system phase</strong>:</p>
+<pre><code>backend/tests/
+├── test_phase1_boot.py           # System startup, config, logging
+├── test_phase2_all_types.py      # Data model validation (Pydantic)
+├── test_phase3_chunking.py       # Document chunking logic
+├── test_phase4_embeddings.py     # BGE-M3 embedding generation
+├── test_phase5_vector_store.py   # ChromaDB operations
+├── test_phase678_retrieval.py    # Dense/sparse/hybrid retrieval + reranking
+├── test_integration_e2e.py       # End-to-end RAG pipeline
+├── test_gpu_manager.py           # GPU resource management (37 tests)
+├── test_pipeline_config.py       # Runtime pipeline reconfiguration
+├── test_workspace.py             # Workspace management + folder watcher
+├── test_context_hint.py          # Context hint retrieval
+├── test_citation_validation.py   # Citation integrity checks
+├── test_source_parsing.py        # Source citation parsing
+├── test_think_splitter.py        # Chain-of-thought extraction
+├── test_abstain_and_temp.py      # Abstain signal + temperature control
+├── test_post_tool_gate.py        # Post-tool reasoning gate
+└── test_api_provider.py          # Cloud API provider integration</code></pre>
+<h3 id="phase-based-testing-philosophy">Phase-based testing philosophy</h3>
+<p>Each phase tests a <strong>single layer</strong> of the stack:</p>
+<ol><li><strong>Phase 1 (Boot)</strong> — Can we start? Config loading, logging, directory creation</li><li><strong>Phase 2 (Types)</strong> — Are data structures valid? Pydantic model validation</li><li><strong>Phase 3 (Chunking)</strong> — Can we split documents? Chunk size, overlap, section respect</li><li><strong>Phase 4 (Embeddings)</strong> — Can we embed text? BGE-M3 inference, normalization</li><li><strong>Phase 5 (Vector Store)</strong> — Can we store/retrieve vectors? ChromaDB operations</li><li><strong>Phase 6-8 (Retrieval)</strong> — Can we search? Dense, sparse, hybrid, reranking</li><li><strong>Integration</strong> — Does the full pipeline work end-to-end?</li></ol>
+<p>This makes debugging trivial: a Phase 3 failure means chunking broke, not embeddings.</p>
+<hr/>
+<h2 id="2-running-tests">2. Running tests</h2>
+<h3 id="run-all-tests">Run all tests</h3>
+<pre><span class="lang">bash</span><code>cd backend
+pytest tests/ -v</code></pre>
+<h3 id="run-a-specific-phase">Run a specific phase</h3>
+<pre><span class="lang">bash</span><code>cd backend
+pytest tests/test_phase3_chunking.py -v</code></pre>
+<h3 id="run-a-specific-test-function">Run a specific test function</h3>
+<pre><span class="lang">bash</span><code>cd backend
+pytest tests/test_phase3_chunking.py::test_chunking_respects_sections -v</code></pre>
+<h3 id="run-with-coverage">Run with coverage</h3>
+<pre><span class="lang">bash</span><code>cd backend
+pytest tests/ --cov=legal_retrieval --cov-report=html</code></pre>
+<p>Coverage report → <code>backend/htmlcov/index.html</code></p>
+<h3 id="run-only-fast-tests-skip-slow-integration">Run only fast tests (skip slow integration)</h3>
+<pre><span class="lang">bash</span><code>cd backend
+pytest tests/ -v -m "not slow"</code></pre>
+<h3 id="run-integration-tests-only">Run integration tests only</h3>
+<pre><span class="lang">bash</span><code>cd backend
+pytest tests/test_integration_e2e.py -v</code></pre>
+<hr/>
+<h2 id="3-test-environment-setup">3. Test environment setup</h2>
+<p>Tests use <strong>in-memory ChromaDB</strong> and <strong>mock embeddings</strong> by default (fast, no GPU needed):</p>
+<pre><span class="lang">python</span><code># Typical test setup
+import pytest
+from legal_retrieval.config import reset_config
+
+@pytest.fixture(autouse=True)
+def reset_state():
+    """Reset global state before each test."""
+    reset_config()
+    yield</code></pre>
+<p>For tests that need real models (integration), use the <code>gpu</code> marker:</p>
+<pre><span class="lang">python</span><code>@pytest.mark.gpu
+def test_real_embedding():
+    """Requires GPU and real BGE-M3 model."""
+    from legal_retrieval.embedder import get_embedder
+    embedder = get_embedder()
+    vec = embedder.embed("test query")
+    assert vec.shape == (1024,)</code></pre>
+<p>Run GPU tests separately:</p>
+<pre><span class="lang">bash</span><code>cd backend
+pytest tests/ -v -m gpu</code></pre>
+<hr/>
+<h2 id="4-phase-1-boot-amp-configuration">4. Phase 1: Boot &amp; Configuration</h2>
+<p><strong>File:</strong> <code>test_phase1_boot.py</code></p>
+<p>Tests system startup essentials:</p>
+<h3 id="what-s-tested">What's tested</h3>
+<p>✅ <strong>Configuration loading</strong></p>
+<ul><li>Default values from <code>config.py</code></li><li>Environment variable overrides (<code>PLR_*</code>)</li><li>Config singleton behavior</li></ul>
+<p>✅ <strong>Logging setup</strong></p>
+<ul><li>Log level from <code>PLR_LOG_LEVEL</code></li><li>File handler creation (<code>logs/legal_retrieval.log</code>)</li><li>Rotating file handler (10MB, 5 backups)</li></ul>
+<p>✅ <strong>Directory creation</strong></p>
+<ul><li><code>ensure_dirs()</code> creates all required directories</li><li>Workspace directory creation</li></ul>
+<p>✅ <strong>Device resolution</strong></p>
+<ul><li><code>resolve_device("auto")</code> → cuda | mps | cpu</li><li>Respects explicit device override</li></ul>
+<h3 id="example-tests">Example tests</h3>
+<pre><span class="lang">python</span><code>def test_config_loads_defaults():
+    """Config loads with sensible defaults."""
+    cfg = get_config()
+    assert cfg.models.embedding_dim == 1024
+    assert cfg.search.top_k_final == 5
+
+def test_logging_creates_file():
+    """Logging setup creates log file."""
+    setup_logging(force=True)
+    log_file = get_config().paths.logs_dir / "legal_retrieval.log"
+    assert log_file.exists()</code></pre>
+<hr/>
+<h2 id="5-phase-2-data-model-validation">5. Phase 2: Data Model Validation</h2>
+<p><strong>File:</strong> <code>test_phase2_all_types.py</code></p>
+<p>Tests all Pydantic models for structural integrity:</p>
+<h3 id="what-s-tested">What's tested</h3>
+<p>✅ <strong>Request/Response models</strong> (<code>models.py</code>)</p>
+<ul><li><code>ChatRequest</code> validation</li><li><code>QueryResponse</code> structure</li><li><code>StreamEvent</code> types</li></ul>
+<p>✅ <strong>Document models</strong></p>
+<ul><li><code>Document</code> (file_name, page, section, text)</li><li><code>Chunk</code> (chunk_id, metadata)</li></ul>
+<p>✅ <strong>Configuration dataclasses</strong></p>
+<ul><li><code>ModelConfig</code>, <code>SearchConfig</code>, <code>ChunkingConfig</code></li><li>Frozen attributes (immutability)</li></ul>
+<h3 id="example-tests">Example tests</h3>
+<pre><span class="lang">python</span><code>def test_chat_request_validation():
+    """ChatRequest rejects invalid input."""
+    with pytest.raises(ValidationError):
+        ChatRequest(query="", mode="invalid_mode")
+
+def test_chunk_id_generation():
+    """Chunk IDs are stable and collision-free."""
+    chunk1 = Chunk(file_name="a.pdf", page=1, text="foo")
+    chunk2 = Chunk(file_name="a.pdf", page=1, text="foo")
+    assert chunk1.chunk_id == chunk2.chunk_id  # stable</code></pre>
+<hr/>
+<h2 id="6-phase-3-chunking">6. Phase 3: Chunking</h2>
+<p><strong>File:</strong> <code>test_phase3_chunking.py</code></p>
+<p>Tests the <code>StructureAwareChunker</code>:</p>
+<h3 id="what-s-tested">What's tested</h3>
+<p>✅ <strong>Section respect</strong></p>
+<ul><li>Chunks never split across section boundaries</li><li>Headers stay with their content</li></ul>
+<p>✅ <strong>Chunk size targets</strong></p>
+<ul><li>Chunks stay near <code>chunk_size</code> (480 tokens default)</li><li>Minimum chunk size enforced (32 tokens)</li></ul>
+<p>✅ <strong>Overlap handling</strong></p>
+<ul><li>Overlap tokens correctly copied between chunks</li><li>No duplicate text when overlap=0</li></ul>
+<p>✅ <strong>Edge cases</strong></p>
+<ul><li>Single-word documents</li><li>Empty sections</li><li>Very long sections (must split eventually)</li></ul>
+<h3 id="example-tests">Example tests</h3>
+<pre><span class="lang">python</span><code>def test_chunking_respects_sections():
+    """Chunks never split section boundaries."""
+    doc = Document(
+        text="# Section A\nContent A.\n\n# Section B\nContent B.",
+        file_name="test.md",
+        section_title="Main"
+    )
+    chunks = chunker.chunk_document(doc)
+    # Each chunk's text must not span two section headers
+    for chunk in chunks:
+        assert chunk.text.count("# Section") &lt;= 1</code></pre>
+<hr/>
+<h2 id="7-phase-4-embeddings">7. Phase 4: Embeddings</h2>
+<p><strong>File:</strong> <code>test_phase4_embeddings.py</code></p>
+<p>Tests BGE-M3 embedding generation:</p>
+<h3 id="what-s-tested">What's tested</h3>
+<p>✅ <strong>Embedding shape</strong></p>
+<ul><li>Output is 1024-dim for BGE-M3</li><li>L2-normalized (unit vectors)</li></ul>
+<p>✅ <strong>Batch processing</strong></p>
+<ul><li>Batch embedding produces same results as single</li><li>Batch size respected</li></ul>
+<p>✅ <strong>Semantic similarity</strong></p>
+<ul><li>Similar texts have high cosine similarity</li><li>Unrelated texts have low similarity</li></ul>
+<p>✅ <strong>Device handling</strong></p>
+<ul><li>Respects <code>device</code> config (cuda/cpu)</li><li>Falls back gracefully when GPU unavailable</li></ul>
+<h3 id="example-tests">Example tests</h3>
+<pre><span class="lang">python</span><code>def test_embedding_shape():
+    """BGE-M3 produces 1024-dim L2-normalized vectors."""
+    embedder = get_embedder()
+    vec = embedder.embed("test query")
+    assert vec.shape == (1024,)
+    assert abs(np.linalg.norm(vec) - 1.0) &lt; 1e-5  # L2-normalized
+
+def test_semantic_similarity():
+    """Similar texts have high cosine similarity."""
+    embedder = get_embedder()
+    vec1 = embedder.embed("contract termination")
+    vec2 = embedder.embed("agreement cancellation")
+    vec3 = embedder.embed("weather forecast")
+    
+    sim_similar = np.dot(vec1, vec2)  # cosine (normalized vecs)
+    sim_different = np.dot(vec1, vec3)
+    assert sim_similar &gt; 0.7
+    assert sim_different &lt; 0.3</code></pre>
+<hr/>
+<h2 id="8-phase-5-vector-store">8. Phase 5: Vector Store</h2>
+<p><strong>File:</strong> <code>test_phase5_vector_store.py</code></p>
+<p>Tests ChromaDB operations via <code>VectorStore</code>:</p>
+<h3 id="what-s-tested">What's tested</h3>
+<p>✅ <strong>Add/retrieve chunks</strong></p>
+<ul><li><code>add_chunks()</code> stores vectors + metadata</li><li><code>query()</code> retrieves top-k by cosine similarity</li></ul>
+<p>✅ <strong>Metadata filtering</strong></p>
+<ul><li>Filter by <code>file_name</code>, <code>page_number</code>, <code>section_title</code></li><li>Combined filters work correctly</li></ul>
+<p>✅ <strong>Deduplication</strong></p>
+<ul><li>Upserting same chunk_id updates, doesn't duplicate</li><li>Collection size remains correct</li></ul>
+<p>✅ <strong>Persistence</strong></p>
+<ul><li>ChromaDB survives restart (PersistentClient)</li><li>Collection metadata persists</li></ul>
+<h3 id="example-tests">Example tests</h3>
+<pre><span class="lang">python</span><code>def test_vector_store_add_and_query():
+    """Add chunks, query retrieves them correctly."""
+    store = VectorStore()
+    chunks = [
+        Chunk(file_name="a.pdf", page=1, text="contract law"),
+        Chunk(file_name="b.pdf", page=2, text="weather data"),
+    ]
+    embeddings = embedder.embed_batch([c.text for c in chunks])
+    store.add_chunks(chunks, embeddings)
+    
+    results = store.query("legal agreement", top_k=1)
+    assert results[0].file_name == "a.pdf"  # semantic match</code></pre>
+<hr/>
+<h2 id="9-phase-6-8-retrieval-amp-reranking">9. Phase 6-8: Retrieval &amp; Reranking</h2>
+<p><strong>File:</strong> <code>test_phase678_retrieval.py</code></p>
+<p>Tests the full retrieval pipeline (<code>RetrievalPipeline</code>):</p>
+<h3 id="what-s-tested">What's tested</h3>
+<p>✅ <strong>Dense retrieval (ChromaDB)</strong></p>
+<ul><li>Returns top-k by cosine similarity</li><li>Respects <code>top_k_retrieval</code> parameter</li></ul>
+<p>✅ <strong>Sparse retrieval (BM25)</strong></p>
+<ul><li>Keyword matching works</li><li>BM25 scores are reasonable</li></ul>
+<p>✅ <strong>Hybrid merge strategies</strong></p>
+<ul><li><code>combine_and_dedup</code> — union of dense + sparse</li><li><code>rrf</code> — reciprocal rank fusion</li><li><code>boost_only</code> — dense results, BM25 boosts scores</li></ul>
+<p>✅ <strong>Reranking (BGE-Reranker-v2-M3)</strong></p>
+<ul><li>Cross-encoder re-scores candidates</li><li>Top-k after rerank differs from pre-rerank</li><li>Rerank scores in [0, 1]</li></ul>
+<p>✅ <strong>Skip rerank</strong></p>
+<ul><li><code>skip_rerank=True</code> bypasses reranker</li><li>Falls back to retrieval scores</li></ul>
+<h3 id="example-tests">Example tests</h3>
+<pre><span class="lang">python</span><code>def test_hybrid_retrieval():
+    """Hybrid mode merges dense + sparse results."""
+    pipeline = RetrievalPipeline()
+    response = pipeline.query("rescission contract", top_k=5)
+    assert len(response.results) &lt;= 5
+    assert all(r.score &gt;= 0 for r in response.results)
+
+def test_rerank_changes_order():
+    """Reranker re-orders retrieval results."""
+    pipeline = RetrievalPipeline()
+    resp_no_rerank = pipeline.query("test", skip_rerank=True)
+    resp_rerank = pipeline.query("test", skip_rerank=False)
+    
+    # Top result may differ after reranking
+    assert resp_no_rerank.results[0].chunk_id != resp_rerank.results[0].chunk_id</code></pre>
+<hr/>
+<h2 id="10-integration-end-to-end-rag">10. Integration: End-to-End RAG</h2>
+<p><strong>File:</strong> <code>test_integration_e2e.py</code></p>
+<p>Tests the complete RAG flow from query to answer:</p>
+<h3 id="what-s-tested">What's tested</h3>
+<p>✅ <strong>Full pipeline</strong></p>
+<ul><li>Ingest document → query → retrieve → rerank → answer</li><li>All components integrated</li></ul>
+<p>✅ <strong>Streaming chat</strong></p>
+<ul><li>SSE events stream correctly</li><li><code>done</code> event contains answer + sources</li></ul>
+<p>✅ <strong>Tool execution</strong></p>
+<ul><li><code>search_documents</code> tool works</li><li><code>verify_relevance</code> tool works</li><li><code>ingest_file</code> tool works</li></ul>
+<p>✅ <strong>Citation generation</strong></p>
+<ul><li>Answer includes <code>[1]</code>, <code>[2]</code> markers</li><li>Citations match returned sources</li></ul>
+<h3 id="example-tests">Example tests</h3>
+<pre><span class="lang">python</span><code>@pytest.mark.slow
+def test_end_to_end_rag():
+    """Full RAG pipeline: ingest → query → answer."""
+    # Ingest test document
+    pipeline = RetrievalPipeline()
+    pipeline.ingest_file("tests/fixtures/sample.pdf")
+    
+    # Query
+    response = pipeline.query("What is the payment term?", top_k=3)
+    assert len(response.results) &gt; 0
+    
+    # Generate answer (via chat pipeline)
+    from legal_retrieval.chat import create_chat_pipeline
+    chat = create_chat_pipeline()
+    answer = chat.chat("What is the payment term?", mode="rag")
+    assert "[1]" in answer  # citation present</code></pre>
+<hr/>
+<h2 id="11-gpu-manager-tests">11. GPU Manager Tests</h2>
+<p><strong>File:</strong> <code>test_gpu_manager.py</code> (37 tests)</p>
+<p>Tests smart GPU resource management (<strong>no GPU required</strong> — pure logic tests):</p>
+<h3 id="what-s-tested">What's tested</h3>
+<p>✅ <strong>Registration</strong></p>
+<ul><li>Models register with priority, VRAM estimate, promote/demote functions</li></ul>
+<p>✅ <strong>Promotion/demotion</strong></p>
+<ul><li><code>acquire()</code> promotes model to VRAM</li><li>Models demote per residency mode (eager/adaptive/persistent)</li></ul>
+<p>✅ <strong>Priority eviction</strong></p>
+<ul><li>Lower-priority models evicted first under pressure</li><li>Higher-priority models never evicted for lower ones</li></ul>
+<p>✅ <strong>Hotness tracking</strong></p>
+<ul><li>Models become "hot" after <code>hot_min_uses</code> within <code>hot_window_seconds</code></li><li>Old uses expire from sliding window</li></ul>
+<p>✅ <strong>Residency modes</strong></p>
+<ul><li><code>eager</code> — demote always</li><li><code>adaptive</code> — keep hot models, evict cold</li><li><code>persistent</code> — keep all</li></ul>
+<p>✅ <strong>Auto-batch tuning</strong></p>
+<ul><li><code>suggest_batch_size()</code> scales with free VRAM</li><li>Never exceeds configured cap</li><li>CPU fallback keeps configured batch</li></ul>
+<p>✅ <strong>Ollama eviction</strong></p>
+<ul><li><code>ollama stop</code> called under VRAM pressure when enabled</li></ul>
+<h3 id="example-tests">Example tests</h3>
+<pre><span class="lang">python</span><code>def test_gpu_manager_priority_eviction():
+    """Lower-priority models evicted first."""
+    gpu = GPUManager(total_vram_mb=4000)
+    gpu.register("embedder", vram_estimate_mb=1500, priority=0)
+    gpu.register("reranker", vram_estimate_mb=2000, priority=1)
+    
+    # Acquire both (total 3500MB fits in 4000MB)
+    gpu.acquire("embedder")
+    gpu.acquire("reranker")
+    assert gpu._models["embedder"].state == "vram"
+    assert gpu._models["reranker"].state == "vram"
+    
+    # Register LLM (5000MB) — reranker evicted, embedder stays
+    gpu.register("llm", vram_estimate_mb=5000, priority=2)
+    gpu.acquire("llm")
+    assert gpu._models["embedder"].state == "vram"  # high priority
+    assert gpu._models["reranker"].state == "ram"   # evicted</code></pre>
+<hr/>
+<h2 id="12-pipeline-config-tests">12. Pipeline Config Tests</h2>
+<p><strong>File:</strong> <code>test_pipeline_config.py</code></p>
+<p>Tests runtime pipeline reconfiguration (<code>POST /api/pipeline/config</code>):</p>
+<h3 id="what-s-tested">What's tested</h3>
+<p>✅ <strong>Node presence → config derivation</strong></p>
+<ul><li>Rerank node present → <code>skip_rerank=False</code></li><li>Rerank node absent → <code>skip_rerank=True</code></li><li>Dense+sparse → <code>search_mode="hybrid"</code></li><li>Dense only → <code>search_mode="dense"</code></li></ul>
+<p>✅ <strong>Validation</strong></p>
+<ul><li>Unknown node types dropped</li><li>Dangling edges dropped</li><li>Duplicate IDs deduplicated</li></ul>
+<p>✅ <strong>Query overrides</strong></p>
+<ul><li><code>?top_k=8</code> wins over layout-derived value</li><li><code>?dense_weight=0.7</code> overrides fusion weights</li></ul>
+<h3 id="example-tests">Example tests</h3>
+<pre><span class="lang">python</span><code>def test_pipeline_config_derives_skip_rerank():
+    """Rerank node absence sets skip_rerank=True."""
+    layout = {
+        "nodes": [
+            {"id": "dense", "type": "denseRetrieval"},
+            {"id": "answer", "type": "answer"}
+        ],
+        "edges": [{"id": "e1", "source": "dense", "target": "answer"}]
+    }
+    config = apply_pipeline_layout(layout)
+    assert config["skip_rerank"] is True</code></pre>
+<hr/>
+<h2 id="13-workspace-tests">13. Workspace Tests</h2>
+<p><strong>File:</strong> <code>test_workspace.py</code></p>
+<p>Tests workspace management and folder watcher:</p>
+<h3 id="what-s-tested">What's tested</h3>
+<p>✅ <strong>Workspace lifecycle</strong></p>
+<ul><li><code>set_workspace()</code> → storage paths resolve under workspace</li><li><code>reset_workspace()</code> → falls back to project <code>data/</code></li></ul>
+<p>✅ <strong>Folder fingerprinting</strong></p>
+<ul><li>Fingerprint captures (size, mtime) per file</li><li>Excludes workspace storage dirs</li><li>Excludes temp/lock files</li></ul>
+<p>✅ <strong>Auto-ingestion</strong></p>
+<ul><li>Watcher detects new files</li><li>Ingests only new files (skips already-indexed)</li><li>Serializes with manual ingestion via <code>INGEST_LOCK</code></li></ul>
+<p>✅ <strong>Watcher status</strong></p>
+<ul><li><code>status()</code> returns thread-safe snapshot</li><li>Last scan timestamp, files found/indexed, chunks</li></ul>
+<h3 id="example-tests">Example tests</h3>
+<pre><span class="lang">python</span><code>def test_workspace_watcher_auto_ingests_new_file(tmp_path):
+    """Watcher auto-ingests newly added documents."""
+    set_workspace(tmp_path)
+    (tmp_path / "contract.pdf").write_text("fake pdf")
+    
+    watcher = get_workspace_watcher()
+    watcher.start(tmp_path)
+    watcher._last_fingerprint = None  # force "changed"
+    watcher._scan_once()
+    
+    status = watcher.status()
+    assert "contract.pdf" in status["files_indexed"]
+    assert status["chunks_indexed"] &gt; 0</code></pre>
+<hr/>
+<h2 id="14-other-test-files">14. Other Test Files</h2>
+<h3 id="test-context-hint-py"><code>test_context_hint.py</code></h3>
+<p>Tests context hint retrieval (native right-click → exact chunk citation):</p>
+<ul><li>Extracts chunk from user-selected text</li><li>Exact match in vector store</li><li>Fallback to semantic search when exact match fails</li></ul>
+<h3 id="test-citation-validation-py"><code>test_citation_validation.py</code></h3>
+<p>Tests citation integrity:</p>
+<ul><li>Citation markers <code>[N]</code> validated against source count</li><li>Malformed markers stripped (<code>[18]</code> when only 5 sources)</li><li>Lexical entailment check (chunk supports claim)</li></ul>
+<h3 id="test-source-parsing-py"><code>test_source_parsing.py</code></h3>
+<p>Tests citation string parsing:</p>
+<ul><li><code>"[Contract.pdf, p.3]"</code> → <code>{file, page}</code></li><li>Multiple citations extracted</li><li>Malformed citations handled gracefully</li></ul>
+<h3 id="test-think-splitter-py"><code>test_think_splitter.py</code></h3>
+<p>Tests chain-of-thought extraction:</p>
+<ul><li><code>&lt;think&gt;...&lt;/think&gt;</code> blocks extracted</li><li>Post-tool reasoning segments detected</li><li>Adaptive reasoning window (short segments only)</li></ul>
+<h3 id="test-abstain-and-temp-py"><code>test_abstain_and_temp.py</code></h3>
+<p>Tests abstain signal and temperature control:</p>
+<ul><li><code>answer_found=false</code> when pipeline abstains</li><li>Temperature parameter respected in LLM calls</li></ul>
+<h3 id="test-post-tool-gate-py"><code>test_post_tool_gate.py</code></h3>
+<p>Tests post-tool reasoning gate:</p>
+<ul><li>Untagged text after tool result treated as CoT</li><li>Max segments and char limits enforced</li><li>Long segments (answer body) excluded from CoT</li></ul>
+<h3 id="test-api-provider-py"><code>test_api_provider.py</code></h3>
+<p>Tests cloud API provider integration:</p>
+<ul><li>OpenAI-compatible provider configuration</li><li>API key validation</li><li>Model list fetching</li><li>Embedding/chat API calls</li></ul>
+<hr/>
+<h2 id="15-test-fixtures">15. Test fixtures</h2>
+<p>Common test fixtures in <code>tests/conftest.py</code> (or inline):</p>
+<pre><span class="lang">python</span><code>@pytest.fixture
+def temp_chroma_db(tmp_path):
+    """Temporary ChromaDB instance."""
+    from legal_retrieval.vector_store import VectorStore
+    store = VectorStore(persist_directory=str(tmp_path / "chroma"))
+    yield store
+    store.client.delete_collection(store.collection_name)
+
+@pytest.fixture
+def sample_chunks():
+    """Sample chunks for testing."""
+    return [
+        Chunk(file_name="a.pdf", page=1, text="contract law"),
+        Chunk(file_name="b.pdf", page=2, text="weather data"),
+    ]
+
+@pytest.fixture(autouse=True)
+def reset_config():
+    """Reset config singleton before each test."""
+    from legal_retrieval.config import reset_config, reset_workspace
+    reset_config()
+    reset_workspace()
+    yield</code></pre>
+<hr/>
+<h2 id="16-running-tests-in-ci">16. Running tests in CI</h2>
+<p>GitHub Actions workflow (<code>.github/workflows/ci.yml</code>):</p>
+<pre><span class="lang">yaml</span><code>name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
+      - name: Run tests
+        run: |
+          cd backend
+          pytest tests/ -v --cov=legal_retrieval
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3</code></pre>
+<hr/>
+<h2 id="17-test-coverage-goals">17. Test coverage goals</h2>
+<p>Target coverage by module:</p>
+<table><thead><tr><th>Module</th><th>Target</th><th>Status</th></tr></thead><tbody><tr><td><code>config.py</code></td><td>90%</td><td>✅</td></tr><tr><td><code>embedder.py</code></td><td>85%</td><td>✅</td></tr><tr><td><code>chunker.py</code></td><td>90%</td><td>✅</td></tr><tr><td><code>vector_store.py</code></td><td>85%</td><td>✅</td></tr><tr><td><code>retrieval.py</code></td><td>80%</td><td>✅</td></tr><tr><td><code>gpu_manager.py</code></td><td>95%</td><td>✅ (37 tests)</td></tr><tr><td><code>router_intent.py</code></td><td>70%</td><td>⚠️ (partial)</td></tr><tr><td><code>tools.py</code></td><td>75%</td><td>⚠️ (partial)</td></tr><tr><td><code>playbook/</code></td><td>60%</td><td>⚠️ (needs more)</td></tr></tbody></table>
+<hr/>
+<h2 id="18-writing-new-tests">18. Writing new tests</h2>
+<h3 id="test-naming-convention">Test naming convention</h3>
+<pre><span class="lang">python</span><code>def test_&lt;component&gt;_&lt;behavior&gt;():
+    """&lt;What it tests in one sentence&gt;."""</code></pre>
+<p>Examples:</p>
+<ul><li><code>test_chunker_respects_sections()</code></li><li><code>test_embedder_normalizes_vectors()</code></li><li><code>test_gpu_manager_evicts_low_priority()</code></li></ul>
+<h3 id="test-structure-arrange-act-assert">Test structure (Arrange-Act-Assert)</h3>
+<pre><span class="lang">python</span><code>def test_example():
+    """Example test following AAA pattern."""
+    # Arrange — set up test data
+    chunks = [Chunk(...), Chunk(...)]
+    
+    # Act — perform the operation
+    result = chunker.chunk_document(doc)
+    
+    # Assert — verify the outcome
+    assert len(result) == 2
+    assert result[0].text.startswith("Chapter")</code></pre>
+<h3 id="use-descriptive-assertion-messages">Use descriptive assertion messages</h3>
+<pre><span class="lang">python</span><code># Bad
+assert len(results) &gt; 0
+
+# Good
+assert len(results) &gt; 0, f"Expected results, got empty list for query: {query}"</code></pre>
+<h3 id="parametrize-for-multiple-cases">Parametrize for multiple cases</h3>
+<pre><span class="lang">python</span><code>@pytest.mark.parametrize("query,expected_count", [
+    ("contract law", 5),
+    ("weather", 0),
+    ("", 0),
+])
+def test_retrieval_various_queries(query, expected_count):
+    """Test retrieval with various query types."""
+    results = pipeline.query(query, top_k=5)
+    assert len(results.results) == expected_count</code></pre>
+<hr/>
+<h2 id="19-troubleshooting-test-failures">19. Troubleshooting test failures</h2>
+<h3 id="chromadb-permission-errors">ChromaDB permission errors</h3>
+<pre><code>PermissionError: [WinError 32] The process cannot access the file</code></pre>
+<p><strong>Cause:</strong> ChromaDB client not closed between tests</p>
+<p><strong>Fix:</strong> Use <code>tmp_path</code> fixture for isolated DBs:</p>
+<pre><span class="lang">python</span><code>def test_example(tmp_path):
+    store = VectorStore(persist_directory=str(tmp_path / "chroma"))
+    # ... test logic
+    store.client.reset()  # cleanup</code></pre>
+<h3 id="cuda-out-of-memory-in-tests">CUDA out of memory in tests</h3>
+<pre><code>RuntimeError: CUDA out of memory</code></pre>
+<p><strong>Cause:</strong> Real models loaded in tests</p>
+<p><strong>Fix:</strong> Use mocks or skip GPU tests:</p>
+<pre><span class="lang">python</span><code>@pytest.mark.gpu  # mark as GPU-requiring
+def test_real_embedding():
+    ...</code></pre>
+<p>Run without GPU tests:</p>
+<pre><span class="lang">bash</span><code>pytest tests/ -v -m "not gpu"</code></pre>
+<h3 id="slow-test-suite">Slow test suite</h3>
+<p><strong>Cause:</strong> Integration tests run on every invocation</p>
+<p><strong>Fix:</strong> Mark slow tests:</p>
+<pre><span class="lang">python</span><code>@pytest.mark.slow
+def test_full_rag_pipeline():
+    ...</code></pre>
+<p>Run fast tests only:</p>
+<pre><span class="lang">bash</span><code>pytest tests/ -v -m "not slow"</code></pre>
+<hr/>
+<h2 id="20-related-documentation">20. Related documentation</h2>
+<table><thead><tr><th>Doc</th><th>Coverage</th></tr></thead><tbody><tr><td><a href="benchmarking.html"><code>BENCHMARKING.md</code></a></td><td>Performance benchmarks, golden eval</td></tr><tr><td><a href="development.html"><code>DEVELOPMENT.md</code></a></td><td>Dev environment, debugging</td></tr><tr><td><a href="backend.html"><code>BACKEND.md</code></a></td><td>API endpoints, agents, tools</td></tr><tr><td><a href="gpu-management.html"><code>GPU_MANAGEMENT.md</code></a></td><td>GPU manager design &amp; tests</td></tr><tr><td><a href="workspace.html"><code>WORKSPACE.md</code></a></td><td>Workspace watcher tests</td></tr></tbody></table>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>How do I run the backend tests?</h3><p>From the backend folder, run pytest tests/ -v. The suite is organized by phase — boot, document types, chunking, embeddings, vector store, retrieval, and end-to-end chat — so a failure tells you exactly which pipeline stage regressed.</p></div><div class="faq-item"><h3>Are there integration tests?</h3><p>Yes. test_integration_e2e.py runs the full chat flow against the real backend, and test_pipeline_streaming.py verifies SSE streaming events. A dedicated API-provider test file covers the cloud-mode facade with a mock server.</p></div><div class="faq-item"><h3>Do tests require a GPU or models?</h3><p>Most unit tests mock or stub the heavy models. Some phase tests load real embeddings and rerankers on CPU, which is slower but works on any machine. GPU-requiring behavior is isolated in the GPU manager tests.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

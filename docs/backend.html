@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Backend — FastAPI server, agents, tools, retrieval &amp; scan — Lawyer Assistant Docs</title>
+<meta name="description" content="Lawyer Assistant backend API: FastAPI endpoints, SSE streaming chat, intent routing, retrieval tools, compliance scan, and configuration on localhost:8765."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/backend.html"/>
+<meta name="keywords" content="lawyer assistant backend, fastapi endpoints, SSE streaming chat, intent router, retrieval api, compliance scan api"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Backend — FastAPI server, agents, tools, retrieval &amp; scan — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Lawyer Assistant backend API: FastAPI endpoints, SSE streaming chat, intent routing, retrieval tools, compliance scan, and configuration on localhost:8765."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/backend.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Backend — FastAPI server, agents, tools, retrieval &amp; scan — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Lawyer Assistant backend API: FastAPI endpoints, SSE streaming chat, intent routing, retrieval tools, compliance scan, and configuration on localhost:8765."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Backend — FastAPI server, agents, tools, retrieval &amp; scan", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/backend.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I call the chat API?", "acceptedAnswer": {"@type": "Answer", "text": "POST /api/chat/stream returns an SSE stream of events — status updates, tool calls, retrieval results, reasoning, tokens, and a final done event carrying the answer and cited sources. The UI consumes this stream; a non-streaming /api/chat also exists."}}, {"@type": "Question", "name": "How does routing work?", "acceptedAnswer": {"@type": "Answer", "text": "The intent router classifies each question and plans a route: SEARCH your documents, SCAN a document against the playbook, INGEST files, or VERIFY results. A legacy ReAct agent mode with human-in-the-loop approval is available for retrieval_only and direct flows."}}, {"@type": "Question", "name": "What retrieval tools exist?", "acceptedAnswer": {"@type": "Answer", "text": "The backend exposes hybrid retrieval — BM25 sparse plus dense vectors fused and reranked — and parses tool output into the sources shown in the UI, including chunk scores and file references."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link active" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Backend — FastAPI server, agents, tools, retrieval &amp; scan</span></div>
+    <h1>Backend — FastAPI server, agents, tools, retrieval &amp; scan</h1>
+    <div class="doc-intro">This document covers everything Python-side: the HTTP API, the AI routers, tools, the retrieval pipeline, configuration, and the compliance scanner.</div>
+    
+
+<hr/>
+<h2 id="1-server-basics">1. Server basics</h2>
+<ul><li><strong>Entry point:</strong> <code>backend/main.py</code> → <code>uvicorn.run(app, host="127.0.0.1", port=8765)</code></li><li><strong>Framework:</strong> FastAPI, CORS allows <code>http://localhost:5173</code> and <code>file://</code></li><li><strong>Startup warmup</strong> (background thread, non-blocking): preloads the BGE-M3 embedder, BGE-Reranker, the Ollama LLM (connection check), and the playbook classifier's reference embeddings — so the first user query is fast.</li><li><strong>Logging:</strong> <code>backend/legal_retrieval/logging_setup.py</code> (<code>get_logger</code>), level from <code>PLR_LOG_LEVEL</code> (default INFO).</li></ul>
+<hr/>
+<h2 id="2-http-api-reference">2. HTTP API reference</h2>
+<h3 id="chat-amp-files">Chat &amp; files</h3>
+<table><thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/health</code></td><td><code>{status, service}</code> — used by the app's boot screen</td></tr><tr><td>POST</td><td><code>/api/chat</code></td><td>Non-streaming chat (collects events, returns final answer)</td></tr><tr><td>POST</td><td><code>/api/chat/stream</code></td><td><strong>SSE</strong> streaming chat (primary path used by the UI)</td></tr><tr><td>POST</td><td><code>/api/chat/resume</code></td><td><strong>SSE</strong> resume after human-in-the-loop approval</td></tr><tr><td>POST</td><td><code>/api/upload</code></td><td>Save an attached file into the <strong>active project folder</strong> (a workspace must be selected first — there is no default <code>data/raw/</code> anymore), returns <code>{path, filename, size}</code></td></tr><tr><td>POST</td><td><code>/api/pipeline/config</code></td><td>Apply a pipeline-layout JSON (see <code>PIPELINE_JSON.md</code>) — reconfigures retrieval at runtime (rerank on/off, search mode, top_k, dense/sparse weights); optional query overrides <code>top_k</code>, <code>top_k_retrieval</code>, <code>dense_weight</code>, <code>sparse_weight</code></td></tr><tr><td>GET</td><td><code>/api/pipeline/config</code></td><td>Current active runtime retrieval config</td></tr><tr><td>DELETE</td><td><code>/api/pipeline/config</code></td><td>Reset retrieval to file defaults</td></tr></tbody></table>
+<h3 id="workspace-user-picked-folder-required-for-chat-upload">Workspace (user-picked folder) — REQUIRED for chat/upload</h3>
+<table><thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead><tbody><tr><td>POST</td><td><code>/api/workspace</code></td><td><code>{path}</code> — make a folder the <strong>active workspace</strong>; uploads land directly in the folder, and the ChromaDB / BM25 / processed / history files all resolve under <code>&lt;folder&gt;/workspace/</code>; returns <code>{active, path, name, workspace_dir, gpu_profile, files}</code> (supported docs discovered in the folder)</td></tr><tr><td>GET</td><td><code>/api/workspace</code></td><td>Current workspace (<code>{active, path, name, workspace_dir, files}</code>)</td></tr><tr><td>DELETE</td><td><code>/api/workspace</code></td><td>Reset — no workspace active afterwards; chat/upload stay disabled until a new folder is picked</td></tr><tr><td>POST</td><td><code>/api/workspace/ingest</code></td><td>Ingest every supported document in the workspace folder into its ChromaDB index; returns <code>{chunks, path, elapsed_ms}</code></td></tr><tr><td>POST</td><td><code>/api/workspace/ingest/stream</code></td><td><strong>SSE</strong> ingest with progress (<code>ingest_start</code>, <code>ingest_progress</code>, <code>ingest_done</code>, <code>ingest_cancelled</code>, <code>ingest_error</code>); <code>?force=1</code> re-indexes already-indexed files</td></tr><tr><td>POST</td><td><code>/api/workspace/ingest/cancel</code></td><td>Stop an in-flight streaming ingest cleanly at the next file boundary</td></tr><tr><td>GET</td><td><code>/api/workspace/history</code></td><td>Per-project saved state (<code>{history}</code>) from <code>&lt;project&gt;/workspace/history.json</code></td></tr><tr><td>POST</td><td><code>/api/workspace/history</code></td><td>Persist per-project state (chat history + working set + GPU profile)</td></tr><tr><td>GET</td><td><code>/api/workspace/watch/status</code></td><td>Background folder-watcher status (watching?, last scan, what it indexed)</td></tr></tbody></table>
+<p><strong>A workspace is mandatory.</strong> Chat (<code>/api/chat</code>, <code>/api/chat/stream</code>, <code>/api/chat/resume</code>) and uploads error with "No workspace selected. Select a project folder first." when none is active — there is <strong>no default <code>data/</code> folder fallback</strong> anymore. The folder is picked through a native Electron directory dialog (<code>folder:select</code> IPC) so the real absolute path reaches the backend.</p>
+<p>Storage layout: with a workspace active, <code>get_raw_dir()</code> returns the project folder itself (uploads land directly in the user's folder, visible as project documents), while processed temp files, the ChromaDB index, the BM25 index and <code>history.json</code> all live under <strong><code>&lt;project&gt;/workspace/</code></strong> (<code>workspace/processed</code>, <code>workspace/chroma_db</code>, <code>workspace/bm25_index</code>, <code>workspace/history.json</code>). The override is <strong>runtime-only</strong> (resets on restart / DELETE).</p>
+<p><code>ChatRequest</code> fields: <code>query</code>, <code>mode</code> (<code>rag</code> default | <code>retrieval_only</code> | <code>direct</code>), <code>top_k</code> (default 5), <code>skip_rerank</code>, <code>temperature</code> (default 0.3), <code>conversation_id</code>, <code>history</code> (prior <code>[{role, content}]</code> turns for direct mode), <code>context_hint</code> (raw selected passage from the native right-click menu — the pipeline retrieves the EXACT chunk the selection came from and cites it), and attachment fields <code>attached_file_path(s)</code> / <code>attached_filename(s)</code>.</p>
+<p><code>mode</code> behavior:</p>
+<ul><li><code>rag</code> → <strong>intent router</strong> (<code>router_intent.run_intent_loop</code>): classify intent, plan, then call tools; answer from documents.</li><li><code>retrieval_only</code> → no LLM, just search; answer is a formatted list of results.</li><li><code>direct</code> → LLM only, no retrieval.</li></ul>
+<h3 id="gpu-manager">GPU manager</h3>
+<table><thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/gpu/status</code></td><td>Device, free/total VRAM, per-model placement + hotness, resident Ollama models</td></tr><tr><td>GET</td><td><code>/api/gpu/profile</code></td><td>The currently-active residency profile</td></tr><tr><td>POST</td><td><code>/api/gpu/profile</code></td><td>Apply a profile now <strong>and</strong> persist it to the active project's <code>workspace/history.json</code></td></tr></tbody></table>
+<h3 id="playbook-scan">Playbook scan</h3>
+<table><thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/playbooks</code></td><td>List available playbooks (<code>{playbooks: [{playbook_id, name, path, rule_count}]}</code>)</td></tr><tr><td>POST</td><td><code>/api/scan</code></td><td>Non-streaming scan of an indexed document</td></tr><tr><td>POST</td><td><code>/api/scan/stream</code></td><td><strong>SSE</strong> scan with progress (<code>scan_start</code>, <code>status</code>, <code>chunk_classified</code>, <code>rule_check</code>, <code>flag_found</code>, <code>scan_done</code>, <code>error</code>)</td></tr><tr><td>POST</td><td><code>/api/scan/upload</code></td><td><strong>SSE</strong> save file → ingest (chunk/embed/store) → scan</td></tr><tr><td>GET</td><td><code>/api/flags</code></td><td>List flags, optional <code>document_id</code> / <code>status</code> filters</td></tr><tr><td>GET</td><td><code>/api/flags/{flag_id}</code></td><td>Single flag</td></tr><tr><td>POST</td><td><code>/api/flags/{flag_id}/resolve</code></td><td><code>action</code>: <code>resolved</code></td></tr><tr><td>GET</td><td><code>/api/documents</code></td><td>File names currently indexed in ChromaDB</td></tr></tbody></table>
+<hr/>
+<h2 id="3-chat-flow-end-to-end">3. Chat flow (end-to-end)</h2>
+<pre><code>User message + optional attachments
+  └─ POST /api/chat/stream (SSE)
+       └─ router_intent.run_intent_loop(query, llm, max_iterations, top_k,
+                                         skip_rerank, conversation_id,
+                                         attached_file_paths, attached_filenames,
+                                         context_hint)
+            ├─ intent classification event ("intent")
+            ├─ planner → writes a 1-2 sentence plan, streams "plan" event,
+            │   tool detected from plan
+            ├─ executes tools (search_documents, verify_relevance,
+            │   scan_document, ingest_file) via _impl functions
+            ├─ streams: thinking / tool_call / tool_result / status / node_start
+            │   / node_complete / sources / token
+            └─ done event: {answer, sources, timing}</code></pre>
+<p><strong>SSE event types the frontend consumes</strong> (see <code>frontend/src/services/api.ts</code>): <code>meta</code>, <code>intent</code>, <code>status</code>, <code>thinking</code>, <code>tool_call</code>, <code>plan</code>, <code>tool_result</code>, <code>node_start</code>, <code>node_complete</code>, <code>sources</code>, <code>interrupted</code>, <code>resumed</code>, <code>error</code>, <code>token</code>, <code>done</code>. (Workspace ingest has its own event set: <code>ingest_start</code>, <code>ingest_progress</code>, <code>ingest_done</code>, <code>ingest_cancelled</code>, <code>ingest_error</code>.)</p>
+<hr/>
+<h2 id="4-agents-tools-amp-modes">4. Agents, tools &amp; modes</h2>
+<h3 id="4a-intent-router-backend-legal-retrieval-router-intent-py-default-rag-path">4a. Intent router (<code>backend/legal_retrieval/router_intent.py</code>) — default RAG path</h3>
+<p>A <strong>plan-based</strong> orchestration. Key nodes (async generators that yield events):</p>
+<ul><li><code>_run_simple_node</code> — chitchat / clarification / direct-answer intents</li><li><code>_run_planner_node</code> — the main search path: plans, calls <code>search_documents</code> (exact query, never rephrased), then <code>verify_relevance</code>, then writes the answer from the retrieved chunks.</li><li><code>_run_scan_node</code> — <code>scan_document</code> for a single attached file</li><li><code>_run_multi_scan_node</code> — batch scan of multiple attached files</li><li><code>run_intent_loop</code> / <code>run_intent_resume_loop</code> — entry points</li><li>Uses <code>prompts_intent.get_intent_prompt</code> (a strict "you MUST NOT answer directly; pick a tool" prompt) and <code>detect_tool_from_plan</code>.</li><li>Thread state checkpointer: <code>AsyncSqliteSaver</code> at <code>data/conversations.db</code> (falls back to <code>MemorySaver</code>).</li></ul>
+<h3 id="4b-legacy-agentic-router-backend-legal-retrieval-router-py">4b. Legacy agentic router (<code>backend/legal_retrieval/router.py</code>)</h3>
+<p>A <strong>LangGraph ReAct agent</strong> (<code>ChatOllama</code> + <code>get_all_tools()</code>), used by <code>retrieval_only</code>/<code>direct</code> modes and resume:</p>
+<ul><li>3-node <code>StateGraph</code>: <code>agent → approval → tools → agent (loop)</code></li><li><strong>Human-in-the-loop:</strong> <code>approval_node</code> calls <code>interrupt(description)</code> before tool execution; the graph pauses; the frontend shows an ApprovalBar; the user approves/rejects; <code>/api/chat/resume</code> streams <code>Command(resume=response)</code>. On reject, a message tells the agent to answer <strong>without</strong> tools.</li><li><code>should_continue</code> routes: tool calls → approval; rejection message → agent; otherwise END.</li><li>System prompt rules: <strong>pass the user's query exactly as-is to <code>search_documents</code></strong>, never rephrase; cite file + page; be honest when documents don't contain the answer.</li></ul>
+<h3 id="4c-tools-backend-legal-retrieval-tools-py">4c. Tools (<code>backend/legal_retrieval/tools.py</code>)</h3>
+<table><thead><tr><th>Tool</th><th>Signature</th><th>What it does</th></tr></thead><tbody><tr><td><code>search_documents</code></td><td><code>(query, top_k=5, skip_rerank=False)</code></td><td>Runs the retrieval pipeline over ChromaDB (+BM25) and returns ranked chunks with file/page/section/score</td></tr><tr><td><code>verify_relevance</code></td><td><code>(query, documents)</code></td><td>LLM check for entity/topic match; returns <code>verified</code> flags</td></tr><tr><td><code>scan_document</code></td><td><code>(document_id, playbook_id="default")</code></td><td>Runs the compliance scanner over an indexed document, persists flags</td></tr><tr><td><code>ingest_file</code></td><td><code>(file_path)</code></td><td>Parse → chunk → embed → store into ChromaDB; makes the file searchable/scannable</td></tr></tbody></table>
+<p><code>get_all_tools()</code> / <code>get_tools_for_mode(mode)</code> build the LangChain-compatible tool list.</p>
+<hr/>
+<h2 id="5-retrieval-pipeline-backend-legal-retrieval-retrieval-py">5. Retrieval pipeline (<code>backend/legal_retrieval/retrieval.py</code>)</h2>
+<pre><code>query
+ ├─ embed (BGE-M3, 1024-dim, L2-normalized)
+ ├─ dense search  — ChromaDB (&lt;project&gt;/workspace/chroma_db when a workspace
+ │                  is active, otherwise data/chroma_db; collection "legal_chunks",
+ │                  cosine/HNSW), top_k_retrieval=50
+ ├─ sparse search — BM25 (&lt;project&gt;/workspace/bm25_index or data/bm25_index), top 50
+ ├─ merge: hybrid modes (default "hybrid" merged with combine_and_dedup;
+ │   rrf and boost_only configurable via SearchConfig.hybrid_merge_strategy)
+ ├─ rerank — BGE-Reranker-v2-M3 cross-encoder, top_k_final=5, score &gt;= 0.0
+ └─ QueryResponse{query, results[{file_name, page, section, score, text}], latency_ms}</code></pre>
+<p>All storage paths resolve through the <strong>active workspace</strong> (see §2 Workspace): when a user-picked folder is active, <code>VectorStore</code> points at <code>&lt;project&gt;/workspace/chroma_db</code> and <code>SparseRetriever</code> at <code>&lt;project&gt;/workspace/bm25_index</code>, so search and ingestion are isolated per project. <code>RetrievalPipeline.ingest_directory(path)</code> skips the workspace's own storage dirs by default.</p>
+<p><code>RetrievalPipeline.ingest_file(path)</code> → <code>DocumentIngester</code> (Docling parse + OCR) → <code>StructureAwareChunker</code> (480-token chunks, <code>respect_sections=True</code>) → embed → store → returns chunk count. Also builds/updates the BM25 index.</p>
+<h3 id="configuration-backend-legal-retrieval-config-py">Configuration (<code>backend/legal_retrieval/config.py</code>)</h3>
+<p>All tunables are dataclasses, overridable with <code>PLR_*</code> env vars:</p>
+<ul><li><code>ModelConfig</code>: <code>BAAI/bge-m3</code> (1024-dim), <code>BAAI/bge-reranker-v2-m3</code>; local dirs <code>models/bge-m3</code>, <code>models/bge-reranker-v2-m3</code>; device <code>auto</code> → cuda/mps/cpu.</li><li><code>ChunkingConfig</code>: chunk_size 480, overlap 0, respect_sections, min 32 tokens.</li><li><code>StorageConfig</code>: <code>data/chroma_db</code> (or <code>&lt;project&gt;/workspace/chroma_db</code> when a workspace is active), collection <code>legal_chunks</code>, cosine, HNSW.</li><li><code>SearchConfig</code>: top_k_retrieval 50, top_k_final 5, min_score 0.0, search_mode <code>hybrid</code>, hybrid_merge_strategy <code>combine_and_dedup</code> (default; <code>rrf</code> / <code>boost_only</code> configurable), RRF k=60.</li><li><code>IngestionConfig</code>: Docling OCR (en), page images, 150 DPI, table structure.</li></ul>
+<hr/>
+<h2 id="6-playbook-scan-backend-legal-retrieval-playbook">6. Playbook scan (<code>backend/legal_retrieval/playbook/</code>)</h2>
+<p>A <strong>clause-level compliance checker</strong>:</p>
+<pre><code>document (indexed or just-uploaded)
+ └─ scan_document_streaming(document_id, playbook, llm, skip_classification)
+      ├─ _fetch_document_chunks → chunks with page/section metadata
+      ├─ classify clause type per chunk (embedding classifier, BGE-M3 refs)  [can be skipped]
+      ├─ for each rule in playbook: rule check (rule → clause type, severity, keywords/LLM)
+      ├─ flag_found events: {flag_id, document_id, chunk_id, section_title,
+      │    page_number, rule_id, rule_description, severity, clause_text, reason, confidence}
+      └─ scan_done event with result{total_chunks, classified_chunks, total_flags, timing}</code></pre>
+<ul><li><strong>Playbooks:</strong> JSON files in <code>backend/legal_retrieval/playbook/playbooks/</code> (e.g. <code>default.json</code>); loaded by <code>loader.py</code> (<code>load_playbook</code>, <code>list_playbooks</code>).</li><li><strong>Persistence:</strong> flags stored in SQLite via <code>persistence.py</code> (<code>save_flags</code>, <code>get_all_flags</code>, <code>update_flag_status</code>); statuses <code>open</code> → <code>resolved</code> / <code>dismissed</code> / <code>escalated</code>.</li><li><strong>Classifier:</strong> <code>classifier.py</code> — embedding-based clause-type classification with <code>_get_embedder()</code> singleton and <code>_build_reference_embeddings()</code>.</li></ul>
+<hr/>
+<h2 id="7-llm-integration-backend-legal-retrieval-llm-py">7. LLM integration (<code>backend/legal_retrieval/llm.py</code>)</h2>
+<ul><li><code>OllamaLLM</code> wrapper around Ollama at <code>http://localhost:11434</code>.</li><li>The LangGraph router binds <code>ChatOllama(model, base_url, temperature=0.3)</code>.</li><li>RAG prompts live in <code>prompts.py</code> (chat/RAG prompts, extraction, no-context and error templates); intent prompts in <code>prompts_intent.py</code>.</li></ul>
+<hr/>
+<h2 id="8-non-streaming-chat-pipeline-backend-legal-retrieval-chat-py">8. Non-streaming chat pipeline (<code>backend/legal_retrieval/chat.py</code>)</h2>
+<p><code>create_chat_pipeline()</code> → <code>ChatPipeline.chat(query, mode, top_k)</code> — retrieval → RAG prompt with context → LLM generation → formatted response with citations. Used by <code>/api/chat</code> for <code>retrieval_only</code>/<code>direct</code> modes.</p>
+<hr/>
+<h2 id="9-rag-graph-pipeline-backend-legal-retrieval-pipeline-graph-py">9. RAG graph pipeline (<code>backend/legal_retrieval/pipeline_graph.py</code>)</h2>
+<p>An alternative node-graph implementation with <code>RetrievalNode</code>, <code>VerificationNode</code>, <code>GenerationNode</code>, <code>PostGenCheckNode</code>, <code>AbstainNode</code>, <code>SuccessNode</code>; <code>build_rag_pipeline()</code>, <code>run_graph_pipeline()</code>, and streaming variants (<code>run_retrieval_only_streaming</code>, <code>run_direct_streaming</code>, <code>run_graph_pipeline_streaming</code>).</p>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>How do I call the chat API?</h3><p>POST /api/chat/stream returns an SSE stream of events — status updates, tool calls, retrieval results, reasoning, tokens, and a final done event carrying the answer and cited sources. The UI consumes this stream; a non-streaming /api/chat also exists.</p></div><div class="faq-item"><h3>How does routing work?</h3><p>The intent router classifies each question and plans a route: SEARCH your documents, SCAN a document against the playbook, INGEST files, or VERIFY results. A legacy ReAct agent mode with human-in-the-loop approval is available for retrieval_only and direct flows.</p></div><div class="faq-item"><h3>What retrieval tools exist?</h3><p>The backend exposes hybrid retrieval — BM25 sparse plus dense vectors fused and reranked — and parses tool output into the sources shown in the UI, including chunk scores and file references.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

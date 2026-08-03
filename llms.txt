@@ -1,0 +1,50 @@
+# Lawyer Assistant
+
+> Lawyer Assistant is a free, open-source, local-first legal research desktop app.
+> It reads your own legal documents (PDF, DOCX, OCR images, JSON, Markdown, plain text),
+> lets you ask questions in plain English, and returns answers with inline citations
+> pointing to the exact source passages. Everything runs on the user's machine — in
+> local mode no question, document, or answer ever leaves it. Works fully offline with
+> Ollama models, or connects to optional API providers (Claude, ChatGPT, Groq, Grok,
+> DeepSeek, Kimi, Qwen, Mistral, Gemini, OpenRouter, Together, OpenAI-compatible).
+
+## What it does
+
+- Cited answers: hybrid retrieval (BM25 keyword + dense vectors + reranker) grounds every
+  answer in the user's documents; inline citations link claims to exact chunks.
+- Compliance playbook scan: checks documents against configurable rules and flags risky
+  language (e.g. missing required contract clauses), with persisted scan history.
+- Visual pipeline editor: users can toggle dense/sparse/rerank/ingest/scan sub-nodes and
+  rearrange retrieval flow without code.
+- Local-first: BGE-M3 embeddings, ChromaDB vector store, BM25 index, BGE reranker, Ollama
+  LLM — no cloud, no account, no telemetry.
+- Any model: local Ollama models or optional API providers; API keys are stored locally
+  and never shown after setup.
+- Platforms: Windows, macOS, Linux. Open source (MIT), source at
+  https://github.com/haal-lab/Lawyer-Assistant.
+
+## Key facts
+
+- 100% private local mode; works offline; documents never uploaded to external servers.
+- Hybrid search = BM25 + dense vectors fused and reranked.
+- Ingests PDF, DOCX, OCR-readable images, JSON, Markdown, plain text.
+- Backend: FastAPI on localhost port 8765; frontend: Vite + React; shell: Electron.
+- Models: BGE-M3 (embeddings), BGE-Reranker-v2-M3, Ollama LLM; optional cloud APIs.
+
+## Documentation
+
+- [Docs hub](docs.html): all documentation, grouped by topic, with search.
+- [Quickstart](docs/quickstart.html): clone → install → run → first query.
+- [Architecture](docs/architecture.html): system overview, ports, runtime modes.
+- [Backend](docs/backend.html): FastAPI endpoints, routers, tools, retrieval, scan.
+- [Frontend](docs/frontend.html): React layout, stores, streaming, theming.
+- [API providers](docs/api-provider.html): cloud mode, providers, env vars.
+- [Launcher](docs/launcher.html): setup page, provider picker, Ollama automation.
+- [Security](docs/security.html): CSP, Electron sandbox, key handling, threat model.
+- [Troubleshooting](docs/troubleshooting.html): common failures & fixes.
+- [Glossary](docs/glossary.html): one-line definitions of every term.
+
+## Repository
+
+- Source: https://github.com/haal-lab/Lawyer-Assistant
+- Issues & feature requests: https://github.com/haal-lab/Lawyer-Assistant/issues

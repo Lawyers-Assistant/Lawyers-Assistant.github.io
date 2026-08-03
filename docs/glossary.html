@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Glossary — Lawyer Assistant — Lawyer Assistant Docs</title>
+<meta name="description" content="The Lawyer Assistant glossary: one-line definitions of every term — chunking, embeddings, BM25, dense vectors, reranking, RAG, playbook scan, working set, and more."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/glossary.html"/>
+<meta name="keywords" content="glossary, RAG terms, chunk definition, embedding definition, reranker definition, legal AI terms"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Glossary — Lawyer Assistant — Lawyer Assistant Docs"/>
+<meta property="og:description" content="The Lawyer Assistant glossary: one-line definitions of every term — chunking, embeddings, BM25, dense vectors, reranking, RAG, playbook scan, working set, and more."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/glossary.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Glossary — Lawyer Assistant — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="The Lawyer Assistant glossary: one-line definitions of every term — chunking, embeddings, BM25, dense vectors, reranking, RAG, playbook scan, working set, and more."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Glossary — Lawyer Assistant", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/glossary.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is RAG?", "acceptedAnswer": {"@type": "Answer", "text": "Retrieval-Augmented Generation — retrieve relevant passages from your documents first, then have the LLM answer grounded in those passages, with citations you can verify."}}, {"@type": "Question", "name": "What is the difference between dense and sparse search?", "acceptedAnswer": {"@type": "Answer", "text": "Dense search matches meaning via vector embeddings (BGE-M3); sparse search matches keywords via BM25. Lawyer Assistant fuses both (hybrid) and reranks the results for best accuracy."}}, {"@type": "Question", "name": "What is a playbook scan?", "acceptedAnswer": {"@type": "Answer", "text": "A compliance check that scores documents against a configurable playbook of rules and flags risky clauses — like missing required contract language — with explanations and persisted history."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link active" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Glossary — Lawyer Assistant</span></div>
+    <h1>Glossary — Lawyer Assistant</h1>
+    <div class="doc-intro">One-line definitions for every technical term used in this project, with pointers to the docs that explain them in depth. Terms are alphabetical.</div>
+    
+
+<blockquote>Use this as a companion to <a href="agent-knowledge-base.html"><code>AGENT_KNOWLEDGE_BASE.md</code></a> (Q&amp;A) and <a href="readme.html"><code>README.md</code></a> (index).</blockquote>
+<hr/>
+<h2 id="a-c">A–C</h2>
+<ul><li><strong>AsyncSqliteSaver</strong> — LangGraph checkpointer that persists agent thread state to <code>data/conversations.db</code> on disk (falls back to <code>MemorySaver</code>). Note the checkpointer is project-independent — it does not move with the workspace. → <a href="backend.html"><code>BACKEND.md</code></a> §4</li><li><strong>BGE-M3</strong> — the multilingual embedding model (BAAI, 1024-dim, L2-normalized) used to turn text chunks and queries into vectors for dense search. → <a href="backend.html"><code>BACKEND.md</code></a> §5</li><li><strong>BGE-Reranker-v2-M3</strong> — the cross-encoder model that re-scores retrieved candidates to pick the best top-5. → <a href="backend.html"><code>BACKEND.md</code></a> §5</li><li><strong>BM25</strong> — the classic keyword (sparse) ranking algorithm used for the <code>sparse</code> retrieval leg, backed by a prebuilt inverted index in <code>&lt;project&gt;/workspace/bm25_index/</code> when a workspace is active, else <code>data/bm25_index/</code>. → <a href="backend.html"><code>BACKEND.md</code></a> §5, <a href="data-flow.html"><code>DATA_FLOW.md</code></a></li><li><strong>Bypass edge</strong> — a temporary particle edge created when a pipeline node is removed, rewiring its incoming sources straight to its outgoing targets so the flow stays connected; tagged <code>bypass-&lt;nodeId&gt;-</code> so re-enabling finds it. → <a href="pipeline-editor.html"><code>PIPELINE_EDITOR.md</code></a> §3</li><li><strong>Chain-of-thought (thinking)</strong> — the LLM's intermediate reasoning tokens streamed to the UI (before tools are called) and shown as a collapsible "thinking" block. → <a href="frontend.html"><code>FRONTEND.md</code></a> §6</li><li><strong>Checkpointer</strong> — the LangGraph component that stores conversation graph state (threads), enabling human-in-the-loop pause/resume across HTTP requests. → <a href="backend.html"><code>BACKEND.md</code></a> §4b</li><li><strong>ChromaDB</strong> — the local vector database (collection <code>legal_chunks</code>, cosine distance, HNSW index) storing chunk embeddings and metadata. With a workspace active it lives in <code>&lt;project&gt;/workspace/chroma_db</code>, else <code>data/chroma_db</code>. → <a href="backend.html"><code>BACKEND.md</code></a> §5</li><li><strong>Chunk</strong> — a 480-token slice of a document (sections never split) that gets embedded and stored; the atomic unit of retrieval. → <a href="data-flow.html"><code>DATA_FLOW.md</code></a></li><li><strong>Citation</strong> — the source reference (file, page, section) attached to a retrieved chunk and shown inline in answers; clicking opens the SourceViewerModal. → <a href="frontend.html"><code>FRONTEND.md</code></a> §2, §5</li><li><strong>Conversation ID</strong> — the thread identifier passed with every chat request (client-supplied, falling back to a server-generated UUID) so agent state and history follow the conversation. → <a href="backend.html"><code>BACKEND.md</code></a> §3</li><li><strong>CORS</strong> — backend middleware allowing the Vite dev origin (<code>http://localhost:5173</code>) and <code>file://</code> to call the API. → <a href="backend.html"><code>BACKEND.md</code></a> §1</li></ul>
+<h2 id="d-h">D–H</h2>
+<ul><li><strong>Dense retrieval</strong> — semantic search over ChromaDB embeddings (vector similarity), the <code>dense</code> pipeline node. → <a href="backend.html"><code>BACKEND.md</code></a> §5, <a href="pipeline-editor.html"><code>PIPELINE_EDITOR.md</code></a> §2</li><li><strong>Docling</strong> — the document-parsing library (with OCR) used during ingestion to extract text, tables, and structure from PDFs/images. → <a href="backend.html"><code>BACKEND.md</code></a> §5, <a href="data-flow.html"><code>DATA_FLOW.md</code></a></li><li><strong>Electron</strong> — the desktop shell that hosts the app: launches the Python backend and Vite dev server, owns the window, exposes IPC. → <a href="architecture.html"><code>ARCHITECTURE.md</code></a> §1, §3</li><li><strong>Embedding</strong> — a 1024-dim numeric vector representing text semantics, produced by BGE-M3; cosine similarity between vectors drives dense search. → <a href="backend.html"><code>BACKEND.md</code></a> §5</li><li><strong>FastAPI</strong> — the Python web framework serving the app's HTTP + SSE API on port 8765 (<code>backend/main.py</code>). → <a href="backend.html"><code>BACKEND.md</code></a> §1</li><li><strong>Flag</strong> — a compliance finding from the playbook scan (severity, rule id, page, reason, clause text); statuses <code>open</code> → <code>resolved</code>/<code>dismissed</code>/ <code>escalated</code>, persisted to SQLite. → <a href="backend.html"><code>BACKEND.md</code></a> §6</li><li><strong>HITL (human-in-the-loop)</strong> — the approval step where the LangGraph agent pauses via <code>interrupt()</code> before executing a tool and waits for the user to approve/reject; resumed through <code>/api/chat/resume</code>. → <a href="backend.html"><code>BACKEND.md</code></a> §4b</li><li><strong>HNSW</strong> — the approximate nearest-neighbor graph index inside ChromaDB that makes dense search fast. → <a href="backend.html"><code>BACKEND.md</code></a> §5</li><li><strong>Hybrid search</strong> — combining dense (vector) and sparse (BM25) results; the default mode merges them (RRF / boost-only / combine-and-dedup strategies). → <a href="backend.html"><code>BACKEND.md</code></a> §5</li></ul>
+<h2 id="i-p">I–P</h2>
+<ul><li><strong>Mode</strong> — the chat request mode: <code>rag</code> (retrieve + answer, default), <code>retrieval_only</code> (search only, no LLM), or <code>direct</code> (LLM only, no retrieval). → <a href="backend.html"><code>BACKEND.md</code></a> §2</li><li><strong>Ingestion</strong> — the pipeline that turns raw files into indexed chunks: parse (Docling/OCR) → chunk → embed → store (ChromaDB + BM25). → <a href="data-flow.html"><code>DATA_FLOW.md</code></a>, <a href="backend.html"><code>BACKEND.md</code></a> §5</li><li><strong>Intent classifier / router</strong> — the default RAG orchestrator (<code>router_intent.py</code>): classifies the message intent, writes a short plan, detects the tool from the plan, executes it, and writes the answer. → <a href="backend.html"><code>BACKEND.md</code></a> §4a</li><li><strong>IPC</strong> — Electron's inter-process communication used for window controls and backend health/port queries. → <a href="architecture.html"><code>ARCHITECTURE.md</code></a> §1</li><li><strong>LangGraph</strong> — the orchestration framework powering the agentic router's <code>StateGraph</code> (agent → approval → tools) and checkpointer. → <a href="backend.html"><code>BACKEND.md</code></a> §4b</li><li><strong>MemorySaver</strong> — the in-memory fallback checkpointer used when the SQLite checkpointer can't be created. → <a href="backend.html"><code>BACKEND.md</code></a> §4b</li><li><strong>Ollama</strong> — the local LLM runtime (<code>http://localhost:11434</code>) providing generation for RAG answers, relevance checks, and scanning. → <a href="backend.html"><code>BACKEND.md</code></a> §7</li><li><strong>Particle edge</strong> — the animated ReactFlow edge type used throughout the pipeline editor to visualize data flowing between nodes. → <a href="pipeline-editor.html"><code>PIPELINE_EDITOR.md</code></a> §1</li><li><strong>Playbook</strong> — a JSON rule set (<code>backend/legal_retrieval/playbook/playbooks/</code>, e.g. <code>default.json</code>) defining clause types and compliance rules the scanner checks documents against. → <a href="backend.html"><code>BACKEND.md</code></a> §6</li><li><strong>Playbook scan</strong> — the clause-level compliance check: chunk → classify clause type → check rules → emit flags → persist. → <a href="backend.html"><code>BACKEND.md</code></a> §6</li></ul>
+<h2 id="r-s">R–S</h2>
+<ul><li><strong>RAG (retrieval-augmented generation)</strong> — answering a question by first retrieving relevant document chunks, then having the LLM write an answer grounded in those chunks with citations. → <a href="backend.html"><code>BACKEND.md</code></a> §3, §5</li><li><strong>ReAct</strong> — the "Reasoning + Acting" agent loop (legacy <code>router.py</code>) where the LLM decides which tool to call at each step. → <a href="backend.html"><code>BACKEND.md</code></a> §4b</li><li><strong>Reranker</strong> — the cross-encoder (BGE-Reranker-v2-M3) that re-scores the ~50 retrieved candidates and keeps the top 5; can be skipped (<code>skip_rerank</code>). → <a href="backend.html"><code>BACKEND.md</code></a> §5</li><li><strong>RRF (Reciprocal Rank Fusion)</strong> — the rank-based merge strategy used in hybrid search to combine dense and sparse rankings. → <a href="backend.html"><code>BACKEND.md</code></a> §5</li><li><strong>Sparse retrieval</strong> — BM25 keyword search over the inverted index; the <code>sparse</code> pipeline node. → <a href="backend.html"><code>BACKEND.md</code></a> §5</li><li><strong>SSE (Server-Sent Events)</strong> — the <code>text/event-stream</code> protocol the backend uses to stream chat tokens, statuses, tool calls, node progress, and scan progress to the UI in real time. → <a href="backend.html"><code>BACKEND.md</code></a> §3, <a href="frontend.html"><code>FRONTEND.md</code></a> §2</li><li><strong>Streaming event</strong> — one typed SSE payload (e.g. <code>token</code>, <code>status</code>, <code>tool_call</code>, <code>node_start</code>, <code>done</code>); the frontend switches on these types. → <a href="backend.html"><code>BACKEND.md</code></a> §3</li></ul>
+<h2 id="t-z">T–Z</h2>
+<ul><li><strong>Thread / thread_id</strong> — the LangGraph conversation thread key (same as the conversation id) used to pause, store, and resume agent state. → <a href="backend.html"><code>BACKEND.md</code></a> §4b</li><li><strong>Tool</strong> — a function the agent can call: <code>search_documents</code>, <code>verify_relevance</code>, <code>scan_document</code>, <code>ingest_file</code>. → <a href="backend.html"><code>BACKEND.md</code></a> §4c</li><li><strong>Top-k</strong> — how many results are requested/returned: 50 candidates retrieved, 5 returned after reranking (<code>top_k_final</code>). → <a href="backend.html"><code>BACKEND.md</code></a> §5</li><li><strong>Upload</strong> — saving an attached file into the <strong>active project folder</strong> via <code>/api/upload</code> so it can be ingested/scanned with the next message (a workspace must be selected first). → <a href="backend.html"><code>BACKEND.md</code></a> §2</li><li><strong>Vector store</strong> — ChromaDB's persistent storage of chunk embeddings + metadata (file, page, section) used for dense retrieval. → <a href="backend.html"><code>BACKEND.md</code></a> §5</li><li><strong>Warmup</strong> — the background thread at backend startup that preloads the embedder, reranker, LLM, and classifier references so the first query is fast. → <a href="backend.html"><code>BACKEND.md</code></a> §1</li><li><strong>Working set</strong> — the pinned/selected sources panel that collects documents of interest during a session. → <a href="frontend.html"><code>FRONTEND.md</code></a> §5</li><li><strong>Zustand</strong> — the lightweight React state store persisting conversations (<code>freebuff-chat-storage</code>) and holding all streaming/approval state. → <a href="frontend.html"><code>FRONTEND.md</code></a> §3</li></ul>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>What is RAG?</h3><p>Retrieval-Augmented Generation — retrieve relevant passages from your documents first, then have the LLM answer grounded in those passages, with citations you can verify.</p></div><div class="faq-item"><h3>What is the difference between dense and sparse search?</h3><p>Dense search matches meaning via vector embeddings (BGE-M3); sparse search matches keywords via BM25. Lawyer Assistant fuses both (hybrid) and reranks the results for best accuracy.</p></div><div class="faq-item"><h3>What is a playbook scan?</h3><p>A compliance check that scores documents against a configurable playbook of rules and flags risky clauses — like missing required contract language — with explanations and persisted history.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

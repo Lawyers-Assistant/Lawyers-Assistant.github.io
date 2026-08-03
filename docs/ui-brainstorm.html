@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🏛️ Making It Smooth &amp; Trustworthy for Lawyers — Lawyer Assistant Docs</title>
+<meta name="description" content="Design explorations for Lawyer Assistant: future UI ideas, interaction refinements, and product directions beyond what is shipped."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/ui-brainstorm.html"/>
+<meta name="keywords" content="ui brainstorm, design ideas, product roadmap ui, interaction design"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="🏛️ Making It Smooth &amp; Trustworthy for Lawyers — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Design explorations for Lawyer Assistant: future UI ideas, interaction refinements, and product directions beyond what is shipped."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/ui-brainstorm.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="🏛️ Making It Smooth &amp; Trustworthy for Lawyers — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Design explorations for Lawyer Assistant: future UI ideas, interaction refinements, and product directions beyond what is shipped."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "🏛️ Making It Smooth &amp; Trustworthy for Lawyers", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/ui-brainstorm.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is this a spec or shipped features?", "acceptedAnswer": {"@type": "Answer", "text": "It's a brainstorming document — design explorations and product ideas that are not all implemented. Treat anything here as proposed unless it's also covered in the frontend or changelog docs."}}, {"@type": "Question", "name": "Can I contribute an idea?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — the doc invites discussion; file an issue or PR on the GitHub repo and link the brainstorm section your idea extends."}}, {"@type": "Question", "name": "What areas does it explore?", "acceptedAnswer": {"@type": "Answer", "text": "Citation interactions, source browsing, panel workflows, onboarding, and other legal-research UX directions — useful reading for design contributors."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link active" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>🏛️ Making It Smooth &amp; Trustworthy for Lawyers</span></div>
+    <h1>🏛️ Making It Smooth &amp; Trustworthy for Lawyers</h1>
+    <div class="doc-intro"></div>
+    
+<h2 id="trust-builders-immediate-impact">🔴 TRUST BUILDERS (Immediate Impact)</h2>
+<h3 id="1-confidence-meter-on-every-answer">1. Confidence Meter on Every Answer</h3>
+<ul><li>Add a <strong>confidence bar</strong> below each answer (High / Medium / Low)</li><li>Based on reranker's top score + number of matching sources</li><li>Color-code: 🟢 High (score &gt; 0.7, 3+ sources), 🟡 Medium (0.4-0.7), 🔴 Low (&lt; 0.4)</li><li>Label: <em>"Based on 5 documents, confidence: High (87%)"</em></li></ul>
+<h3 id="2-citation-inline-formatting">2. Citation Inline Formatting</h3>
+<ul><li>Render clickable <code>[1]</code> superscripts inline in answer text, like legal briefs</li><li>When clicked, open SourceViewerModal or scroll to source card</li><li>Standard format for Westlaw, LexisNexis, Casetext</li></ul>
+<h3 id="3-why-this-answer-transparency-box">3. "Why This Answer" Transparency Box</h3>
+<ul><li>Collapsible box explaining how the system arrived at the answer</li><li>Shows: chunk count, reranker score, source documents used</li><li>Creates audit trail for court-defensible research</li></ul>
+<h3 id="4-not-in-documents-reframed">4. "Not in Documents" Reframed</h3>
+<ul><li>Change message to: <em>"This specific question wasn't addressed in your indexed documents."</em></li><li>Add: 📋 "Consider adding documents that address [topic]"</li><li>Reframes absence as actionable intelligence</li></ul>
+<h2 id="smoothness-reduces-friction">🟡 SMOOTHNESS (Reduces Friction)</h2>
+<h3 id="5-progressive-answer-rendering">5. Progressive Answer Rendering</h3>
+<ul><li>Semantic chunks: direct answer → supporting evidence → caveats</li><li>Each section slides in with fadeSlideUp animation</li><li>Mirrors how lawyers read: answer first, then authority</li></ul>
+<h3 id="6-keyboard-first-navigation">6. Keyboard-First Navigation</h3>
+<ul><li><code>↑/↓</code> navigate source cards, <code>Cmd/Ctrl+K</code> command palette</li><li><code>Escape</code> close modals, <code>Tab</code> switch panels</li><li>Number keys <code>1-5</code> open source citations</li></ul>
+<h3 id="7-contextual-loading-states">7. Contextual Loading States</h3>
+<ul><li>"🧠 Analyzing your question..."</li><li>"🔍 Searching 18,836 document chunks..."</li><li>"📊 Reranking top 100 candidates..."</li><li>"✍️ Drafting response with citations..."</li></ul>
+<h3 id="8-smart-auto-scroll">8. Smart Auto-Scroll</h3>
+<ul><li>Auto-scroll during streaming, but stop if user scrolls up</li><li>Show "↓ New content" pill at bottom</li></ul>
+<h2 id="professionalism">🟢 PROFESSIONALISM</h2>
+<h3 id="9-document-header-in-source-viewer">9. Document Header in Source Viewer</h3>
+<pre><code>📄 contract_license_agreement.pdf
+   Arconic Rolled Products — Trademark License Agreement
+   Page 3 of 12 · Section: Territory Limitations</code></pre>
+<h3 id="10-dark-light-mode-toggle">10. Dark/Light Mode Toggle</h3>
+<ul><li>Light mode: cream background, dark text (feels like paper)</li><li>Dark mode: current design (feels like terminal)</li><li>Persist in localStorage</li></ul>
+<h3 id="11-answer-length-controls">11. Answer Length Controls</h3>
+<ul><li>Brief: 1-2 sentences</li><li>Standard: paragraph with citations</li><li>Detailed: full analysis with all supporting passages</li></ul>
+<h3 id="12-export-as-legal-memo">12. Export as Legal Memo</h3>
+<pre><code>MEMORANDUM
+TO:       [User]
+FROM:     Lawyer Assistant
+DATE:     July 30, 2026
+RE:       [Original Question]
+
+ANSWER: [text]
+SOURCES: [1] contract.pdf, p.5 — "The liability cap..."
+CONFIDENCE: High (87%)</code></pre>
+<h2 id="trust-amp-compliance">🔵 TRUST &amp; COMPLIANCE</h2>
+<h3 id="13-local-processing-badge">13. "Local Processing" Badge</h3>
+<ul><li>Persistent: 🔒 <em>"All data processed locally — nothing sent to external servers"</em></li><li>Massive differentiator vs. ChatGPT/Claude</li></ul>
+<h3 id="14-professional-disclaimer">14. Professional Disclaimer</h3>
+<blockquote><em>"AI-generated responses based on your indexed documents. Always verify citations against source documents. This tool does not provide legal advice."</em></blockquote>
+<h3 id="15-audit-log">15. Audit Log</h3>
+<ul><li>History tab showing every question, sources cited, confidence level</li><li>Creates defensible record of research process</li></ul>
+<h2 id="micro-interactions">🟣 MICRO-INTERACTIONS</h2>
+<h3 id="16-source-card-hover-effects">16. Source Card Hover Effects</h3>
+<ul><li>2-line text preview on hover</li><li>Subtle shadow lift with translateY(-1px)</li><li>Relevance bar animates wider</li></ul>
+<h3 id="17-staggered-answer-reveal">17. Staggered Answer Reveal</h3>
+<ul><li>0ms: answer text fades in</li><li>200ms: confidence meter slides in</li><li>400ms: source buttons appear one by one</li></ul>
+<h3 id="18-input-bar-enhancements">18. Input Bar Enhancements</h3>
+<ul><li>Subtle character count</li><li>File attachment chips above input</li><li>Rotating placeholder prompts</li></ul>
+<h3 id="19-empty-state-upgrade">19. Empty State Upgrade</h3>
+<ul><li>Legal scales icon</li><li>Corpus stats: "18,836 passages from 511 documents"</li><li>Subtitle: "Every answer is cited to source text"</li></ul>
+<h2 id="architecture-suggestions">🏗️ Architecture Suggestions</h2>
+<h3 id="20-answer-pre-processing">20. Answer Pre-processing</h3>
+<ul><li>Check source count before LLM call</li><li>0 matches → show "not found" immediately</li><li>Low confidence → prepend caveat</li></ul>
+<h3 id="21-source-deduplication">21. Source Deduplication</h3>
+<ul><li>Group multiple chunks from same file</li><li>Show as expandable tree: <code>📄 contract.pdf (3 citations)</code></li></ul>
+<h3 id="22-skeleton-loading">22. Skeleton Loading</h3>
+<ul><li>Pulsing gray lines in answer shape while LLM thinks</li><li>Reduces perceived wait time by ~40%</li></ul>
+<h2 id="priority-matrix">Priority Matrix</h2>
+<table><thead><tr><th>Priority</th><th>Item</th><th>Effort</th><th>Impact</th></tr></thead><tbody><tr><td>🔴 P0</td><td>Confidence meter</td><td>Low</td><td>Very High</td></tr><tr><td>🔴 P0</td><td>Inline citations [1]</td><td>Medium</td><td>Very High</td></tr><tr><td>🔴 P0</td><td>Local processing badge</td><td>Trivial</td><td>High</td></tr><tr><td>🔴 P0</td><td>Professional disclaimer</td><td>Trivial</td><td>High</td></tr><tr><td>🟡 P1</td><td>"Why This Answer" box</td><td>Medium</td><td>High</td></tr><tr><td>🟡 P1</td><td>Export as legal memo</td><td>Medium</td><td>High</td></tr><tr><td>🟡 P1</td><td>Progressive answer rendering</td><td>Medium</td><td>High</td></tr><tr><td>🟡 P1</td><td>Keyboard navigation</td><td>Medium</td><td>High</td></tr><tr><td>🟢 P2</td><td>Source grouping</td><td>Medium</td><td>Medium</td></tr><tr><td>🟢 P2</td><td>Skeleton loading</td><td>Low</td><td>Medium</td></tr><tr><td>🟢 P2</td><td>Dark/light mode</td><td>Medium</td><td>Medium</td></tr><tr><td>🟢 P2</td><td>Audit log</td><td>High</td><td>Medium</td></tr></tbody></table>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>Is this a spec or shipped features?</h3><p>It's a brainstorming document — design explorations and product ideas that are not all implemented. Treat anything here as proposed unless it's also covered in the frontend or changelog docs.</p></div><div class="faq-item"><h3>Can I contribute an idea?</h3><p>Yes — the doc invites discussion; file an issue or PR on the GitHub repo and link the brainstorm section your idea extends.</p></div><div class="faq-item"><h3>What areas does it explore?</h3><p>Citation interactions, source browsing, panel workflows, onboarding, and other legal-research UX directions — useful reading for design contributors.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CLI Tools — Command-Line Utilities Reference — Lawyer Assistant Docs</title>
+<meta name="description" content="Lawyer Assistant command-line tools: ingest documents, run queries, build the BM25 index, and compare retrieval versions without the desktop app."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/cli-tools.html"/>
+<meta name="keywords" content="cli tools, ingest script, query cli, bm25 build, retrieval compare, terminal legal AI"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="CLI Tools — Command-Line Utilities Reference — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Lawyer Assistant command-line tools: ingest documents, run queries, build the BM25 index, and compare retrieval versions without the desktop app."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/cli-tools.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="CLI Tools — Command-Line Utilities Reference — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Lawyer Assistant command-line tools: ingest documents, run queries, build the BM25 index, and compare retrieval versions without the desktop app."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "CLI Tools — Command-Line Utilities Reference", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/cli-tools.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I ingest documents from the terminal?", "acceptedAnswer": {"@type": "Answer", "text": "Use scripts/ingest_all.py with a folder path — it runs the same parse-to-chunk-to-embed-to-index pipeline the app uses, so the CLI and the UI share one index."}}, {"@type": "Question", "name": "How do I query from the terminal?", "acceptedAnswer": {"@type": "Answer", "text": "scripts/query.py runs a retrieval query and prints the top chunks with scores, useful for debugging retrieval quality or scripting. A chat CLI (scripts/chat_cli.py) offers a full interactive session."}}, {"@type": "Question", "name": "Can I compare retrieval versions?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — scripts/compare_v1_v2_retrieval.py runs the same queries through the two retrieval paths and reports per-query differences, and scripts/build_bm25_index.py rebuilds the sparse index on demand."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link active" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>CLI Tools — Command-Line Utilities Reference</span></div>
+    <h1>CLI Tools — Command-Line Utilities Reference</h1>
+    <div class="doc-intro">Command-line scripts for batch operations, debugging, and automation. All scripts live in <code>backend/scripts/</code> and are designed for direct Python execution (not through the desktop app).</div>
+    
+
+<hr/>
+<h2 id="1-quick-reference">1. Quick reference</h2>
+<table><thead><tr><th>Script</th><th>Purpose</th><th>Use Case</th></tr></thead><tbody><tr><td><code>ingest_all.py</code></td><td>Bulk document ingestion</td><td>Initial corpus import, re-indexing</td></tr><tr><td><code>query.py</code></td><td>CLI search</td><td>Quick retrieval testing</td></tr><tr><td><code>chat_cli.py</code></td><td>Interactive chat REPL</td><td>CLI-based RAG queries</td></tr><tr><td><code>build_bm25_index.py</code></td><td>Rebuild BM25 index</td><td>Fix corrupted sparse index</td></tr><tr><td><code>compare_v1_v2_retrieval.py</code></td><td>A/B test retrieval</td><td>Compare configs</td></tr><tr><td><code>benchmark.py</code></td><td>Legacy benchmark runner</td><td>Compatibility wrapper</td></tr><tr><td><code>test_playbook_scan.py</code></td><td>Test compliance scanner</td><td>Scan debugging</td></tr></tbody></table>
+<hr/>
+<h2 id="2-ingest-all-py-bulk-document-ingestion">2. <code>ingest_all.py</code> — Bulk document ingestion</h2>
+<h3 id="purpose">Purpose</h3>
+<p>Ingest every document in <code>data/raw/</code> into ChromaDB + BM25 in one batch operation.</p>
+<h3 id="usage">Usage</h3>
+<pre><span class="lang">bash</span><code>cd backend
+.venv\Scripts\activate  # Windows
+# source .venv/bin/activate  # macOS/Linux
+python scripts/ingest_all.py</code></pre>
+<h3 id="options">Options</h3>
+<table><thead><tr><th>Flag</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>--reset</code></td><td>False</td><td>Wipe ChromaDB collection before ingesting (full rebuild)</td></tr><tr><td><code>--device</code></td><td>auto</td><td>Force device (<code>cuda</code> \</td></tr><tr><td><code>--batch-size</code></td><td>32</td><td>Embedding batch size (lower for small GPUs)</td></tr><tr><td><code>--skip-json</code></td><td>False</td><td>Skip <code>Dataset_BA.json</code> (ingest only PDFs/images)</td></tr></tbody></table>
+<h3 id="examples">Examples</h3>
+<p><strong>Standard ingestion:</strong></p>
+<pre><span class="lang">bash</span><code>python scripts/ingest_all.py</code></pre>
+<p><strong>Full rebuild (wipe + re-ingest):</strong></p>
+<pre><span class="lang">bash</span><code>python scripts/ingest_all.py --reset</code></pre>
+<p><strong>Low-VRAM GPU (4GB):</strong></p>
+<pre><span class="lang">bash</span><code>python scripts/ingest_all.py --batch-size 16</code></pre>
+<p><strong>CPU-only:</strong></p>
+<pre><span class="lang">bash</span><code>python scripts/ingest_all.py --device cpu --batch-size 4</code></pre>
+<h3 id="what-it-does">What it does</h3>
+<ol><li>Scans <code>data/raw/</code> for supported files (<code>.pdf</code>, <code>.docx</code>, <code>.txt</code>, <code>.png</code>, <code>.jpg</code>, ...)</li><li>Parses each document with Docling (OCR for scanned PDFs)</li><li>Chunks via <code>StructureAwareChunker</code> (480 tokens, respect sections)</li><li>Embeds all chunks with BGE-M3 (GPU batch processing)</li><li>Stores vectors + metadata in ChromaDB</li><li>Builds BM25 sparse index from all chunks</li><li>Prints summary: total chunks, files processed, elapsed time</li></ol>
+<h3 id="output">Output</h3>
+<pre><code>Ingesting documents from data/raw/...
+Found 511 files
+
+Processing contract_A.pdf... 23 chunks
+Processing agreement_B.docx... 15 chunks
+...
+
+Ingestion complete:
+  Files processed: 511
+  Total chunks: 18,836
+  Elapsed time: 342.5s
+  ChromaDB collection: legal_chunks (18,836 vectors)
+  BM25 index: data/bm25_index/bm25_index.pkl (18,820 docs)</code></pre>
+<h3 id="when-to-use">When to use</h3>
+<ul><li><strong>Initial setup</strong> — first time indexing your corpus</li><li><strong>After adding many files</strong> — bulk re-index</li><li><strong>After config changes</strong> — chunk size, embedding model, etc.</li><li><strong>Troubleshooting</strong> — rebuild corrupted index with <code>--reset</code></li></ul>
+<h3 id="notes">Notes</h3>
+<ul><li><strong>Skips already-indexed files</strong> — checks ChromaDB for existing <code>file_name</code> (unless <code>--reset</code> is used)</li><li><strong>Backup index</strong> — saves embeddings to <code>data/processed/all_embeddings.npy</code> for crash recovery</li><li><strong>Memory usage</strong> — loads all chunks into RAM during embedding (18K chunks ≈ 2GB)</li></ul>
+<hr/>
+<h2 id="3-query-py-cli-search">3. <code>query.py</code> — CLI search</h2>
+<h3 id="purpose">Purpose</h3>
+<p>Quick CLI search for testing retrieval without the full chat pipeline.</p>
+<h3 id="usage">Usage</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python scripts/query.py "What is rescission under contract law?"</code></pre>
+<h3 id="options">Options</h3>
+<table><thead><tr><th>Flag</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>--top-k</code></td><td>5</td><td>Number of results to return</td></tr><tr><td><code>--no-rerank</code></td><td>False</td><td>Skip reranking (faster, lower quality)</td></tr><tr><td><code>--search-mode</code></td><td>hybrid</td><td><code>dense</code> \</td></tr></tbody></table>
+<h3 id="examples">Examples</h3>
+<p><strong>Basic search:</strong></p>
+<pre><span class="lang">bash</span><code>python scripts/query.py "contract termination"</code></pre>
+<p><strong>More results:</strong></p>
+<pre><span class="lang">bash</span><code>python scripts/query.py "payment terms" --top-k 10</code></pre>
+<p><strong>Dense-only search:</strong></p>
+<pre><span class="lang">bash</span><code>python scripts/query.py "breach of contract" --search-mode dense</code></pre>
+<p><strong>Skip reranking (faster):</strong></p>
+<pre><span class="lang">bash</span><code>python scripts/query.py "liability" --no-rerank</code></pre>
+<h3 id="output">Output</h3>
+<pre><code>Query: What is rescission under contract law?
+Search mode: hybrid
+Reranking: enabled
+Top-K: 5
+
+Results:
+1. [0.847] contract_law.pdf (p.12, §Remedies)
+   "Rescission is the unmaking of a contract between parties..."
+
+2. [0.762] remedies_guide.pdf (p.3, §Contract Remedies)
+   "When a contract is rescinded, both parties are restored..."
+
+3. [0.701] civil_code.pdf (p.145, §1689)
+   "A party to a contract may rescind the contract if..."
+
+4. [0.689] contract_basics.pdf (p.8, §Termination)
+   "Rescission differs from termination in that..."
+
+5. [0.654] legal_dictionary.pdf (p.234)
+   "Rescission: noun. The cancellation of a contract..."
+
+Latency: 4.32s</code></pre>
+<h3 id="when-to-use">When to use</h3>
+<ul><li><strong>Quick retrieval testing</strong> — verify indexed documents are searchable</li><li><strong>Debugging search quality</strong> — compare dense vs sparse vs hybrid</li><li><strong>Benchmarking retrieval speed</strong> — measure latency without LLM overhead</li><li><strong>Reranker A/B testing</strong> — compare <code>--no-rerank</code> vs default</li></ul>
+<hr/>
+<h2 id="4-chat-cli-py-interactive-chat-repl">4. <code>chat_cli.py</code> — Interactive chat REPL</h2>
+<h3 id="purpose">Purpose</h3>
+<p>Interactive command-line chat interface with full RAG pipeline (retrieval + LLM answer).</p>
+<h3 id="usage">Usage</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python scripts/chat_cli.py</code></pre>
+<h3 id="session">Session</h3>
+<pre><code>Legal Assistant CLI
+Type 'exit' or 'quit' to end session.
+
+&gt; What is rescission under contract law?
+
+[Retrieval] Searching documents...
+[Retrieval] Found 5 sources in 3.2s
+
+[LLM] Generating answer...
+
+Rescission is the unmaking of a contract between parties, restoring them
+to their pre-contract positions. Under California Civil Code §1689, a party
+may rescind a contract if consent was obtained through fraud, undue influence,
+or mistake. [1]
+
+Sources:
+  [1] civil_code.pdf (p.145, §1689)
+  [2] contract_law.pdf (p.12, §Remedies)
+
+&gt; What are the payment terms?
+
+[Retrieval] Searching documents...
+[Retrieval] Found 5 sources in 2.8s
+
+[LLM] Generating answer...
+
+The documents do not specify payment terms. Please provide more context
+about which agreement you're referring to.
+
+&gt; exit
+
+Session ended. Goodbye!</code></pre>
+<h3 id="commands">Commands</h3>
+<table><thead><tr><th>Command</th><th>Action</th></tr></thead><tbody><tr><td><code>exit</code></td><td>End session</td></tr><tr><td><code>quit</code></td><td>End session</td></tr><tr><td><code>clear</code></td><td>Clear screen</td></tr><tr><td><code>help</code></td><td>Show commands</td></tr></tbody></table>
+<h3 id="when-to-use">When to use</h3>
+<ul><li><strong>Interactive testing</strong> — chat without opening the desktop app</li><li><strong>Debugging LLM answers</strong> — see raw retrieval + generation</li><li><strong>Scripting</strong> — pipe queries for automation</li><li><strong>Remote access</strong> — SSH into server, run CLI chat</li></ul>
+<h3 id="notes">Notes</h3>
+<ul><li><strong>Requires Ollama</strong> — LLM must be running on <code>localhost:11434</code></li><li><strong>Uses same pipeline</strong> — identical to desktop app RAG flow</li><li><strong>No conversation history</strong> — each query is independent</li><li><strong>No approval mechanism</strong> — tools execute immediately (no HITL)</li></ul>
+<hr/>
+<h2 id="5-build-bm25-index-py-rebuild-bm25-index">5. <code>build_bm25_index.py</code> — Rebuild BM25 index</h2>
+<h3 id="purpose">Purpose</h3>
+<p>Rebuild the BM25 sparse index from existing ChromaDB chunks (useful when BM25 index is corrupted or missing).</p>
+<h3 id="usage">Usage</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python scripts/build_bm25_index.py</code></pre>
+<h3 id="what-it-does">What it does</h3>
+<ol><li>Connects to ChromaDB (<code>data/chroma_db</code>)</li><li>Fetches all chunks from <code>legal_chunks</code> collection</li><li>Tokenizes chunk text (whitespace split)</li><li>Builds BM25Okapi index</li><li>Saves to <code>data/bm25_index/bm25_index.pkl</code></li></ol>
+<h3 id="output">Output</h3>
+<pre><code>Building BM25 index from ChromaDB...
+Fetched 18,836 chunks from legal_chunks collection
+Tokenizing...
+Building BM25 index...
+Saved to data/bm25_index/bm25_index.pkl (18,820 documents indexed)
+
+Index stats:
+  Total documents: 18,820
+  Vocabulary size: 47,234 unique tokens
+  Index size: 12.3 MB</code></pre>
+<h3 id="when-to-use">When to use</h3>
+<ul><li><strong>After ChromaDB changes</strong> — BM25 out of sync with vector store</li><li><strong>Corrupted BM25 index</strong> — error loading <code>.pkl</code> file</li><li><strong>Missing BM25 index</strong> — <code>data/bm25_index/bm25_index.pkl</code> deleted</li></ul>
+<h3 id="notes">Notes</h3>
+<ul><li><strong>Does NOT re-embed</strong> — uses existing ChromaDB chunks only</li><li><strong>Fast</strong> — no GPU needed, pure CPU tokenization (~30s for 18K chunks)</li><li><strong>Safe</strong> — does not modify ChromaDB</li></ul>
+<hr/>
+<h2 id="6-compare-v1-v2-retrieval-py-a-b-test-retrieval">6. <code>compare_v1_v2_retrieval.py</code> — A/B test retrieval</h2>
+<h3 id="purpose">Purpose</h3>
+<p>Compare two retrieval configurations side-by-side on a sample query set.</p>
+<h3 id="usage">Usage</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python scripts/compare_v1_v2_retrieval.py</code></pre>
+<h3 id="what-it-does">What it does</h3>
+<ol><li>Loads 20 test queries</li><li>Runs each query through two retrieval configs:<ul><li><strong>V1:</strong> Dense-only, no reranking</li><li><strong>V2:</strong> Hybrid (dense+sparse), reranking enabled</li></ul></li><li>Computes Recall@5, MRR for each</li><li>Prints comparison table</li></ol>
+<h3 id="output">Output</h3>
+<pre><code>Comparing retrieval configurations on 20 queries...
+
+Config V1: dense-only, no reranking
+Config V2: hybrid, reranking enabled
+
+Results:
+
+| Query | V1 R@5 | V2 R@5 | V1 MRR | V2 MRR | Winner |
+|-------|--------|--------|--------|--------|--------|
+| Q1    | 0.8    | 1.0    | 0.6    | 1.0    | V2     |
+| Q2    | 1.0    | 1.0    | 1.0    | 1.0    | Tie    |
+| Q3    | 0.6    | 0.8    | 0.4    | 0.7    | V2     |
+...
+
+Summary:
+  V1 wins: 3
+  V2 wins: 14
+  Ties: 3
+
+  V1 Recall@5: 0.73
+  V2 Recall@5: 0.86
+
+  V1 MRR: 0.61
+  V2 MRR: 0.74</code></pre>
+<h3 id="when-to-use">When to use</h3>
+<ul><li><strong>A/B testing retrieval changes</strong> — compare before/after config changes</li><li><strong>Evaluating reranker impact</strong> — quantify quality improvement</li><li><strong>Search mode comparison</strong> — dense vs sparse vs hybrid</li></ul>
+<h3 id="customization">Customization</h3>
+<p>Edit the script to test your own configs:</p>
+<pre><span class="lang">python</span><code># scripts/compare_v1_v2_retrieval.py
+config_v1 = SearchConfig(search_mode="dense", rerank=False)
+config_v2 = SearchConfig(search_mode="hybrid", rerank=True, rrf_k=60)</code></pre>
+<hr/>
+<h2 id="7-benchmark-py-legacy-benchmark-runner">7. <code>benchmark.py</code> — Legacy benchmark runner</h2>
+<h3 id="purpose">Purpose</h3>
+<p>Compatibility wrapper for the old benchmark interface (now deprecated; use <code>python -m benchmark.runner</code> instead).</p>
+<h3 id="usage">Usage</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python scripts/benchmark.py</code></pre>
+<p>Equivalent to:</p>
+<pre><span class="lang">bash</span><code>python -m benchmark.runner</code></pre>
+<p>See <a href="benchmarking.html"><code>BENCHMARKING.md</code></a> for full benchmark documentation.</p>
+<hr/>
+<h2 id="8-test-playbook-scan-py-test-compliance-scanner">8. <code>test_playbook_scan.py</code> — Test compliance scanner</h2>
+<h3 id="purpose">Purpose</h3>
+<p>Test the playbook compliance scanner on a single document (debugging tool).</p>
+<h3 id="usage">Usage</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python scripts/test_playbook_scan.py &lt;document_id&gt; [playbook_id]</code></pre>
+<h3 id="examples">Examples</h3>
+<p><strong>Scan with default playbook:</strong></p>
+<pre><span class="lang">bash</span><code>python scripts/test_playbook_scan.py "contract_A.pdf"</code></pre>
+<p><strong>Scan with specific playbook:</strong></p>
+<pre><span class="lang">bash</span><code>python scripts/test_playbook_scan.py "contract_A.pdf" "gdpr"</code></pre>
+<h3 id="output">Output</h3>
+<pre><code>Scanning document: contract_A.pdf
+Playbook: default (8 rules)
+
+Fetching chunks... 23 chunks found
+Classifying chunks...
+  Chunk 1: payment_terms (confidence: 0.89)
+  Chunk 2: liability_clause (confidence: 0.76)
+  ...
+
+Checking rules...
+  Rule 1: "Unlimited liability clauses" → CHECKING
+    Matched chunk 5 (liability_clause)
+    → FLAG: Unlimited liability found (severity: HIGH)
+
+  Rule 2: "Automatic renewal" → CHECKING
+    No matches
+
+  ...
+
+Scan complete:
+  Total chunks: 23
+  Flags found: 3
+    - HIGH: 1
+    - MEDIUM: 2
+    - LOW: 0
+
+Flags:
+  1. [HIGH] Unlimited liability clause (p.3, §5.2)
+     "The licensee assumes unlimited liability for..."
+     Rule: "Unlimited liability clauses"
+
+  2. [MEDIUM] Ambiguous payment terms (p.5, §8.1)
+     "Payment due within reasonable time..."
+     Rule: "Vague payment obligations"
+
+  3. [MEDIUM] Broad indemnification (p.7, §10)
+     "Indemnify against all claims..."
+     Rule: "Overly broad indemnification"</code></pre>
+<h3 id="when-to-use">When to use</h3>
+<ul><li><strong>Debugging scan failures</strong> — see which rules triggered</li><li><strong>Testing new playbooks</strong> — verify rule logic</li><li><strong>Inspecting clause classification</strong> — check confidence scores</li></ul>
+<hr/>
+<h2 id="9-running-scripts-in-production">9. Running scripts in production</h2>
+<h3 id="automated-ingestion-cron">Automated ingestion (cron)</h3>
+<pre><span class="lang">bash</span><code># /etc/cron.daily/ingest-legal-docs
+#!/bin/bash
+cd /app/Lawyer-Assistant/backend
+source .venv/bin/activate
+python scripts/ingest_all.py &gt;&gt; /var/log/ingest.log 2&gt;&amp;1</code></pre>
+<h3 id="batch-processing">Batch processing</h3>
+<pre><span class="lang">bash</span><code># Process multiple queries from a file
+while IFS= read -r query; do
+  python scripts/query.py "$query" &gt;&gt; results.txt
+done &lt; queries.txt</code></pre>
+<h3 id="ci-cd-integration">CI/CD integration</h3>
+<pre><span class="lang">yaml</span><code># .github/workflows/index-corpus.yml
+- name: Ingest corpus
+  run: |
+    cd backend
+    python scripts/ingest_all.py --reset
+- name: Verify index
+  run: |
+    python scripts/query.py "test query" | grep -q "Results"</code></pre>
+<hr/>
+<h2 id="10-common-cli-workflows">10. Common CLI workflows</h2>
+<h3 id="workflow-1-add-new-documents-and-re-index">Workflow 1: Add new documents and re-index</h3>
+<pre><span class="lang">bash</span><code># 1. Copy new PDFs to data/raw/
+cp ~/Downloads/*.pdf data/raw/
+
+# 2. Re-ingest (skips already-indexed files)
+cd backend
+python scripts/ingest_all.py
+
+# 3. Test a query
+python scripts/query.py "new document topic"</code></pre>
+<h3 id="workflow-2-rebuild-corrupted-index">Workflow 2: Rebuild corrupted index</h3>
+<pre><span class="lang">bash</span><code>cd backend
+
+# Option A: Full rebuild
+python scripts/ingest_all.py --reset
+
+# Option B: Just BM25 (if ChromaDB is OK)
+python scripts/build_bm25_index.py</code></pre>
+<h3 id="workflow-3-compare-retrieval-configs">Workflow 3: Compare retrieval configs</h3>
+<pre><span class="lang">bash</span><code># Edit compare_v1_v2_retrieval.py with your configs
+nano scripts/compare_v1_v2_retrieval.py
+
+# Run comparison
+python scripts/compare_v1_v2_retrieval.py &gt; comparison_report.txt
+
+# Review
+cat comparison_report.txt</code></pre>
+<hr/>
+<h2 id="11-cli-script-troubleshooting">11. CLI script troubleshooting</h2>
+<table><thead><tr><th>Issue</th><th>Cause</th><th>Fix</th></tr></thead><tbody><tr><td><code>ModuleNotFoundError</code></td><td>Not in venv</td><td>Activate: <code>.venv\Scripts\activate</code></td></tr><tr><td><code>ChromaDB not found</code></td><td>Index not created</td><td>Run <code>ingest_all.py</code> first</td></tr><tr><td><code>CUDA out of memory</code></td><td>Batch too large</td><td>Use <code>--batch-size 16</code></td></tr><tr><td><code>Model not found</code></td><td>Models not downloaded</td><td>Run launcher setup or download manually</td></tr><tr><td><code>Permission denied</code></td><td>File locked</td><td>Close desktop app first</td></tr></tbody></table>
+<hr/>
+<h2 id="12-related-documentation">12. Related documentation</h2>
+<table><thead><tr><th>Doc</th><th>Coverage</th></tr></thead><tbody><tr><td><a href="benchmarking.html"><code>BENCHMARKING.md</code></a></td><td>Full benchmark suite</td></tr><tr><td><a href="development.html"><code>DEVELOPMENT.md</code></a></td><td>Dev workflows, debugging</td></tr><tr><td><a href="backend.html"><code>BACKEND.md</code></a></td><td>API &amp; pipeline internals</td></tr><tr><td><a href="data-flow.html"><code>DATA_FLOW.md</code></a></td><td>Ingestion pipeline deep dive</td></tr><tr><td><a href="troubleshooting.html"><code>TROUBLESHOOTING.md</code></a></td><td>Common failures</td></tr></tbody></table>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>How do I ingest documents from the terminal?</h3><p>Use scripts/ingest_all.py with a folder path — it runs the same parse-to-chunk-to-embed-to-index pipeline the app uses, so the CLI and the UI share one index.</p></div><div class="faq-item"><h3>How do I query from the terminal?</h3><p>scripts/query.py runs a retrieval query and prints the top chunks with scores, useful for debugging retrieval quality or scripting. A chat CLI (scripts/chat_cli.py) offers a full interactive session.</p></div><div class="faq-item"><h3>Can I compare retrieval versions?</h3><p>Yes — scripts/compare_v1_v2_retrieval.py runs the same queries through the two retrieval paths and reports per-query differences, and scripts/build_bm25_index.py rebuilds the sparse index on demand.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

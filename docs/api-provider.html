@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>API Provider Mode — run Lawyer Assistant on remote AI — Lawyer Assistant Docs</title>
+<meta name="description" content="Lawyer Assistant cloud mode: use Claude, ChatGPT, Groq, Grok, DeepSeek, Mistral, Kimi, Qwen, Gemini, OpenRouter, or Together instead of local Ollama."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/api-provider.html"/>
+<meta name="keywords" content="api provider, claude groq deepseek, cloud LLM, api_config.json, provider setup, rerank modes"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="API Provider Mode — run Lawyer Assistant on remote AI — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Lawyer Assistant cloud mode: use Claude, ChatGPT, Groq, Grok, DeepSeek, Mistral, Kimi, Qwen, Gemini, OpenRouter, or Together instead of local Ollama."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/api-provider.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="API Provider Mode — run Lawyer Assistant on remote AI — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Lawyer Assistant cloud mode: use Claude, ChatGPT, Groq, Grok, DeepSeek, Mistral, Kimi, Qwen, Gemini, OpenRouter, or Together instead of local Ollama."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "API Provider Mode — run Lawyer Assistant on remote AI", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/api-provider.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I switch to an API provider?", "acceptedAnswer": {"@type": "Answer", "text": "In the launcher, choose a provider, paste your API key, and test the connection. Settings are saved to a git-ignored api_config.json; the backend then routes LLM calls to that provider while embeddings and reranking stay local (or follow your rerank mode)."}}, {"@type": "Question", "name": "Which providers are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Claude, ChatGPT/OpenAI, Groq, Grok, DeepSeek, Mistral, Kimi, Qwen, Gemini, OpenRouter, Together, and any OpenAI-compatible endpoint. The launcher lists them in a dropdown and can auto-detect available models."}}, {"@type": "Question", "name": "Is my key safe?", "acceptedAnswer": {"@type": "Answer", "text": "Keys are stored in git-ignored api_config.json, never logged, never displayed after setup, and only sent to the provider you chose over HTTPS. Local mode sends nothing anywhere."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link active" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>API Provider Mode — run Lawyer Assistant on remote AI</span></div>
+    <h1>API Provider Mode — run Lawyer Assistant on remote AI</h1>
+    <div class="doc-intro">An <strong>optional</strong> mode where every model-backed step (LLM generation, embeddings, reranking) runs through cloud/remote APIs instead of local models. Docling document parsing, BM25 sparse indexing and the ChromaDB vector index <strong>stay local by design</strong> — only <em>model inference</em> is delegated.</div>
+    
+
+<p>Local mode is 100% unaffected: unless a config file explicitly enables API mode, the app behaves exactly as before (Ollama LLM + BGE-M3 + BGE-Reranker).</p>
+<hr/>
+<h2 id="1-how-it-manages-your-models">1. How it manages your models</h2>
+<table><thead><tr><th>Step</th><th>Local mode (default)</th><th>API mode</th></tr></thead><tbody><tr><td>Document parsing (docling)</td><td>local</td><td><strong>local</strong> (unchanged)</td></tr><tr><td>Embeddings (BGE-M3)</td><td>local GPU/CPU</td><td>remote embeddings API</td></tr><tr><td>Vector index (ChromaDB)</td><td>local</td><td><strong>local</strong> (unchanged)</td></tr><tr><td>Sparse index (BM25)</td><td>local</td><td><strong>local</strong> (unchanged)</td></tr><tr><td>Reranking (BGE-Reranker)</td><td>local GPU/CPU</td><td>remote rerank API (or embedding-based)</td></tr><tr><td>LLM (Ollama)</td><td>local</td><td>remote chat-completions API</td></tr><tr><td>Playbook scan classifier</td><td>local BGE-M3</td><td>remote embeddings</td></tr><tr><td>GPU manager</td><td>manages local VRAM</td><td>no-op (nothing local to manage)</td></tr></tbody></table>
+<p>The ChromaDB and BM25 indexes still live inside your project folder's <code>workspace/</code> directory, so switching projects works exactly the same.</p>
+<h2 id="2-enabling-api-mode">2. Enabling API mode</h2>
+<p>Copy <code>backend/api_config.sample.json</code> to <code>backend/api_config.json</code>, set <code>"enabled": true</code>, fill in your key/model, and restart the backend:</p>
+<pre><span class="lang">json</span><code>{
+  "enabled": true,
+  "provider": "openai",
+  "base_url": "https://api.openai.com/v1",
+  "api_key": "sk-...",
+  "llm_model": "gpt-4o-mini",
+  "embed_model": "text-embedding-3-small",
+  "embed_dim": 0,
+  "rerank_mode": "auto",
+  "temperature": 0.3,
+  "max_tokens": 4096,
+  "timeout": 120,
+  "thinking_budget": 0
+}</code></pre>
+<p><code>backend/api_config.json</code> is git-ignored — the API key never gets committed. You can also point at a different file with the <code>LAWYER_API_CONFIG</code> env var.</p>
+<p><code>thinking_budget</code> enables Anthropic <strong>extended thinking</strong> (see the Anthropic section below). <code>0</code> = off, the default.</p>
+<h3 id="environment-variable-overrides">Environment-variable overrides</h3>
+<p>Every field can be overridden by an env var (these win over the JSON file):</p>
+<table><thead><tr><th>Env var</th><th>Meaning</th></tr></thead><tbody><tr><td><code>LAWYER_API_ENABLED</code></td><td><code>1</code>/<code>true</code> to enable</td></tr><tr><td><code>LAWYER_PROVIDER</code></td><td><code>openai</code> \</td></tr><tr><td><code>LAWYER_API_BASE_URL</code> / <code>LAWYER_API_KEY</code></td><td>main endpoint + key</td></tr><tr><td><code>LAWYER_LLM_MODEL</code> / <code>LAWYER_LLM_BASE_URL</code> / <code>LAWYER_LLM_API_KEY</code></td><td>LLM override</td></tr><tr><td><code>LAWYER_EMBED_MODEL</code> / <code>LAWYER_EMBED_BASE_URL</code> / <code>LAWYER_EMBED_API_KEY</code></td><td>embeddings override</td></tr><tr><td><code>LAWYER_EMBED_DIM</code></td><td>embedding dimension (0 = auto-detect)</td></tr><tr><td><code>LAWYER_RERANK_MODE</code></td><td><code>auto</code> \</td></tr><tr><td><code>LAWYER_RERANK_BASE_URL</code> / <code>LAWYER_RERANK_API_KEY</code> / <code>LAWYER_RERANK_MODEL</code></td><td>rerank endpoint</td></tr><tr><td><code>LAWYER_TEMPERATURE</code> / <code>LAWYER_MAX_TOKENS</code> / <code>LAWYER_TIMEOUT</code></td><td>generation knobs</td></tr><tr><td><code>LAWYER_THINKING_BUDGET</code></td><td>Anthropic extended-thinking budget in tokens (<code>0</code> = off)</td></tr></tbody></table>
+<h2 id="3-providers">3. Providers</h2>
+<p><strong><code>openai</code> / <code>openai_compatible</code></strong> — any OpenAI-compatible API: OpenAI, Groq, DeepSeek, Mistral, OpenRouter, Together, Jina, Moonshot, Fireworks, xAI, ... Chat, embeddings and function calling all work.</p>
+<p><strong><code>gemini</code></strong> — Google Gemini (chat + embeddings). Set <code>base_url</code> to your regional endpoint if you use one (e.g. <code>https://generativelanguage.googleapis.com/v1beta</code> is the default).</p>
+<p><strong><code>cohere</code></strong> — Cohere (chat + embeddings + rerank).</p>
+<p><strong><code>anthropic</code></strong> — Anthropic Claude via the Messages API (chat + streaming with extended thinking). Thinking blocks stream through the same Chain-of-Thought channel as OpenAI-compatible reasoning models, so the CoT panel works identically. Set <code>api_key</code> to your Anthropic key (<code>sk-ant-...</code>); the default <code>base_url</code> is <code>https://api.anthropic.com/v1</code>.</p>
+<p><strong>Extended thinking (optional):</strong> set <code>"thinking_budget": 2048</code> (or <code>LAWYER_THINKING_BUDGET=2048</code>) to enable Claude's extended thinking. The budget must stay below <code>max_tokens</code> (it is clamped automatically, and floored at 1024 tokens per Anthropic's requirement — when <code>max_tokens</code> leaves enough headroom). While thinking is on, <code>temperature</code> is omitted from requests — the Anthropic API rejects sending them together.</p>
+<blockquote>Anthropic has <strong>no embeddings API</strong> — to use Claude for the LLM with remote embeddings, configure an <code>embed_base_url</code>/<code>embed_model</code> override (Jina, Voyage, OpenAI, ...), or keep embeddings local. Agent-mode tool calling is not supported yet for Anthropic (same as Gemini/Cohere) — use an OpenAI-compatible provider for the LangGraph agent.</blockquote>
+<h3 id="mixing-providers">Mixing providers</h3>
+<p><code>llm_base_url</code>/<code>llm_api_key</code> and <code>embed_base_url</code>/<code>embed_api_key</code> let you mix — e.g. a DeepSeek LLM with Jina embeddings:</p>
+<pre><span class="lang">json</span><code>{
+  "enabled": true,
+  "provider": "openai_compatible",
+  "base_url": "https://api.deepseek.com/v1",
+  "api_key": "sk-deepseek...",
+  "llm_model": "deepseek-chat",
+  "embed_base_url": "https://api.jina.ai/v1",
+  "embed_api_key": "jina_...",
+  "embed_model": "jina-embeddings-v3",
+  "rerank_mode": "jina"
+}</code></pre>
+<blockquote>Note: DeepSeek/Groq/OpenRouter do <strong>not</strong> offer embeddings — use an <code>embed_base_url</code> override (Jina, Voyage, OpenAI, ...) or stay local for embeddings.</blockquote>
+<h2 id="4-reranking-modes">4. Reranking modes</h2>
+<ul><li><code>auto</code> — use Cohere rerank when a rerank endpoint is configured, otherwise fall back to embedding-similarity reranking (query embedding vs candidate embeddings, no extra API beyond embeddings).</li><li><code>cohere</code> — Cohere <code>/rerank</code> endpoint.</li><li><code>jina</code> — Jina <code>/rerank</code> endpoint (OpenAI-style).</li><li><code>embedding</code> — cosine similarity rerank using the configured embedder.</li><li><code>none</code> — keep retrieval order (no rerank).</li></ul>
+<h2 id="5-streaming-amp-chain-of-thought">5. Streaming &amp; chain-of-thought</h2>
+<p>The full SSE chat flow (planner → tool call → answer) works over APIs. Thinking-capable OpenAI-compatible models that stream <code>reasoning_content</code> (DeepSeek-R1, Qwen3, ...) feed the same Chain-of-Thought panel as local thinking models. Anthropic extended-thinking <code>thinking_delta</code> blocks are mapped to the same <code>reasoning_content</code> channel, so Claude's deliberation shows up identically in the CoT panel.</p>
+<p>The legacy LangGraph agent with human-in-the-loop approval works too, but tool calling is only supported on OpenAI-compatible providers (Gemini/Cohere/ Anthropic raise a clear error for agent mode).</p>
+<h2 id="6-checking-the-mode-is-active">6. Checking the mode is active</h2>
+<pre><span class="lang">bash</span><code>curl http://127.0.0.1:8765/api/providers/status</code></pre>
+<p>Returns which provider/models are active. <strong>The API key is never returned.</strong> The GPU status endpoint will show nothing loaded in API mode — that is expected (no local models are resident).</p>
+<h2 id="7-troubleshooting">7. Troubleshooting</h2>
+<ul><li><strong>"API request failed (401/403)"</strong> — wrong/missing key; check the config file path is being read (<code>config_source</code> in the status endpoint).</li><li><strong>"embedding dim mismatch"</strong> — your embed model's dimension differs from <code>embed_dim</code>. Set <code>embed_dim</code> (OpenAI <code>text-embedding-3-small</code> = 1536, <code>text-embedding-3-large</code> = 3072, Gemini <code>text-embedding-004</code> = 768) or leave it <code>0</code> to auto-detect.</li><li><strong>Anthropic: "no embedding model is configured"</strong> — Anthropic has no embeddings API. Set <code>embed_base_url</code>/<code>embed_model</code> (Jina, Voyage, OpenAI, ...) or keep embeddings local (remove <code>embed_model</code>/<code>embed_base_url</code> and rely on BGE-M3).</li><li><strong>Switching modes on an existing project</strong> — the ChromaDB collection keeps the dimension it was built with. Re-ingest the project after changing embedding providers.</li><li><strong>Slow first query</strong> — the embedder probes the dimension once at startup; afterwards everything is cached.</li></ul>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>How do I switch to an API provider?</h3><p>In the launcher, choose a provider, paste your API key, and test the connection. Settings are saved to a git-ignored api_config.json; the backend then routes LLM calls to that provider while embeddings and reranking stay local (or follow your rerank mode).</p></div><div class="faq-item"><h3>Which providers are supported?</h3><p>Claude, ChatGPT/OpenAI, Groq, Grok, DeepSeek, Mistral, Kimi, Qwen, Gemini, OpenRouter, Together, and any OpenAI-compatible endpoint. The launcher lists them in a dropdown and can auto-detect available models.</p></div><div class="faq-item"><h3>Is my key safe?</h3><p>Keys are stored in git-ignored api_config.json, never logged, never displayed after setup, and only sent to the provider you chose over HTTPS. Local mode sends nothing anywhere.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

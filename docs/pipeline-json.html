@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pipeline Layout JSON — spec for AI models &amp; hand-editors — Lawyer Assistant Docs</title>
+<meta name="description" content="The exact JSON schema for Lawyer Assistant pipeline layouts: nodes, edges, sub-node IDs, config overrides, and the runtime application rules."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/pipeline-json.html"/>
+<meta name="keywords" content="pipeline json schema, node edges, sub-node ids, pipeline layout format, config override"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Pipeline Layout JSON — spec for AI models &amp; hand-editors — Lawyer Assistant Docs"/>
+<meta property="og:description" content="The exact JSON schema for Lawyer Assistant pipeline layouts: nodes, edges, sub-node IDs, config overrides, and the runtime application rules."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/pipeline-json.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Pipeline Layout JSON — spec for AI models &amp; hand-editors — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="The exact JSON schema for Lawyer Assistant pipeline layouts: nodes, edges, sub-node IDs, config overrides, and the runtime application rules."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Pipeline Layout JSON — spec for AI models &amp; hand-editors", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/pipeline-json.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What does a pipeline layout JSON look like?", "acceptedAnswer": {"@type": "Answer", "text": "A JSON object with nodes (each with an id, type, and sub-node state) and edges connecting them. The doc lists every field with examples — including canonical sub-node IDs and per-node config overrides like top_k."}}, {"@type": "Question", "name": "How is the layout validated?", "acceptedAnswer": {"@type": "Answer", "text": "The layout is validated before save and before applying to the backend — unknown node types, dangling edges, and invalid overrides are rejected so the runtime never receives a malformed graph."}}, {"@type": "Question", "name": "Where is the source of truth?", "acceptedAnswer": {"@type": "Answer", "text": "pipelineStorage.ts in the frontend is the canonical implementation; docs/PIPELINE_JSON.md documents the schema. The pipeline config endpoint maps the JSON onto backend flags like skip_rerank and search_mode."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link active" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Pipeline Layout JSON — spec for AI models &amp; hand-editors</span></div>
+    <h1>Pipeline Layout JSON — spec for AI models &amp; hand-editors</h1>
+    <div class="doc-intro">This is the <strong>authoritative, machine-actionable spec</strong> for the pipeline-editor layout JSON. It is written so an AI model (or a human) can <strong>produce a valid file from scratch</strong> that the editor will import without errors.</div>
+    
+
+<ul><li>Ground truth code: <code>frontend/src/components/Pipeline/pipelineStorage.ts</code> (serialize / parse / validate), <code>defaults.ts</code> (default nodes &amp; edges), <code>nodes.tsx</code> (node types + bypass edges).</li><li>Feature overview: <a href="pipeline-editor.html"><code>PIPELINE_EDITOR.md</code></a>.</li><li><strong>Backend wiring:</strong> since the <code>/api/pipeline/config</code> endpoint was added, this JSON now <strong>also reconfigures retrieval at runtime</strong> (reranking, search mode, top_k, dense/sparse weights). See <a href="#10-backend-runtime-configuration-post-apipipelineconfig">§10</a>.</li></ul>
+<hr/>
+<h2 id="1-file-envelope-two-accepted-shapes">1. File envelope (two accepted shapes)</h2>
+<p>The import function <code>parsePipelineLayout(text)</code> accepts <strong>either</strong>:</p>
+<pre><span class="lang">jsonc</span><code>// Shape A — versioned export (what the editor's ↓ button writes)
+{
+  "version": 1,
+  "nodes": [ /* Node[] */ ],
+  "edges": [ /* Edge[] */ ]
+}</code></pre>
+<pre><span class="lang">jsonc</span><code>// Shape B — bare layout (also valid; version is optional)
+{
+  "nodes": [ /* Node[] */ ],
+  "edges": [ /* Edge[] */ ]
+}</code></pre>
+<p>If you author a file, <strong>prefer Shape A</strong> with <code>"version": 1</code> (matching <code>serializeLayout</code>). <code>version</code> is informational — the parser does not check it.</p>
+<hr/>
+<h2 id="2-node-object-schema">2. Node object schema</h2>
+<pre><span class="lang">jsonc</span><code>{
+  "id": "dense",                        // string, REQUIRED, must be unique across nodes
+  "type": "denseRetrieval",             // string, REQUIRED, must be in KNOWN_TYPES (see §3)
+  "position": { "x": 280, "y": 440 },   // {x,y} numbers, REQUIRED (any values allowed)
+  "data": {
+    "label": "Dense Retrieval",         // string, recommended (shown on the node)
+    "status": "idle",                   // optional, one of idle|active|done|error; runtime-only
+    "files": ["a.pdf"],                 // optional, ingest node only
+    "icon": "🔧",                       // optional, tool node only
+    "description": "..."                // optional, tool node only
+  }
+}</code></pre>
+<p>Rules enforced by <code>validateLayout</code>:</p>
+<ul><li><code>type</code> must be one of the 10 known types (§3). <strong>Unknown/stale types are dropped silently</strong> (e.g. the pre-split <code>searchDocuments</code> / <code>scanIngest</code>).</li><li>Duplicate node <code>id</code>s: only the first occurrence is kept.</li><li>Runtime-only fields (<code>status</code>, <code>active</code>, <code>selected</code>) are tolerated on import and overridden at render (the editor re-derives them); they are stripped on export. You may include them or omit them.</li></ul>
+<hr/>
+<h2 id="3-valid-node-types-known-types">3. Valid node types (KNOWN_TYPES)</h2>
+<table><thead><tr><th>type</th><th>Canonical default id</th><th>Default position</th><th>Meaning</th></tr></thead><tbody><tr><td><code>intentClassifier</code></td><td><code>intent</code></td><td>{450, 0}</td><td>Classifies greeting vs legal query</td></tr><tr><td><code>chitchat</code></td><td><code>chitchat</code></td><td>{100, 220}</td><td>Greeting reply, no retrieval</td></tr><tr><td><code>planner</code></td><td><code>planner</code></td><td>{450, 220}</td><td>Writes search plan, dispatches to dense + sparse</td></tr><tr><td><code>denseRetrieval</code></td><td><code>dense</code></td><td>{280, 440}</td><td>Semantic search (ChromaDB)</td></tr><tr><td><code>sparseRetrieval</code></td><td><code>sparse</code></td><td>{620, 440}</td><td>Keyword search (BM25)</td></tr><tr><td><code>rerank</code></td><td><code>rerank</code></td><td>{450, 660}</td><td>Cross-encoder re-scoring</td></tr><tr><td><code>ingest</code></td><td><code>ingest</code></td><td>{100, 440}</td><td>Parse attached files → chunks → embed → store</td></tr><tr><td><code>scan</code></td><td><code>scan</code></td><td>{100, 660}</td><td>Playbook compliance scan + flags</td></tr><tr><td><code>answer</code></td><td><code>answer</code></td><td>{450, 880}</td><td>Final answer from retrieved docs</td></tr><tr><td><code>tool</code></td><td>(any)</td><td>(any)</td><td>Generic custom node (drag-and-drop)</td></tr></tbody></table>
+<p>The five <strong>toggleable sub-nodes</strong> (palette switches) are: <code>denseRetrieval</code>, <code>sparseRetrieval</code>, <code>rerank</code>, <code>ingest</code>, <code>scan</code> — mapped to canonical ids <code>dense</code>, <code>sparse</code>, <code>rerank</code>, <code>ingest</code>, <code>scan</code>. Keep those ids if you want the toggle switches to control the node.</p>
+<hr/>
+<h2 id="4-edge-object-schema">4. Edge object schema</h2>
+<pre><span class="lang">jsonc</span><code>{
+  "id": "dense-rerank",                 // string, REQUIRED, must be unique across edges
+  "type": "particle",                   // string; 'particle' or 'default' kept, anything else coerced to 'particle'
+  "source": "dense",                    // string, REQUIRED — must exist in nodes, else edge dropped
+  "target": "rerank",                   // string, REQUIRED — must exist in nodes, else edge dropped
+  "sourceHandle": "chitchat",           // optional — named output handle (see §5)
+  "targetHandle": null,                 // optional — usually omitted
+  "label": "candidates",                // optional — shown on the edge
+  "style": { "stroke": "#8b5cf6", "strokeWidth": 2 },           // optional
+  "labelStyle": { "fill": "#8b5cf6", "fontSize": 11, "fontWeight": 600 },  // optional
+  "labelBgStyle": { "fill": "var(--bg-primary)", "fillOpacity": 0.9 },     // optional
+  "data": {
+    "color": "#8b5cf6",                 // optional — used by the particle animation
+    "active": false,                    // optional — runtime-only, stripped on export
+    "dataType": "candidates",           // optional — shown in live payload preview
+    "payloadPreview": "top 50 dense"    // optional — shown in live payload preview
+  }
+}</code></pre>
+<p>Rules enforced by <code>validateLayout</code>:</p>
+<ul><li>Edge is <strong>dropped</strong> if <code>source</code> or <code>target</code> does not reference an existing node id (that survived validation).</li><li>Edge is dropped if <code>id</code> is missing or a duplicate (first occurrence kept).</li><li><code>type</code> other than <code>'particle'</code>/<code>'default'</code> is coerced to <code>'particle'</code>.</li></ul>
+<hr/>
+<h2 id="5-named-handles-important-for-the-intent-node">5. Named handles (important for the intent node)</h2>
+<p>Only the <strong>intent</strong> node exposes named source handles. If an edge leaves <code>intent</code>, set <code>sourceHandle</code> to one of:</p>
+<table><thead><tr><th>sourceHandle</th><th>Meaning</th><th>Used by default edge</th></tr></thead><tbody><tr><td><code>chitchat</code></td><td>greeting route</td><td><code>intent-chitchat</code></td></tr><tr><td><code>planner</code></td><td>legal-query route</td><td><code>intent-planner</code></td></tr><tr><td><code>ingest</code></td><td>attachment route</td><td><code>intent-ingest</code></td></tr></tbody></table>
+<p>All other nodes use a single unnamed source/target handle — omit <code>sourceHandle</code>/<code>targetHandle</code> for them.</p>
+<hr/>
+<h2 id="6-bypass-edges-what-a-removed-sub-node-looks-like">6. Bypass edges (what a removed sub-node looks like)</h2>
+<p>When a middle sub-node is removed, the editor rewires incoming edges straight to outgoing targets. Those rewires are tagged so re-enabling can find them:</p>
+<ul><li>id pattern: <code>bypass-&lt;removedNodeId&gt;-&lt;incSource&gt;-&lt;outTarget&gt;-&lt;i&gt;-&lt;j&gt;-&lt;timestamp&gt;</code> (e.g. <code>bypass-rerank-dense-answer-0-0-1750000000000</code>)</li><li><code>type: "particle"</code>, <code>label: "bypass"</code>, <code>data: { color: "var(--accent)", active: false, dataType: "data", payloadPreview: "bypassed step" }</code></li><li><code>source</code>/<code>target</code> are the surviving nodes; <code>sourceHandle</code>/<code>targetHandle</code> are carried over from the incoming edge.</li></ul>
+<p>Example — the <strong>reranker removed</strong>:</p>
+<pre><span class="lang">jsonc</span><code>{ "id": "bypass-rerank-dense-answer-0-0-1750000000000", "type": "particle",
+  "source": "dense", "target": "answer", "label": "bypass",
+  "data": { "color": "var(--accent)", "active": false, "dataType": "data",
+  "payloadPreview": "bypassed step" } }
+{ "id": "bypass-rerank-sparse-answer-1-0-1750000000000", "type": "particle",
+  "source": "sparse", "target": "answer", "label": "bypass",
+  "data": { "color": "var(--accent)", "active": false, "dataType": "data",
+  "payloadPreview": "bypassed step" } }</code></pre>
+<hr/>
+<h2 id="7-a-complete-valid-example-dense-sparse-answer-no-rerank-no-scan">7. A complete valid example (dense + sparse → answer, no rerank, no scan)</h2>
+<p>This file is guaranteed to import cleanly — it references only known node types, unique ids, and edges whose endpoints exist:</p>
+<pre><span class="lang">json</span><code>{
+  "version": 1,
+  "nodes": [
+    { "id": "intent", "type": "intentClassifier", "position": { "x": 450, "y": 0 }, "data": { "label": "Intent Classifier" } },
+    { "id": "planner", "type": "planner", "position": { "x": 450, "y": 220 }, "data": { "label": "Planner" } },
+    { "id": "dense", "type": "denseRetrieval", "position": { "x": 280, "y": 440 }, "data": { "label": "Dense Retrieval" } },
+    { "id": "sparse", "type": "sparseRetrieval", "position": { "x": 620, "y": 440 }, "data": { "label": "Sparse Retrieval" } },
+    { "id": "answer", "type": "answer", "position": { "x": 450, "y": 880 }, "data": { "label": "Answer" } }
+  ],
+  "edges": [
+    { "id": "intent-planner", "type": "particle", "source": "intent", "target": "planner", "sourceHandle": "planner",
+      "label": "legal query", "style": { "stroke": "#f59e0b", "strokeWidth": 2 },
+      "data": { "color": "#f59e0b", "active": false, "dataType": "user query", "payloadPreview": "What is rescission?" } },
+    { "id": "planner-dense", "type": "particle", "source": "planner", "target": "dense", "label": "query",
+      "style": { "stroke": "#8b5cf6", "strokeWidth": 2 },
+      "data": { "color": "#8b5cf6", "active": false, "dataType": "query", "payloadPreview": "dense search on embeddings" } },
+    { "id": "planner-sparse", "type": "particle", "source": "planner", "target": "sparse", "label": "query",
+      "style": { "stroke": "#8b5cf6", "strokeWidth": 2 },
+      "data": { "color": "#8b5cf6", "active": false, "dataType": "query", "payloadPreview": "BM25 keyword search" } },
+    { "id": "bypass-rerank-dense-answer-0-0-1750000000000", "type": "particle", "source": "dense", "target": "answer",
+      "label": "bypass", "style": { "stroke": "var(--accent)", "strokeWidth": 2 },
+      "data": { "color": "var(--accent)", "active": false, "dataType": "data", "payloadPreview": "bypassed step" } },
+    { "id": "bypass-rerank-sparse-answer-1-0-1750000000000", "type": "particle", "source": "sparse", "target": "answer",
+      "label": "bypass", "style": { "stroke": "var(--accent)", "strokeWidth": 2 },
+      "data": { "color": "var(--accent)", "active": false, "dataType": "data", "payloadPreview": "bypassed step" } }
+  ]
+}</code></pre>
+<blockquote>Note: <code>bypass-rerank-…</code> ids are arbitrary here — the editor only matches them by the <code>bypass-&lt;nodeId&gt;-</code> prefix when re-enabling the reranker. Using the real pattern keeps re-enable behavior correct.</blockquote>
+<hr/>
+<h2 id="8-generation-checklist-ai-must-follow-all-of-these">8. Generation checklist (AI must follow all of these)</h2>
+<ol><li><strong>Envelope:</strong> <code>{ "version": 1, "nodes": [...], "edges": [...] }</code>.</li><li><strong>Every node:</strong> has string <code>id</code> (unique), valid <code>type</code> from §3, and a <code>position</code> object with numeric <code>x</code>/<code>y</code>. Recommended: <code>data.label</code>.</li><li><strong>Every edge:</strong> has string <code>id</code> (unique), <code>source</code> and <code>target</code> that <strong>both exist in the node list</strong>, and <code>type: "particle"</code>.</li><li><strong>No dangling edges:</strong> an edge to a node you deleted is invalid — it will be silently dropped.</li><li><strong>No unknown types:</strong> using <code>searchDocuments</code>, <code>scanIngest</code>, or any other non-§3 type gets the node silently dropped. This is the most common AI mistake.</li><li><strong>Named handles only from intent</strong> (§5); omit them elsewhere.</li><li><strong>Zero nodes is legal</strong> (a deliberately emptied canvas round-trips), but a file with edges and no valid nodes is pointless — edges get dropped.</li><li>Keep ids stable and semantic (<code>dense</code>, <code>sparse</code>, <code>rerank</code>, <code>ingest</code>, <code>scan</code>, <code>planner</code>, <code>answer</code>, <code>intent</code>, <code>chitchat</code>) so palette toggles and re-enabling work.</li><li>Extra fields are tolerated: the parser ignores unknown properties.</li></ol>
+<hr/>
+<h2 id="9-round-trip-guarantee">9. Round-trip guarantee</h2>
+<p>Export writes <code>{version, nodes, edges}</code> with runtime fields stripped (<code>status</code>, <code>active</code>, <code>selected</code>). Import accepts that exact output back — export → import is identity-preserving. If you want to <em>edit</em> an exported file: change positions, delete nodes <strong>and every edge touching them</strong>, and keep all other fields as-is.</p>
+<hr/>
+<h2 id="10-backend-runtime-configuration-post-api-pipeline-config">10. Backend runtime configuration (<code>POST /api/pipeline/config</code>)</h2>
+<p>The backend validates and consumes <strong>exactly the same JSON</strong> this spec covers. The editor no longer needs to be visualization-only: sending the layout to the backend reconfigures retrieval for every subsequent query.</p>
+<h3 id="endpoint">Endpoint</h3>
+<ul><li><code>POST /api/pipeline/config</code> — body is the layout JSON (Shape A or B from §1). Applies it at runtime.</li><li><code>GET /api/pipeline/config</code> — returns the currently active config.</li><li><code>DELETE /api/pipeline/config</code> — restore file defaults.</li></ul>
+<p>Optional <strong>query overrides</strong> on POST (win over the node-derived values): <code>top_k</code> (1–100), <code>top_k_retrieval</code> (1–500), <code>dense_weight</code>, <code>sparse_weight</code> (0–10).</p>
+<pre><span class="lang">bash</span><code>curl -X POST http://localhost:8765/api/pipeline/config \
+  -H "Content-Type: application/json" \
+  -d @pipeline-layout.json \
+  "?top_k=8&amp;dense_weight=0.7&amp;sparse_weight=0.3"</code></pre>
+<h3 id="derivation-rules-from-which-sub-nodes-are-present">Derivation rules (from which sub-nodes are present)</h3>
+<table><thead><tr><th>Sub-node state</th><th>skip_rerank</th><th>search_mode</th><th>weights</th></tr></thead><tbody><tr><td><code>rerank</code> present</td><td><code>False</code> (rerank ON)</td><td>—</td><td>—</td></tr><tr><td><code>rerank</code> absent</td><td><code>True</code> (rerank OFF)</td><td>—</td><td>—</td></tr><tr><td><code>denseRetrieval</code> + <code>sparseRetrieval</code></td><td>—</td><td><code>hybrid</code></td><td>dense_w / sparse_w (default 1/1)</td></tr><tr><td>only <code>denseRetrieval</code></td><td>—</td><td><code>dense</code></td><td>sparse_w forced to 0</td></tr><tr><td>only <code>sparseRetrieval</code></td><td>—</td><td><code>sparse</code></td><td>dense_w forced to 0</td></tr><tr><td>neither retrieval node</td><td>—</td><td>file default</td><td>—</td></tr></tbody></table>
+<p><strong>Precedence:</strong> file defaults &lt; layout config &lt; explicit per-request params (<code>skip_rerank</code>, <code>top_k</code> in the chat request). One exception: a layout with an explicit <code>top_k</code> override wins over the chat UI's fixed default of 5 (the frontend sends <code>top_k: 5</code> unconditionally).</p>
+<h3 id="behavior-notes">Behavior notes</h3>
+<ul><li>Validation reuses the <em>same rules</em> as the editor: unknown node types, dangling edges, and duplicate ids are dropped silently (§2–§4), so a file that imports cleanly into the editor also applies cleanly here.</li><li>The response returns the derived <code>config</code> plus a <code>validation</code> summary (<code>nodes_received</code>/<code>nodes_kept</code>, <code>edges_received</code>/<code>edges_kept</code>, <code>dropped_unknown_types</code>, <code>dropped_dangling_edges</code>).</li><li><code>skip_rerank</code>, <code>search_mode</code>, <code>top_k</code>, and weights are read by <code>RetrievalPipeline</code> on construction (<code>backend/legal_retrieval/pipeline_config.py</code>), so every path — chat, tools, scan-upload ingestion queries — honors the layout automatically.</li><li>Weights apply to the RRF fusion (<code>rrf_score = dense_w/(k+rank_dense) + sparse_w/(k+rank_sparse)</code>) and, when non-default, to the combine-and-dedup ordering for the no-rerank path.</li><li>Config is <strong>runtime-only</strong>: it resets on server restart unless re-applied. Persistence lives in the editor's <code>localStorage</code> (<code>pipeline-layout-v1</code>) and the exported JSON file.</li><li>⚠️ <strong>Empty layout caveat:</strong> applying <code>{nodes: [], edges: []}</code> (a deliberately emptied canvas) derives <code>skip_rerank=True</code> — reranking is disabled globally until another layout or <code>DELETE /api/pipeline/config</code> restores it. Use <code>DELETE</code> (or the editor's Reset button, which is visual only) if you want retrieval untouched.</li></ul>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>What does a pipeline layout JSON look like?</h3><p>A JSON object with nodes (each with an id, type, and sub-node state) and edges connecting them. The doc lists every field with examples — including canonical sub-node IDs and per-node config overrides like top_k.</p></div><div class="faq-item"><h3>How is the layout validated?</h3><p>The layout is validated before save and before applying to the backend — unknown node types, dangling edges, and invalid overrides are rejected so the runtime never receives a malformed graph.</p></div><div class="faq-item"><h3>Where is the source of truth?</h3><p>pipelineStorage.ts in the frontend is the canonical implementation; docs/PIPELINE_JSON.md documents the schema. The pipeline config endpoint maps the JSON onto backend flags like skip_rerank and search_mode.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

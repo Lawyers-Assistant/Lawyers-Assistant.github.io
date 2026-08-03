@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Agent Knowledge Base — answering questions about this app — Lawyer Assistant Docs</title>
+<meta name="description" content="Fast answers for AI agents and developers working on Lawyer Assistant: canonical docs, ground-truth source files, known traps, and verification rules."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/agent-knowledge-base.html"/>
+<meta name="keywords" content="agent knowledge base, ground truth sources, canonical docs, known traps, developer qa"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Agent Knowledge Base — answering questions about this app — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Fast answers for AI agents and developers working on Lawyer Assistant: canonical docs, ground-truth source files, known traps, and verification rules."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/agent-knowledge-base.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Agent Knowledge Base — answering questions about this app — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Fast answers for AI agents and developers working on Lawyer Assistant: canonical docs, ground-truth source files, known traps, and verification rules."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Agent Knowledge Base — answering questions about this app", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/agent-knowledge-base.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Where is the ground truth for the app?", "acceptedAnswer": {"@type": "Answer", "text": "The knowledge base maps each topic to its source file — API endpoints in backend/main.py, retrieval config in config.py, frontend events in chatStore.ts, pipeline layout format in pipelineStorage.ts."}}, {"@type": "Question", "name": "What are the known documentation traps?", "acceptedAnswer": {"@type": "Answer", "text": "The root README is legacy (old CLI/flask), two routers exist (intent-based vs legacy ReAct), and both streaming and non-streaming chat endpoints exist — the knowledge base flags each so agents answer from the current architecture."}}, {"@type": "Question", "name": "How should agents verify facts?", "acceptedAnswer": {"@type": "Answer", "text": "Answer from docs/ first, then verify technical claims against the code with search, quote file + line when unsure, and say so when a fact can't be verified."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link active" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Agent Knowledge Base — answering questions about this app</span></div>
+    <h1>Agent Knowledge Base — answering questions about this app</h1>
+    <div class="doc-intro">This is the <strong>fast-answer reference</strong> for humans and AI agents. Each entry gives a concise answer plus the doc to read for depth. If an answer here conflicts with the root <code>README.md</code>, trust this document (and the docs it references) — the root README is the non-technical user guide; these docs are the source-verified technical reference.</div>
+    
+
+<hr/>
+<h2 id="q-amp-a">Q&amp;A</h2>
+<h3 id="what-is-this-app">What is this app?</h3>
+<p>A <strong>local-first legal research desktop application</strong> ("Lawyer Assistant") for legal documents. The UI, prompts and OCR are English, and retrieval is language-agnostic (the BGE-M3 embedding model handles many languages, so non-English source text can still be searched). It searches a legal corpus with <strong>BGE-M3 embeddings + ChromaDB + BM25 + a cross-encoder reranker</strong>, answers questions with a local <strong>Ollama LLM</strong> (RAG with citations), and runs a <strong>compliance playbook scan</strong> that flags risky clauses in documents. It is an Electron app with a React frontend and a Python FastAPI backend. → <code>ARCHITECTURE.md</code>.</p>
+<h3 id="what-are-the-three-modes-of-chat">What are the three "modes" of chat?</h3>
+<p><code>rag</code> (default; retrieve + answer), <code>retrieval_only</code> (search only, no LLM), <code>direct</code> (LLM only, no retrieval). → <code>BACKEND.md</code> §2.</p>
+<h3 id="what-ai-agents-does-the-app-have">What AI "agents" does the app have?</h3>
+<ul><li><strong>Intent router</strong> (<code>router_intent.py</code>) — the default RAG orchestrator: classifies intent, writes a plan, picks tools from the plan, executes them, writes the answer.</li><li><strong>Legacy agentic router</strong> (<code>router.py</code>) — a LangGraph ReAct agent (agent → approval → tools → loop) with <strong>human-in-the-loop</strong> approval.</li><li><strong>Tools</strong> (the agent's "hands"): <code>search_documents</code>, <code>verify_relevance</code>, <code>scan_document</code>, <code>ingest_file</code>.</li><li><strong>Playbook scanner</strong> — a clause classifier + rule engine (not an LLM agent, but an AI component using embeddings). → <code>BACKEND.md</code> §4, §6.</li></ul>
+<h3 id="what-does-the-agent-do-with-my-query">What does the agent do with my query?</h3>
+<p>Rules enforced by prompts: the exact user query is passed to <code>search_documents</code> <strong>without rephrasing</strong>, results are verified with <code>verify_relevance</code>, and the final answer is written from retrieved chunks with file/page citations — or it says honestly that documents don't contain the answer. → <code>BACKEND.md</code> §4b.</p>
+<h3 id="what-is-human-in-the-loop-approval">What is human-in-the-loop approval?</h3>
+<p>Before the agent executes a tool, the LangGraph graph pauses with <code>interrupt()</code>. The UI shows an ApprovalBar; the user approves or rejects; <code>/api/chat/resume</code> resumes the thread with <code>Command(resume=response)</code>. Reject makes the agent answer without tools. Thread state persists in <code>data/conversations.db</code> (AsyncSqliteSaver). → <code>BACKEND.md</code> §4b, §3.</p>
+<h3 id="how-does-retrieval-work">How does retrieval work?</h3>
+<p>Query → BGE-M3 embedding → <strong>dense</strong> search (ChromaDB, top 50) + <strong>sparse</strong> (BM25, top 50) → hybrid merge → <strong>BGE-Reranker-v2-M3</strong> cross-encoder re-scores → top 5 results with scores, file/page/section metadata. → <code>BACKEND.md</code> §5.</p>
+<h3 id="how-does-document-ingestion-work">How does document ingestion work?</h3>
+<p>Files are saved into the <strong>active project folder</strong> (a workspace must be selected first — uploads land directly in that folder), parsed with <strong>Docling</strong> (OCR for scanned PDFs), chunked by the <strong>structure-aware chunker</strong> (480-token chunks, sections never split), embedded with BGE-M3, stored in ChromaDB, and indexed for BM25. → <code>DATA_FLOW.md</code>, <code>BACKEND.md</code> §5.</p>
+<h3 id="how-does-the-compliance-scan-work">How does the compliance scan work?</h3>
+<p>Document chunks → classify clause type (embedding classifier) → check each playbook rule → emit <strong>flags</strong> (severity high/medium/low, rule id, page, reason, clause text) → persist to SQLite → UI lets you resolve / dismiss / escalate. Playbooks are JSON files in <code>backend/legal_retrieval/playbook/playbooks/</code>. → <code>BACKEND.md</code> §6.</p>
+<h3 id="how-do-attachments-work">How do attachments work?</h3>
+<p>Attach up to 5 files (or a folder of up to 50 docs) → each is uploaded to <code>/api/upload</code> (saved into the active project folder — a workspace must be selected first) → the paths ride along on the chat request → the router ingests (<code>ingest_file</code>) and/or scans (<code>scan_document</code>) them; if you attach files without typing, it runs a default batch-scan prompt. → <code>BACKEND.md</code> §2, <code>FRONTEND.md</code> §2.</p>
+<h3 id="what-does-select-a-folder-do-workspace">What does "select a folder" do? (Workspace)</h3>
+<p>The "Work in a folder" button opens a <strong>native Electron directory dialog</strong> and the picked folder becomes the <strong>active workspace</strong> — and a workspace is now <strong>required</strong>: chat, upload and scan all refuse to run without one (there is no default <code>data/</code> folder anymore). Raw uploads land directly in that folder, and the ChromaDB/BM25 indexes, processed temp files and per-project history all live under <code>&lt;folder&gt;/workspace/</code> (<code>workspace/chroma_db</code>, <code>workspace/bm25_index</code>, <code>workspace/processed</code>, <code>workspace/history.json</code>), replacing the static project <code>data/</code> paths. <code>POST /api/workspace</code> sets it, <code>GET</code> reads it, <code>DELETE</code> resets it, and <code>POST /api/workspace/ingest</code> (or its SSE variant <code>/api/workspace/ingest/stream</code>) indexes every supported document in the folder. A background folder-watcher auto-ingests new files dropped into the project. The override is <strong>runtime-only</strong> (resets on restart). The frontend passes workspace file absolute paths on send (no re-upload). → <code>BACKEND.md</code> §2 (Workspace), <code>config.py</code> workspace section.</p>
+<h3 id="what-ports-does-the-app-use">What ports does the app use?</h3>
+<p><strong>8765</strong> backend (FastAPI), <strong>5173</strong> Vite dev server, <strong>11434</strong> Ollama. Electron kills stale 8765/5173 processes at startup. → <code>ARCHITECTURE.md</code> §2.</p>
+<h3 id="where-is-data-stored">Where is data stored?</h3>
+<ul><li>Browser: conversations and working set in <strong>per-project scoped</strong> localStorage keys (<code>freebuff-chat-storage:&lt;project-hash&gt;</code>, <code>freebuff-working-set:&lt;project-hash&gt;</code>), pipeline layout (<code>pipeline-layout-v1</code>).</li><li>Disk, project folder: <code>&lt;project&gt;/workspace/</code> — <code>chroma_db/</code> (vectors), <code>bm25_index/</code> (sparse index), <code>processed/</code> (temp artifacts) and <code>history.json</code> (per-project chat history + working set + GPU profile). Raw uploads live directly in the project folder itself.</li><li>Disk, project-independent: <code>data/conversations.db</code> (LangGraph agent threads), <code>data/flags.db</code> (scan flags).</li><li>Models: <code>models/bge-m3</code>, <code>models/bge-reranker-v2-m3</code>. → <code>ARCHITECTURE.md</code> §5.</li></ul>
+<h3 id="how-does-streaming-work">How does streaming work?</h3>
+<p>The backend streams <strong>Server-Sent Events</strong> (<code>event: &lt;type&gt;\ndata: &lt;json&gt;</code>): tokens, thinking (chain-of-thought), statuses, the plan, tool calls/results, node_start/node_complete, sources, interrupted/resumed, done, error. The frontend parses SSE lines and appends to Zustand streaming state. Workspace ingest streams its own event set (<code>ingest_start</code>, <code>ingest_progress</code>, <code>ingest_done</code>, <code>ingest_cancelled</code>, <code>ingest_error</code>). → <code>BACKEND.md</code> §3, <code>FRONTEND.md</code> §2, §6.</p>
+<h3 id="what-is-the-pipeline-editor">What is the Pipeline Editor?</h3>
+<p>A ReactFlow canvas visualizing the pipeline as nodes (intent, planner, dense, sparse, rerank, ingest, scan, answer). Nodes can be removed (auto-bypass rewires the flow), re-enabled via palette toggles, and the whole layout is auto-saved, resettable, and exportable/importable as JSON. <strong>Since the <code>/api/pipeline/config</code> endpoint, the layout also reconfigures the Python backend at runtime</strong> (rerank on/off from the <code>rerank</code> node, search mode + fusion weights from the dense/sparse nodes, <code>top_k</code> overrides). The config is runtime-only and resets on restart. → <code>PIPELINE_EDITOR.md</code>, <code>PIPELINE_JSON.md</code> §10.</p>
+<h3 id="why-is-the-ui-light-by-default-how-does-theming-work">Why is the UI light by default? / How does theming work?</h3>
+<p>The app defaults to a light "parchment" theme; <code>html.light</code> + CSS variables drive all colors, and a bridge remaps Tailwind utility classes so text never matches the background in either theme. → <code>FRONTEND.md</code> §7.</p>
+<h3 id="how-do-i-run-the-app">How do I run the app?</h3>
+<p><code>npm run dev</code> at the root (runs Electron, which boots the FastAPI backend and Vite itself). Non-technical users: double-click <code>launch.bat</code> / <code>launch.sh</code> to open the launcher, which installs everything and starts the app. For production, <code>npm run build</code> then <code>npm run package:win|mac|linux</code> (electron-builder). Electron auto-creates/uses <code>.venv</code> for the backend. → <code>ARCHITECTURE.md</code> §3.</p>
+<h3 id="why-is-the-first-query-slow">Why is the first query slow?</h3>
+<p>Models are preloaded at backend startup (warmup thread), so after startup the first query is fast; without warmup the first call pays model-loading cost. CLI (<code>backend/scripts/query.py</code>) also loads models on first use.</p>
+<h3 id="what-are-the-tests-benchmarks-backend-tests-has-phase-based-suites-boot-types-chunking-embeddings-vector">What are the tests/benchmarks?<code>backend/tests/</code> has phase-based suites (boot, types, chunking, embeddings, vector</h3>
+<p>  store, retrieval, integration e2e); <code>backend/benchmark/</code> has component tests and golden eval harnesses; CLI <code>law.py benchmark</code> runs them. → <code>backend/tests/</code>, <code>backend/benchmark/</code> source.</p>
+<hr/>
+<h2 id="how-to-answer-accurately-for-agents">How to answer accurately (for agents)</h2>
+<ol><li><strong>Scope check:</strong> is the question about the desktop app (Electron/React/ FastAPI) or the legacy CLI (<code>law.py</code>)? Point to <code>docs/</code> for the former; the CLI is not user-facing anymore.</li><li><strong>Prefer code over memory:</strong> verify specifics against <code>backend/main.py</code>, <code>backend/legal_retrieval/*.py</code>, <code>frontend/src/**</code> when the question is technical.</li><li><strong>Pipeline Editor = runtime config:</strong> since <code>POST /api/pipeline/config</code>, the editor's layout <em>does</em> reconfigure retrieval at runtime (rerank on/off, search mode + fusion weights, top_k) — it is not visual-only. Say so accurately (see <code>PIPELINE_JSON.md</code> §10).</li><li><strong>Cite the doc:</strong> end answers with the relevant doc filename so the questioner can go deeper.</li></ol>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>Where is the ground truth for the app?</h3><p>The knowledge base maps each topic to its source file — API endpoints in backend/main.py, retrieval config in config.py, frontend events in chatStore.ts, pipeline layout format in pipelineStorage.ts.</p></div><div class="faq-item"><h3>What are the known documentation traps?</h3><p>The root README is legacy (old CLI/flask), two routers exist (intent-based vs legacy ReAct), and both streaming and non-streaming chat endpoints exist — the knowledge base flags each so agents answer from the current architecture.</p></div><div class="faq-item"><h3>How should agents verify facts?</h3><p>Answer from docs/ first, then verify technical claims against the code with search, quote file + line when unsure, and say so when a fact can't be verified.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

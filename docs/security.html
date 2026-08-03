@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Security — Architecture, Policies &amp; Best Practices — Lawyer Assistant Docs</title>
+<meta name="description" content="Lawyer Assistant security model: CSP, Electron sandbox, API key handling, path traversal protection, file upload limits, data retention, and the full threat model."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/security.html"/>
+<meta name="keywords" content="legal AI security, csp, electron sandbox, api key protection, path traversal, threat model, data retention"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Security — Architecture, Policies &amp; Best Practices — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Lawyer Assistant security model: CSP, Electron sandbox, API key handling, path traversal protection, file upload limits, data retention, and the full threat model."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/security.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Security — Architecture, Policies &amp; Best Practices — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Lawyer Assistant security model: CSP, Electron sandbox, API key handling, path traversal protection, file upload limits, data retention, and the full threat model."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Security — Architecture, Policies &amp; Best Practices", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/security.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How are API keys protected?", "acceptedAnswer": {"@type": "Answer", "text": "Keys are stored in a git-ignored config file with file-permission protection, never logged (redacted from all output), never echoed back to the UI, and only sent to the chosen provider over HTTPS."}}, {"@type": "Question", "name": "How does the app prevent path traversal?", "acceptedAnswer": {"@type": "Answer", "text": "Uploaded files are resolved against the workspace root and rejected if they escape it — the docs show the exact safe-path pattern. Temp and lock files are excluded from scanning entirely."}}, {"@type": "Question", "name": "Does the backend expose anything to the network?", "acceptedAnswer": {"@type": "Answer", "text": "No — the FastAPI server binds to localhost only, CORS allows only the Vite dev server and Electron, and in local mode there are no outbound HTTP requests at all."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link active" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Security — Architecture, Policies &amp; Best Practices</span></div>
+    <h1>Security — Architecture, Policies &amp; Best Practices</h1>
+    <div class="doc-intro">Security architecture and implementation details for Lawyer Assistant. This document covers the app's security model, Content Security Policy (CSP), Electron sandboxing, data handling, and security testing.</div>
+    
+
+<hr/>
+<h2 id="1-security-principles">1. Security principles</h2>
+<h3 id="local-first-by-design">Local-first by design</h3>
+<p><strong>Documents never leave your machine by default.</strong></p>
+<ul><li><strong>Local mode</strong> — 100% on-device. Models run on your GPU/CPU. No network calls.</li><li><strong>API mode</strong> — Only the tiny piece of text needed for the answer is sent to the provider. Your full files never upload.</li></ul>
+<h3 id="zero-telemetry">Zero telemetry</h3>
+<ul><li>No usage tracking</li><li>No analytics</li><li>No crash reporting to external servers</li><li>No phone-home behavior</li></ul>
+<h3 id="open-source">Open source</h3>
+<ul><li>Full source code available for audit</li><li>No obfuscated code</li><li>Dependencies are well-known, vetted libraries</li></ul>
+<hr/>
+<h2 id="2-content-security-policy-csp">2. Content Security Policy (CSP)</h2>
+<p>The app enforces a <strong>strict CSP</strong> in production to prevent XSS, code injection, and unauthorized resource loading.</p>
+<h3 id="csp-rules-production-build">CSP rules (production build)</h3>
+<pre><span class="lang">html</span><code>&lt;meta
+  http-equiv="Content-Security-Policy"
+  content="default-src 'self';
+           script-src 'self';
+           style-src 'self' 'unsafe-inline';
+           img-src 'self' data: blob:;
+           font-src 'self' data:;
+           connect-src 'self' http://localhost:* ws://localhost:*;
+           object-src 'none';
+           base-uri 'self';
+           form-action 'self';"
+/&gt;</code></pre>
+<h3 id="what-it-prevents">What it prevents</h3>
+<table><thead><tr><th>Directive</th><th>What it blocks</th></tr></thead><tbody><tr><td><code>script-src 'self'</code></td><td>❌ Inline <code>&lt;script&gt;</code> tags&lt;br&gt;❌ <code>eval()</code>, <code>new Function()</code>&lt;br&gt;❌ External scripts from CDNs</td></tr><tr><td><code>style-src 'self' 'unsafe-inline'</code></td><td>⚠️ Allows inline styles (needed for Tailwind)&lt;br&gt;✅ Blocks external stylesheets</td></tr><tr><td><code>connect-src 'self' http://localhost:*</code></td><td>❌ Requests to external domains&lt;br&gt;✅ Allows backend (8765) + Vite HMR (5173)</td></tr><tr><td><code>object-src 'none'</code></td><td>❌ <code>&lt;object&gt;</code>, <code>&lt;embed&gt;</code>, <code>&lt;applet&gt;</code></td></tr></tbody></table>
+<h3 id="development-mode-relaxations">Development mode relaxations</h3>
+<p>During development (<code>npm run dev</code>), CSP allows:</p>
+<ul><li><code>script-src 'self' 'unsafe-inline'</code> — React Fast Refresh needs inline scripts</li><li><code>connect-src ... ws://localhost:*</code> — Vite HMR websocket</li></ul>
+<p>Production builds <strong>never</strong> allow <code>unsafe-inline</code> for scripts or <code>unsafe-eval</code>.</p>
+<h3 id="csp-injection-automated">CSP injection (automated)</h3>
+<p>CSP is injected into <code>dist/index.html</code> during build by a Vite plugin:</p>
+<p><strong>File:</strong> <code>frontend/vite.config.ts</code></p>
+<pre><span class="lang">typescript</span><code>function contentSecurityPolicy(): Plugin {
+  return {
+    name: 'inject-csp',
+    transformIndexHtml(html) {
+      const isDev = process.env.NODE_ENV === 'development';
+      const csp = isDev
+        ? "default-src 'self'; script-src 'self' 'unsafe-inline'; ..."
+        : "default-src 'self'; script-src 'self'; ...";
+      
+      return html.replace(
+        '&lt;head&gt;',
+        `&lt;head&gt;\n    &lt;meta http-equiv="Content-Security-Policy" content="${csp}"&gt;`
+      );
+    },
+  };
+}</code></pre>
+<h3 id="csp-regression-guard">CSP regression guard</h3>
+<p>A CI check (<code>frontend/scripts/check-csp.mjs</code>) fails the build if:</p>
+<ol><li><code>dist/index.html</code> is missing the CSP <code>&lt;meta&gt;</code> tag</li><li>Production CSP contains <code>unsafe-eval</code></li></ol>
+<p><strong>Run locally:</strong></p>
+<pre><span class="lang">bash</span><code>cd frontend
+npm run build
+npm run check:csp</code></pre>
+<p><strong>CI workflow</strong> (<code>.github/workflows/ci.yml</code>):</p>
+<pre><span class="lang">yaml</span><code>- name: Check CSP
+  run: |
+    cd frontend
+    npm run build
+    npm run check:csp</code></pre>
+<p>A CSP violation <strong>breaks the build</strong> — the security posture can't regress silently.</p>
+<hr/>
+<h2 id="3-electron-security-model">3. Electron security model</h2>
+<h3 id="renderer-sandbox">Renderer sandbox</h3>
+<p>The renderer process runs in a <strong>strict sandbox</strong> with no Node.js access:</p>
+<p><strong>File:</strong> <code>frontend/electron/src/main/window.ts</code></p>
+<pre><span class="lang">typescript</span><code>const win = new BrowserWindow({
+  webPreferences: {
+    sandbox: true,               // ✅ Renderer isolated from OS
+    contextIsolation: true,       // ✅ Renderer can't touch Electron APIs
+    nodeIntegration: false,       // ✅ No require() in renderer
+    preload: path.join(__dirname, 'preload.js'),
+  },
+});</code></pre>
+<h3 id="what-sandboxing-prevents">What sandboxing prevents</h3>
+<table><thead><tr><th>Attack</th><th>How it's prevented</th></tr></thead><tbody><tr><td><strong>Arbitrary file access</strong></td><td>Renderer has no <code>fs</code> module access</td></tr><tr><td><strong>OS command execution</strong></td><td>Renderer has no <code>child_process</code> access</td></tr><tr><td><strong>Electron API abuse</strong></td><td><code>contextIsolation=true</code> isolates APIs</td></tr><tr><td><strong>Node.js module loading</strong></td><td><code>nodeIntegration=false</code> disables <code>require()</code></td></tr></tbody></table>
+<h3 id="preload-script-controlled-bridge">Preload script (controlled bridge)</h3>
+<p>The preload script (<code>preload.ts</code>) exposes <strong>only</strong> safe, controlled IPC:</p>
+<pre><span class="lang">typescript</span><code>contextBridge.exposeInMainWorld('electron', {
+  // Safe IPC — main process validates all requests
+  send: (channel: string, data: any) =&gt; ipcRenderer.send(channel, data),
+  invoke: (channel: string, data: any) =&gt; ipcRenderer.invoke(channel, data),
+  on: (channel: string, func: Function) =&gt; {
+    ipcRenderer.on(channel, (event, ...args) =&gt; func(...args));
+  },
+});</code></pre>
+<p>Renderer <strong>cannot</strong> call arbitrary Node.js APIs — only the pre-defined IPC channels.</p>
+<h3 id="no-no-sandbox-flag">No <code>--no-sandbox</code> flag</h3>
+<p>The main process <strong>never</strong> uses the <code>--no-sandbox</code> Chromium flag (which disables the sandbox entirely). Using it anywhere in the codebase breaks the security check.</p>
+<h3 id="electron-security-regression-guard">Electron security regression guard</h3>
+<p>A CI check (<code>frontend/electron/scripts/check-electron-security.mjs</code>) fails the build if:</p>
+<ol><li>Any <code>BrowserWindow</code> doesn't set <code>sandbox: true</code>, <code>contextIsolation: true</code>, and <code>nodeIntegration: false</code> explicitly</li><li>The <code>--no-sandbox</code> flag appears anywhere in the main process sources</li></ol>
+<p><strong>Run locally:</strong></p>
+<pre><span class="lang">bash</span><code>cd frontend/electron
+npm run build
+npm run check:security</code></pre>
+<p><strong>CI workflow:</strong></p>
+<pre><span class="lang">yaml</span><code>- name: Check Electron Security
+  run: |
+    cd frontend/electron
+    npm run build
+    npm run check:security</code></pre>
+<p>An insecure <code>webPreferences</code> configuration <strong>breaks the build</strong>.</p>
+<hr/>
+<h2 id="4-api-key-handling">4. API key handling</h2>
+<h3 id="storage">Storage</h3>
+<p>API keys (<code>backend/api_config.json</code>) are:</p>
+<ul><li>✅ <strong>Git-ignored</strong> — never committed to the repository</li><li>✅ <strong>File-permission protected</strong> — readable only by the user running the app</li><li>✅ <strong>Never logged</strong> — keys are redacted from all log output</li><li>✅ <strong>Never echoed back</strong> — the <code>/api/providers/status</code> endpoint returns <code>"api_key": "[redacted]"</code>, not the real key</li></ul>
+<h3 id="transmission">Transmission</h3>
+<ul><li>Keys are sent <strong>only</strong> to the configured provider's API endpoint (OpenAI, Anthropic, etc.)</li><li>Keys are <strong>never</strong> sent to any other domain</li><li>All API provider communication is over <strong>HTTPS</strong> (TLS-encrypted)</li></ul>
+<h3 id="user-control">User control</h3>
+<p>The launcher's API provider card:</p>
+<ul><li>✅ Shows saved keys as <code>✓ &lt;provider&gt;</code> chips (key is never displayed)</li><li>✅ Allows deleting a saved key (removes it from <code>api_config.json</code>)</li><li>✅ Test connection validates the key without persisting it</li></ul>
+<hr/>
+<h2 id="5-file-upload-security">5. File upload security</h2>
+<h3 id="upload-constraints">Upload constraints</h3>
+<table><thead><tr><th>Constraint</th><th>Limit</th><th>Enforcement</th></tr></thead><tbody><tr><td><strong>Max files per message</strong></td><td>5</td><td>Frontend pre-check + backend validation</td></tr><tr><td><strong>Max folder files</strong></td><td>50</td><td>Frontend file picker filter</td></tr><tr><td><strong>Scan upload size cap</strong></td><td>50 MB</td><td>Backend <code>/api/scan/upload</code> rejects larger</td></tr><tr><td><strong>Supported extensions only</strong></td><td><code>.pdf</code>, <code>.docx</code>, <code>.txt</code>, <code>.png</code>, <code>.jpg</code>, ...</td><td>Backend <code>SUPPORTED_EXTENSIONS</code> filter</td></tr></tbody></table>
+<h3 id="path-validation">Path validation</h3>
+<p>Uploaded files are saved to the <strong>active workspace root</strong> — never to arbitrary paths supplied by the user:</p>
+<pre><span class="lang">python</span><code># Backend: main.py
+@app.post("/api/upload")
+async def upload_file(file: UploadFile):
+    root = get_workspace_root()
+    if root is None:
+        raise HTTPException(400, "No workspace selected")
+    
+    # Safe: sanitize filename, save under workspace root only
+    safe_name = secure_filename(file.filename)
+    dest = root / safe_name
+    
+    # Write file
+    with dest.open("wb") as f:
+        f.write(await file.read())
+    
+    return {"path": str(dest), "filename": safe_name}</code></pre>
+<p><strong>No path traversal:</strong> <code>../../etc/passwd</code> in a filename is sanitized to <code>etcpasswd</code>.</p>
+<h3 id="temp-file-exclusion">Temp file exclusion</h3>
+<p>Temp/lock files are <strong>never ingested</strong> (ignored during workspace scanning):</p>
+<p><strong>Patterns excluded:</strong></p>
+<ul><li><code>~$*</code> — Word lock files</li><li><code>.~lock*#</code> — LibreOffice lock files</li><li><code><em>.tmp</code>, <code></em>.temp</code>, <code><em>.bak</code>, <code></em>.swp</code>, <code>*.part</code> — temporary artifacts</li></ul>
+<p>This prevents indexing transient metadata files that could leak into search results.</p>
+<hr/>
+<h2 id="6-network-security">6. Network security</h2>
+<h3 id="backend-binds-to-localhost-only">Backend binds to localhost only</h3>
+<p>The FastAPI server binds to <code>127.0.0.1:8765</code> — <strong>not</strong> <code>0.0.0.0</code>:</p>
+<pre><span class="lang">python</span><code># Backend: main.py
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8765)</code></pre>
+<p>The backend is <strong>never exposed to the network</strong> — only the local Electron app can reach it.</p>
+<h3 id="cors-policy">CORS policy</h3>
+<p>CORS allows only:</p>
+<ul><li><code>http://localhost:5173</code> (Vite dev server)</li><li><code>file://</code> (Electron in production)</li></ul>
+<p>External origins <strong>cannot</strong> call the API.</p>
+<pre><span class="lang">python</span><code>app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_origin_regex=r"^file://.*",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)</code></pre>
+<h3 id="no-external-network-calls-local-mode">No external network calls (local mode)</h3>
+<p>In local mode:</p>
+<ul><li>✅ No outbound HTTP requests (models run locally)</li><li>✅ Ollama runs on <code>localhost:11434</code> (not exposed to network)</li><li>✅ ChromaDB is a local file database</li></ul>
+<p>The app is <strong>fully functional offline</strong>.</p>
+<hr/>
+<h2 id="7-data-retention">7. Data retention</h2>
+<h3 id="what-s-stored-where">What's stored where</h3>
+<table><thead><tr><th>Data</th><th>Location</th><th>Persistence</th></tr></thead><tbody><tr><td><strong>Raw uploads</strong></td><td><code>&lt;workspace&gt;/</code></td><td>Permanent (user's files)</td></tr><tr><td><strong>Vector index</strong></td><td><code>&lt;workspace&gt;/workspace/chroma_db/</code></td><td>Permanent (per project)</td></tr><tr><td><strong>Chat history</strong></td><td><code>&lt;workspace&gt;/workspace/history.json</code></td><td>Permanent (per project)</td></tr><tr><td><strong>LangGraph threads</strong></td><td><code>data/conversations.db</code></td><td>Permanent (project-independent)</td></tr><tr><td><strong>Compliance flags</strong></td><td><code>data/flags.db</code></td><td>Permanent (project-independent)</td></tr><tr><td><strong>Logs</strong></td><td><code>logs/legal_retrieval.log</code></td><td>Rotating (10 MB, 5 backups)</td></tr></tbody></table>
+<h3 id="what-s-not-stored">What's NOT stored</h3>
+<ul><li>❌ API keys are in <code>api_config.json</code> (git-ignored), not committed</li><li>❌ User queries are not logged (only logged locally in rotating log files)</li><li>❌ Documents are never uploaded to external servers (local mode)</li><li>❌ Telemetry/analytics data (none collected)</li></ul>
+<h3 id="clearing-data">Clearing data</h3>
+<p><strong>Per-project data</strong> (workspace):</p>
+<pre><span class="lang">bash</span><code>rm -rf /path/to/project/workspace/</code></pre>
+<p><strong>Global data</strong> (conversations, flags):</p>
+<pre><span class="lang">bash</span><code>rm -rf data/conversations.db data/flags.db</code></pre>
+<p><strong>Logs</strong>:</p>
+<pre><span class="lang">bash</span><code>rm -rf logs/</code></pre>
+<p><strong>Models</strong> (14 GB):</p>
+<pre><span class="lang">bash</span><code>rm -rf models/</code></pre>
+<hr/>
+<h2 id="8-dependency-security">8. Dependency security</h2>
+<h3 id="dependency-auditing">Dependency auditing</h3>
+<p>The project uses <strong>well-known, actively maintained</strong> dependencies:</p>
+<p><strong>Backend (Python):</strong></p>
+<ul><li><code>fastapi</code> — modern web framework, actively maintained</li><li><code>chromadb</code> — vector database, Chroma team</li><li><code>sentence-transformers</code> — HuggingFace, widely used</li><li><code>torch</code> — PyTorch, Facebook/Meta</li></ul>
+<p><strong>Frontend (TypeScript):</strong></p>
+<ul><li><code>react</code> — Facebook/Meta</li><li><code>vite</code> — Evan You (Vue.js creator)</li><li><code>electron</code> — GitHub/Microsoft</li></ul>
+<p><strong>Audit commands:</strong></p>
+<pre><span class="lang">bash</span><code># Python
+cd backend
+pip-audit
+
+# Node.js
+npm audit
+npm audit fix</code></pre>
+<p>Run audits in CI to catch vulnerable dependencies.</p>
+<h3 id="dependency-pinning">Dependency pinning</h3>
+<p>Python dependencies (<code>backend/requirements.txt</code>) use <strong>version pins</strong>:</p>
+<pre><code>fastapi==0.109.0
+chromadb==0.4.22
+sentence-transformers==2.2.2</code></pre>
+<p>Not ranges (<code>&gt;=0.109.0</code>) — exact versions for reproducibility.</p>
+<h3 id="supply-chain-attacks">Supply chain attacks</h3>
+<p><strong>Defense:</strong></p>
+<ul><li>All Python packages from <strong>PyPI</strong> (official index)</li><li>All Node packages from <strong>npmjs.com</strong> (official registry)</li><li>No dependencies from git repos or unknown sources</li><li><code>package-lock.json</code> / <code>requirements.txt</code> lock transitive deps</li></ul>
+<hr/>
+<h2 id="9-secure-coding-practices">9. Secure coding practices</h2>
+<h3 id="input-validation">Input validation</h3>
+<p>All API inputs are validated via Pydantic models:</p>
+<pre><span class="lang">python</span><code>class ChatRequest(BaseModel):
+    query: str = Field(..., min_length=1, max_length=10000)
+    mode: Literal["rag", "retrieval_only", "direct"] = "rag"
+    top_k: int = Field(default=5, ge=1, le=100)
+    # ... validates types, ranges, required fields</code></pre>
+<p>Invalid input is rejected <strong>before</strong> processing.</p>
+<h3 id="sql-injection-prevention">SQL injection prevention</h3>
+<p>The app uses:</p>
+<ul><li><strong>SQLite with parameterized queries</strong> (LangGraph, flags persistence)</li><li><strong>ChromaDB</strong> (vector database, no SQL)</li></ul>
+<p>No raw SQL string concatenation anywhere in the codebase.</p>
+<h3 id="path-traversal-prevention">Path traversal prevention</h3>
+<p>File operations use <strong>safe path resolution</strong>:</p>
+<pre><span class="lang">python</span><code># Safe
+workspace_root = Path("/absolute/path/to/project")
+user_file = "contract.pdf"
+safe_path = (workspace_root / user_file).resolve()
+
+# Check: must be under workspace root
+if not safe_path.is_relative_to(workspace_root):
+    raise ValueError("Path traversal attempt")</code></pre>
+<p>User-supplied paths are <strong>never</strong> used directly.</p>
+<h3 id="command-injection-prevention">Command injection prevention</h3>
+<p>The app <strong>does not</strong> execute user-supplied shell commands. The only shell commands are:</p>
+<ul><li><code>ollama serve</code> (hardcoded, no user input)</li><li><code>ollama pull &lt;model&gt;</code> (model name is from config, not user input)</li><li><code>python main.py</code> (Electron spawns backend, hardcoded)</li></ul>
+<h3 id="xss-prevention">XSS prevention</h3>
+<ul><li><strong>CSP blocks inline scripts</strong> (production)</li><li><strong>React escapes by default</strong> (JSX auto-escapes)</li><li><strong>Markdown rendering uses <code>react-markdown</code></strong> (sanitized by default)</li></ul>
+<p>User input is <strong>never</strong> inserted into HTML via <code>dangerouslySetInnerHTML</code>.</p>
+<hr/>
+<h2 id="10-electron-specific-security">10. Electron-specific security</h2>
+<h3 id="remote-module-disabled">Remote module disabled</h3>
+<p>The deprecated <code>remote</code> module is <strong>not used</strong> — all main↔renderer communication is via IPC.</p>
+<h3 id="websecurity-enabled"><code>webSecurity</code> enabled</h3>
+<p><code>webSecurity: true</code> (default) is never disabled — prevents:</p>
+<ul><li>Loading insecure content (mixed HTTP/HTTPS)</li><li>CORS bypass</li><li>File protocol abuse</li></ul>
+<h3 id="no-allowrunninginsecurecontent">No <code>allowRunningInsecureContent</code></h3>
+<p>Production builds <strong>never</strong> set <code>allowRunningInsecureContent: true</code> (which would allow HTTP content in HTTPS pages).</p>
+<h3 id="native-modules-sandboxed">Native modules sandboxed</h3>
+<p>Electron's native modules (<code>require('electron')</code>) are <strong>not accessible</strong> in the renderer due to <code>nodeIntegration: false</code> + <code>contextIsolation: true</code>.</p>
+<hr/>
+<h2 id="11-security-testing">11. Security testing</h2>
+<h3 id="automated-checks-in-ci">Automated checks in CI</h3>
+<p>Two security checks run on every push/PR:</p>
+<p><strong>1. CSP validation</strong> (<code>.github/workflows/ci.yml</code>):</p>
+<pre><span class="lang">yaml</span><code>- name: Build frontend
+  run: cd frontend &amp;&amp; npm run build
+- name: Check CSP
+  run: cd frontend &amp;&amp; npm run check:csp</code></pre>
+<p><strong>2. Electron security validation</strong>:</p>
+<pre><span class="lang">yaml</span><code>- name: Build Electron
+  run: cd frontend/electron &amp;&amp; npm run build
+- name: Check Electron Security
+  run: cd frontend/electron &amp;&amp; npm run check:security</code></pre>
+<p>Both checks <strong>fail the build</strong> on violations.</p>
+<h3 id="manual-security-testing">Manual security testing</h3>
+<p><strong>Test CSP enforcement:</strong></p>
+<pre><span class="lang">bash</span><code>cd frontend
+npm run build
+npm run check:csp</code></pre>
+<p><strong>Test Electron sandbox:</strong></p>
+<pre><span class="lang">bash</span><code>cd frontend/electron
+npm run build
+npm run check:security</code></pre>
+<p><strong>Test dependency vulnerabilities:</strong></p>
+<pre><span class="lang">bash</span><code>cd backend
+pip-audit
+
+cd ..
+npm audit</code></pre>
+<hr/>
+<h2 id="12-threat-model">12. Threat model</h2>
+<h3 id="in-scope-threats">In-scope threats</h3>
+<p>✅ <strong>XSS via user input</strong> — mitigated by CSP + React escaping ✅ <strong>Code injection</strong> — mitigated by sandbox + CSP ✅ <strong>Path traversal</strong> — mitigated by safe path resolution ✅ <strong>API key leakage</strong> — mitigated by git-ignore + log redaction ✅ <strong>Dependency vulnerabilities</strong> — mitigated by audits + pinning ✅ <strong>Electron sandbox escape</strong> — mitigated by strict <code>webPreferences</code></p>
+<h3 id="out-of-scope-threats">Out-of-scope threats</h3>
+<p>⚠️ <strong>Physical access to machine</strong> — user's OS-level security responsibility ⚠️ <strong>Malicious Ollama models</strong> — user must trust model sources ⚠️ <strong>Compromised PyPI/npm packages</strong> — supply chain risk (audits help) ⚠️ <strong>OS kernel exploits</strong> — outside app's control</p>
+<hr/>
+<h2 id="13-incident-response">13. Incident response</h2>
+<h3 id="reporting-a-vulnerability">Reporting a vulnerability</h3>
+<p><strong>Email:</strong> [your-security-email@example.com]</p>
+<p><strong>What to include:</strong></p>
+<ul><li>Description of the vulnerability</li><li>Steps to reproduce</li><li>Affected versions</li><li>Suggested fix (if any)</li></ul>
+<p><strong>Response SLA:</strong></p>
+<ul><li>Acknowledgment within 48 hours</li><li>Initial assessment within 7 days</li><li>Fix timeline provided within 14 days</li></ul>
+<h3 id="disclosure-policy">Disclosure policy</h3>
+<ul><li><strong>Coordinated disclosure</strong> — 90 days from report to public disclosure</li><li>Security fixes released as <strong>patch versions</strong> (e.g., 1.0.1)</li><li>CVE assigned if applicable</li><li>Security advisories published on GitHub</li></ul>
+<hr/>
+<h2 id="14-security-checklist-for-contributors">14. Security checklist for contributors</h2>
+<p>Before submitting a PR:</p>
+<ul><li>[ ] No API keys, credentials, or secrets in code</li><li>[ ] All user input validated via Pydantic models</li><li>[ ] No raw SQL string concatenation</li><li>[ ] No user-supplied paths used directly (use safe resolution)</li><li>[ ] No <code>eval()</code>, <code>exec()</code>, or <code>new Function()</code></li><li>[ ] No <code>dangerouslySetInnerHTML</code> in React components</li><li>[ ] CSP check passes (<code>npm run check:csp</code>)</li><li>[ ] Electron security check passes (<code>npm run check:security</code>)</li><li>[ ] <code>npm audit</code> shows no high/critical vulnerabilities</li><li>[ ] New dependencies justified and from official registries</li></ul>
+<hr/>
+<h2 id="15-security-updates">15. Security updates</h2>
+<p><strong>Where to watch:</strong></p>
+<ul><li><a href="https://github.com/haal-lab/Lawyer-Assistant/security/advisories" target="_blank" rel="noopener">GitHub Security Advisories</a></li><li><a href="https://github.com/haal-lab/Lawyer-Assistant/releases" target="_blank" rel="noopener">Release notes</a> — security fixes noted</li><li>Dependency audit reports (<code>npm audit</code>, <code>pip-audit</code>)</li></ul>
+<p><strong>How to update:</strong></p>
+<pre><span class="lang">bash</span><code># Pull latest
+git pull origin main
+
+# Update dependencies
+cd backend &amp;&amp; pip install -r requirements.txt
+cd frontend &amp;&amp; npm install
+cd frontend/electron &amp;&amp; npm install</code></pre>
+<hr/>
+<h2 id="16-privacy-guarantees">16. Privacy guarantees</h2>
+<h3 id="local-mode">Local mode</h3>
+<p>✅ <strong>100% private</strong> — no network calls, no data leaves your machine ✅ <strong>Offline capable</strong> — works without internet ✅ <strong>No telemetry</strong> — zero usage tracking</p>
+<h3 id="api-mode">API mode</h3>
+<p>⚠️ <strong>Selective data sent</strong> — only the small text snippet needed for the answer ✅ <strong>Documents stay local</strong> — full files never uploaded ✅ <strong>User controls provider</strong> — choose OpenAI, Anthropic, etc. ✅ <strong>No telemetry</strong> — app still doesn't track usage</p>
+<h3 id="what-s-never-sent">What's NEVER sent</h3>
+<ul><li>❌ Your full documents</li><li>❌ Your file names or directory structure (unless part of a citation in the answer text)</li><li>❌ Your workspace folder paths</li><li>❌ Your API keys (sent only to the configured provider)</li><li>❌ Usage analytics or telemetry</li></ul>
+<hr/>
+<h2 id="17-compliance-notes">17. Compliance notes</h2>
+<h3 id="gdpr">GDPR</h3>
+<p>The app does <strong>not</strong> collect, process, or transmit personal data — all processing is local (user's machine). API mode sends only text snippets to the chosen provider (user-controlled).</p>
+<h3 id="hipaa-phi">HIPAA / PHI</h3>
+<p>The app is <strong>not</strong> HIPAA-compliant out-of-the-box. Healthcare organizations must:</p>
+<ul><li>Use local mode only (no API providers)</li><li>Encrypt the workspace folder at rest (OS-level encryption)</li><li>Ensure secure local machine (full disk encryption, access controls)</li></ul>
+<h3 id="legal-documents">Legal documents</h3>
+<p>The app is designed for <strong>legal professionals</strong> handling <strong>confidential client documents</strong>. Local-first architecture ensures client privilege is maintained.</p>
+<hr/>
+<h2 id="18-related-documentation">18. Related documentation</h2>
+<table><thead><tr><th>Doc</th><th>Coverage</th></tr></thead><tbody><tr><td><a href="architecture.html"><code>ARCHITECTURE.md</code></a></td><td>System overview, ports</td></tr><tr><td><a href="backend.html"><code>BACKEND.md</code></a></td><td>API endpoints, validation</td></tr><tr><td><a href="frontend.html"><code>FRONTEND.md</code></a></td><td>UI security, CSP</td></tr><tr><td><a href="api-provider.html"><code>API_PROVIDER.md</code></a></td><td>Cloud mode security</td></tr><tr><td><a href="development.html"><code>DEVELOPMENT.md</code></a></td><td>Secure development practices</td></tr><tr><td><a href="deployment.html"><code>DEPLOYMENT.md</code></a></td><td>Production security hardening</td></tr></tbody></table>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>How are API keys protected?</h3><p>Keys are stored in a git-ignored config file with file-permission protection, never logged (redacted from all output), never echoed back to the UI, and only sent to the chosen provider over HTTPS.</p></div><div class="faq-item"><h3>How does the app prevent path traversal?</h3><p>Uploaded files are resolved against the workspace root and rejected if they escape it — the docs show the exact safe-path pattern. Temp and lock files are excluded from scanning entirely.</p></div><div class="faq-item"><h3>Does the backend expose anything to the network?</h3><p>No — the FastAPI server binds to localhost only, CORS allows only the Vite dev server and Electron, and in local mode there are no outbound HTTP requests at all.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

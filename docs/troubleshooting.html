@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Troubleshooting — Lawyer Assistant — Lawyer Assistant Docs</title>
+<meta name="description" content="Fix common Lawyer Assistant problems: Ollama not running, stale processes on 8765/5173, empty search results, venv failures, and model warmup issues."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/troubleshooting.html"/>
+<meta name="keywords" content="troubleshooting, ollama not running, port 8765 conflict, empty results, venv failed, model warmup"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Troubleshooting — Lawyer Assistant — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Fix common Lawyer Assistant problems: Ollama not running, stale processes on 8765/5173, empty search results, venv failures, and model warmup issues."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/troubleshooting.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Troubleshooting — Lawyer Assistant — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Fix common Lawyer Assistant problems: Ollama not running, stale processes on 8765/5173, empty search results, venv failures, and model warmup issues."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Troubleshooting — Lawyer Assistant", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/troubleshooting.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Ollama isn't running — what do I do?", "acceptedAnswer": {"@type": "Answer", "text": "Start it manually (ollama serve) or relaunch the app, then confirm http://localhost:11434 responds. Retrieval still works without Ollama — only LLM generation (answers, verification, scanning) degrades."}}, {"@type": "Question", "name": "Why is my search returning no results?", "acceptedAnswer": {"@type": "Answer", "text": "Usually the corpus was never ingested — make sure a workspace is selected and 'Ingest all files' has run. Also verify the reranker isn't filtering everything and that the query terms actually exist in the index."}}, {"@type": "Question", "name": "Port 8765 is already in use?", "acceptedAnswer": {"@type": "Answer", "text": "A stale backend from a previous session is still listening. The app kills listeners on 8765 and 5173 at startup; if it still conflicts, kill the leftover process and restart. The doc covers the exact commands."}}, {"@type": "Question", "name": "Setup fails at the venv step?", "acceptedAnswer": {"@type": "Answer", "text": "The launcher falls back to system Python if venv creation fails. The troubleshooting guide walks through each failure mode with its exact fix."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link active" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Troubleshooting — Lawyer Assistant</span></div>
+    <h1>Troubleshooting — Lawyer Assistant</h1>
+    <div class="doc-intro">Common failures, their causes, and fixes. Cross-referenced with the rest of the knowledge base — start with the quick table, then jump to a section or a doc for depth.</div>
+    
+
+<blockquote>Getting started? See <a href="quickstart.html"><code>QUICKSTART.md</code></a> first.</blockquote>
+<hr/>
+<h2 id="0-quick-reference">0. Quick reference</h2>
+<table><thead><tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td>Boot screen stuck on "loading"</td><td>Backend never became ready</td><td>§1 — check backend startup / Python on PATH</td></tr><tr><td>"Could not reach the backend server"</td><td>Nothing listening on 8765</td><td>§1 — start the backend or restart <code>npm run dev</code></td></tr><tr><td><code>EADDRINUSE</code> / port 8765 busy</td><td>Stale backend process</td><td>§2 — kill the port, restart</td></tr><tr><td>Answers say model "unavailable"</td><td>Ollama not running / no model</td><td>§3 — start Ollama, <code>ollama pull lfm2.5:8b</code></td></tr><tr><td>"No workspace selected. Select a project folder first."</td><td>No project folder active</td><td>§4a — pick a folder with "Work in a folder" (a workspace is required)</td></tr><tr><td>No sources, "could not find relevant information"</td><td>Corpus not ingested</td><td>§4 — ingest documents (bulk or attach)</td></tr><tr><td>First query very slow</td><td>Models loading cold</td><td>§5 — warmup / patience on first run</td></tr><tr><td>CUDA out of memory</td><td>Batch size too large for GPU</td><td>§6 — <code>--batch-size 32</code> or CPU</td></tr><tr><td>Electron shows "Frontend Dev Server Failed"</td><td>Vite can't start on 5173</td><td>§7 — <code>cd frontend &amp;&amp; npm install</code></td></tr><tr><td>Attached file doesn't appear in chat</td><td>Upload failed / unsupported type</td><td>§8 — check <code>/api/upload</code>, extensions, 5-file cap</td></tr><tr><td>Stream ends with no answer</td><td>Interrupt or SSE hiccup</td><td>§9 — check ApprovalBar; retry</td></tr><tr><td>Scan fails or flags missing</td><td>Document not indexed / 50MB cap</td><td>§10 — ingest first, check caps</td></tr></tbody></table>
+<hr/>
+<h2 id="1-backend-not-reachable-on-port-8765">1. Backend not reachable on port 8765</h2>
+<p><strong>Symptoms:</strong> BootLoader stuck on "loading"; toast/error "Could not reach the backend server. Make sure the Python server is running on port 8765."</p>
+<p><strong>Causes &amp; checks:</strong></p>
+<pre><span class="lang">bash</span><code># Is anything listening on 8765?
+curl http://localhost:8765/api/health          # expect {"status":"ok",...}
+netstat -ano | findstr :8765 | findstr LISTENING   # Windows
+lsof -ti:8765                                  # macOS/Linux</code></pre>
+<p>If nothing responds, the backend didn't start. Common reasons:</p>
+<ol><li><strong>Python 3 not on PATH</strong> — Electron's <code>venv-manager</code> needs a system Python to create <code>.venv</code>; if it can't find one it falls back to <code>python</code>/<code>python3</code>, which also fails. Verify: <code>python --version</code>.</li><li><strong>Venv/dependency setup failed</strong> — the bridge logs to the Electron console ("Venv setup failed, falling back to system Python"). Fix manually:</li></ol>
+<pre><span class="lang">bash</span><code>   python -m venv .venv
+   .venv\Scripts\activate        # Windows   |   source .venv/bin/activate
+   pip install -r backend/requirements.txt
+   python backend/main.py        # run directly to see errors</code></pre>
+<ol><li><strong>Warmup takes a while</strong> — the backend binds the port first, then warms up models in the background, so <code>/api/health</code> should respond quickly. If the process crashes during warmup (OOM, missing model), see §5/§6.</li></ol>
+<p><strong>Fix:</strong> restart <code>npm run dev</code> (it kills stale listeners and retries). Watch the Electron terminal for Python stdout/stderr.</p>
+<hr/>
+<h2 id="2-stale-processes-on-8765-5173">2. Stale processes on 8765 / 5173</h2>
+<p><strong>Symptom:</strong> <code>EADDRINUSE</code> errors; a previous instance's backend keeps serving old code.</p>
+<p>Electron already kills listeners on <strong>8765</strong> and <strong>5173</strong> at startup (<code>frontend/electron/src/main/index.ts</code> → <code>killPort</code>). If you still hit conflicts:</p>
+<pre><span class="lang">bash</span><code># Windows
+netstat -ano | findstr :8765 | findstr LISTENING
+taskkill /F /PID &lt;pid&gt;
+
+# macOS/Linux
+lsof -ti:8765 | xargs kill -9</code></pre>
+<p>Then restart the app. See <a href="quickstart.html"><code>QUICKSTART.md</code></a> §3.</p>
+<hr/>
+<h2 id="3-ollama-not-running-model-unavailable">3. Ollama not running / model unavailable</h2>
+<p><strong>Symptom:</strong> The status/meta line reports model <strong>"unavailable"</strong>; answers may be generic or missing; <code>direct</code> mode fails.</p>
+<p><strong>Causes:</strong></p>
+<ul><li>Ollama isn't started, or isn't on <code>http://localhost:11434</code> (the default base URL used by <code>OllamaLLM</code> / <code>ChatOllama</code>).</li><li>Ollama is up but the configured model isn't pulled.</li></ul>
+<p><strong>Fixes:</strong></p>
+<pre><span class="lang">bash</span><code>ollama serve                        # ensure the daemon is running
+ollama list                         # see pulled models
+ollama pull lfm2.5:8b               # pull the launcher's default model</code></pre>
+<blockquote>Retrieval still works without Ollama — only LLM generation (RAG answers, relevance verification, scanning) degrades. See <a href="backend.html"><code>BACKEND.md</code></a> §7.</blockquote>
+<hr/>
+<h2 id="4-empty-results-no-relevant-documents">4. Empty results / "no relevant documents"</h2>
+<p><strong>Symptom:</strong> The agent honestly says it couldn't find relevant information; Sources panel is empty; retrieval returns 0 chunks.</p>
+<p><strong>Cause:</strong> The corpus was never ingested (empty <code>&lt;project&gt;/workspace/chroma_db</code> for the active project — or no workspace selected at all).</p>
+<p><strong>Checks:</strong></p>
+<pre><span class="lang">bash</span><code>curl http://localhost:8765/api/documents    # list indexed files</code></pre>
+<h3 id="4a-no-workspace-selected">4a. "No workspace selected"</h3>
+<p><strong>Symptom:</strong> Chat/upload/scan error with "No workspace selected. Select a project folder first."</p>
+<p><strong>Cause:</strong> A project folder is now <strong>required</strong> — there is no default <code>data/</code> folder fallback.</p>
+<p><strong>Fix:</strong> In the app, click <strong>"Work in a folder"</strong> and pick the project folder. The backend then stores everything under <code>&lt;project&gt;/workspace/</code>.</p>
+<hr/>
+<h3 id="4b-empty-workspace-index">4b. Empty workspace index</h3>
+<p><strong>Fixes:</strong></p>
+<ul><li>In the app: run <strong>"Ingest all files"</strong> in the Workspace panel (or programmatically <code>curl -X POST http://localhost:8765/api/workspace/ingest</code>) to index every supported document in the folder at once.</li><li>Or attach files individually via the <strong>+</strong> button (or drag &amp; drop) — uploaded files are ingested automatically.</li><li>Bulk initial ingest of a static corpus (see <a href="quickstart.html"><code>QUICKSTART.md</code></a> §4):</li></ul>
+<pre><span class="lang">bash</span><code>  .venv\Scripts\activate
+  cd backend &amp;&amp; python scripts/ingest_all.py            # --reset to rebuild</code></pre>
+<p>Also verify the <strong>reranker isn't filtering everything</strong>: if scores are all below the threshold, try <code>skip_rerank</code> / <code>--no-rerank</code>. See</p>
+<p><a href="backend.html"><code>BACKEND.md</code></a> §5.</p>
+<hr/>
+<h2 id="5-slow-first-query">5. Slow first query</h2>
+<p><strong>Symptom:</strong> The first query takes 10–30s; later ones are fast.</p>
+<p><strong>Cause:</strong> Models (BGE-M3, BGE-Reranker, LLM) load on first use.</p>
+<p><strong>Fix:</strong> The backend <strong>warms up</strong> all models in a background thread at startup (<code>backend/main.py</code>), so in the desktop app the first query is already fast after the warmup completes (~seconds after launch). If you run the backend directly and skip warmup, expect a one-time load. Don't kill the app during warmup.</p>
+<hr/>
+<h2 id="6-gpu-out-of-memory">6. GPU out of memory</h2>
+<p><strong>Symptom:</strong> <code>CUDA out of memory</code> during ingestion or embedding.</p>
+<p><strong>Fixes:</strong></p>
+<pre><span class="lang">bash</span><code>cd backend &amp;&amp; python scripts/ingest_all.py --batch-size 32    # lower GPU memory
+cd backend &amp;&amp; python scripts/ingest_all.py --device cpu       # force CPU</code></pre>
+<p>Runtime device is auto-resolved (<code>cuda</code> → <code>mps</code> → <code>cpu</code>) in <code>backend/legal_retrieval/config.py</code> (<code>resolve_device</code>); you can override with <code>PLR_*</code> env vars. See <a href="backend.html"><code>BACKEND.md</code></a> §5.</p>
+<hr/>
+<h2 id="7-frontend-dev-server-failed">7. Frontend dev server failed</h2>
+<p><strong>Symptom:</strong> Electron window shows "⚠️ Frontend Dev Server Failed" and hints <code>cd frontend &amp;&amp; npm install</code>.</p>
+<p><strong>Fixes:</strong></p>
+<pre><span class="lang">bash</span><code>cd frontend &amp;&amp; npm install &amp;&amp; npm run dev   # confirm Vite starts on 5173</code></pre>
+<p>If 5173 is occupied by another app, stop it or restart <code>npm run dev</code> (which kills stale 5173 listeners). See <a href="frontend.html"><code>FRONTEND.md</code></a> §8.</p>
+<hr/>
+<h2 id="8-attachments-don-t-work">8. Attachments don't work</h2>
+<p><strong>Symptoms:</strong> Files don't upload; uploads fail; attached file ignored.</p>
+<p><strong>Checks:</strong></p>
+<ul><li>Supported extensions only (see <code>SUPPORTED_ATTACH_EXTENSIONS</code> in <code>frontend/src/components/Chat/InputBar.tsx</code>).</li><li><strong>Max 5 files</strong> per message; <strong>50 docs</strong> per folder pick.</li><li>A project folder must be active before uploading (see §4a); <code>/api/upload</code> saves into the project folder itself; check the Electron console for <code>[Upload]</code> logs.</li><li>If all uploads fail and you typed nothing, the app bails out with "No files uploaded."</li></ul>
+<p>See <a href="frontend.html"><code>FRONTEND.md</code></a> §2 and <a href="backend.html"><code>BACKEND.md</code></a> §2.</p>
+<hr/>
+<h2 id="9-stream-ends-without-an-answer">9. Stream ends without an answer</h2>
+<p><strong>Symptoms:</strong> Answer never arrives; spinner stops; execution log incomplete.</p>
+<p><strong>Causes:</strong></p>
+<ul><li><strong>Human-in-the-loop interrupt</strong> — the agent paused for approval; the ApprovalBar should appear. Approve or reject to resume (<code>/api/chat/resume</code>). See <a href="backend.html"><code>BACKEND.md</code></a> §4b.</li><li><strong>SSE hiccup / backend error</strong> — the last event was <code>error</code> or the stream closed. The frontend finalizes with whatever it has; retry the query.</li><li><strong>Session expired</strong> — resuming an old thread returns "Session expired. Please start a new conversation." (the stored graph was cleaned up).</li></ul>
+<hr/>
+<h2 id="10-playbook-scan-fails-flags-missing">10. Playbook scan fails / flags missing</h2>
+<p><strong>Symptoms:</strong> Scan errors; zero flags; "Document not found".</p>
+<p><strong>Checks:</strong></p>
+<ul><li>The document must be <strong>indexed</strong> (see §4) before <code>/api/scan/stream</code> can fetch its chunks.</li><li><strong>50MB upload cap</strong> on scan uploads.</li><li>Playbooks come from <code>backend/legal_retrieval/playbook/playbooks/</code> — if none listed, the <code>default.json</code> may be missing.</li><li>Flags persist to SQLite (<code>playbook/persistence.py</code>); if they don't show, re-run the scan and check <code>/api/flags</code>. See <a href="backend.html"><code>BACKEND.md</code></a> §6.</li></ul>
+<hr/>
+<h2 id="11-diagnostics-cheatsheet">11. Diagnostics cheatsheet</h2>
+<pre><span class="lang">bash</span><code>curl http://localhost:8765/api/health       # backend alive?
+curl http://localhost:8765/api/documents    # indexed files
+curl http://localhost:8765/api/playbooks    # available playbooks
+curl http://localhost:8765/api/flags        # persisted flags
+netstat -ano | findstr :8765                # Windows port check
+ollama list                                 # pulled LLM models
+nvidia-smi                                  # GPU memory</code></pre>
+<hr/>
+<h2 id="12-where-to-look-next">12. Where to look next</h2>
+<table><thead><tr><th>Topic</th><th>Doc</th></tr></thead><tbody><tr><td>Running the app</td><td><a href="quickstart.html"><code>QUICKSTART.md</code></a></td></tr><tr><td>Architecture &amp; ports</td><td><a href="architecture.html"><code>ARCHITECTURE.md</code></a></td></tr><tr><td>API, agents, retrieval, scan</td><td><a href="backend.html"><code>BACKEND.md</code></a></td></tr><tr><td>Frontend streaming &amp; panels</td><td><a href="frontend.html"><code>FRONTEND.md</code></a></td></tr><tr><td>Pipeline editor</td><td><a href="pipeline-editor.html"><code>PIPELINE_EDITOR.md</code></a></td></tr><tr><td>Terminology</td><td><a href="glossary.html"><code>GLOSSARY.md</code></a></td></tr><tr><td>Agent Q&amp;A</td><td><a href="agent-knowledge-base.html"><code>AGENT_KNOWLEDGE_BASE.md</code></a></td></tr></tbody></table>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>Ollama isn't running — what do I do?</h3><p>Start it manually (ollama serve) or relaunch the app, then confirm http://localhost:11434 responds. Retrieval still works without Ollama — only LLM generation (answers, verification, scanning) degrades.</p></div><div class="faq-item"><h3>Why is my search returning no results?</h3><p>Usually the corpus was never ingested — make sure a workspace is selected and 'Ingest all files' has run. Also verify the reranker isn't filtering everything and that the query terms actually exist in the index.</p></div><div class="faq-item"><h3>Port 8765 is already in use?</h3><p>A stale backend from a previous session is still listening. The app kills listeners on 8765 and 5173 at startup; if it still conflicts, kill the leftover process and restart. The doc covers the exact commands.</p></div><div class="faq-item"><h3>Setup fails at the venv step?</h3><p>The launcher falls back to system Python if venv creation fails. The troubleshooting guide walks through each failure mode with its exact fix.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

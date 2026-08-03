@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Workspace Management &amp; Auto-Ingestion — Lawyer Assistant Docs</title>
+<meta name="description" content="Lawyer Assistant workspace model: project folders, the folder picker, ingestion workflows, per-project index and history, and the required workspace."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/workspace.html"/>
+<meta name="keywords" content="workspace, project folder, folder picker, ingest all files, per project index"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Workspace Management &amp; Auto-Ingestion — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Lawyer Assistant workspace model: project folders, the folder picker, ingestion workflows, per-project index and history, and the required workspace."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/workspace.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Workspace Management &amp; Auto-Ingestion — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Lawyer Assistant workspace model: project folders, the folder picker, ingestion workflows, per-project index and history, and the required workspace."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Workspace Management &amp; Auto-Ingestion", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/workspace.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why do I need a workspace?", "acceptedAnswer": {"@type": "Answer", "text": "A project folder is required — there is no default fallback. It scopes retrieval to the right corpus, keeps per-project indexes and history separate, and prevents results bleeding between cases."}}, {"@type": "Question", "name": "How do I set up a workspace?", "acceptedAnswer": {"@type": "Answer", "text": "Click 'Work in a folder' in the app and pick your project directory. Then run 'Ingest all files' (or attach files individually) to index everything; uploads land in the active workspace."}}, {"@type": "Question", "name": "What lives in the workspace?", "acceptedAnswer": {"@type": "Answer", "text": "Raw uploads, processed chunks, the vector + BM25 indexes, and project-scoped history. Switching folders switches the whole working set, and folder-specific project history is saved."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link active" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Workspace Management &amp; Auto-Ingestion</span></div>
+    <h1>Workspace Management &amp; Auto-Ingestion</h1>
+    <div class="doc-intro">Workspace management in Lawyer Assistant provides <strong>per-project isolation</strong> with automatic document indexing. When you select a folder, it becomes your active workspace — everything the app saves lives in a dedicated <code>workspace/</code> sub-folder, and a background watcher auto-ingests new documents you drop in.</div>
+    
+
+<hr/>
+<h2 id="1-what-is-a-workspace">1. What is a workspace?</h2>
+<p>A workspace is a <strong>user-picked project folder</strong> that becomes the active context for all operations:</p>
+<ul><li><strong>Uploads land directly in the folder</strong> (raw files stay visible as project documents)</li><li><strong>Indexes live under <code>workspace/</code></strong> (<code>chroma_db/</code>, <code>bm25_index/</code>, <code>processed/</code>)</li><li><strong>Chat history is per-project</strong> (<code>workspace/history.json</code>)</li><li><strong>GPU settings are per-project</strong> (residency profile in <code>history.json</code>)</li></ul>
+<h3 id="before-workspace-system-legacy">Before workspace system (legacy)</h3>
+<p>Everything lived in a static <code>data/</code> directory — one index for all documents, mixed chat history, no project separation.</p>
+<h3 id="after-workspace-system-current">After workspace system (current)</h3>
+<p>Each folder is self-contained. Point the app at a different folder and you get that folder's index, history, and settings — no cross-contamination.</p>
+<hr/>
+<h2 id="2-selecting-a-workspace">2. Selecting a workspace</h2>
+<h3 id="in-the-desktop-app">In the desktop app</h3>
+<p>Click <strong>"Work in a folder"</strong> in the sidebar → a <strong>native Electron directory dialog</strong> opens → pick your project folder. The backend receives the <strong>absolute path</strong> (no file re-upload needed).</p>
+<h3 id="via-api">Via API</h3>
+<pre><span class="lang">bash</span><code># Set workspace
+curl -X POST http://localhost:8765/api/workspace \
+  -H "Content-Type: application/json" \
+  -d '{"path": "/absolute/path/to/project"}'
+
+# Get current workspace
+curl http://localhost:8765/api/workspace
+
+# Clear workspace (reset to no active workspace)
+curl -X DELETE http://localhost:8765/api/workspace</code></pre>
+<h3 id="requirements">Requirements</h3>
+<p>A workspace is <strong>mandatory</strong> for:</p>
+<ul><li>Chat (<code>/api/chat</code>, <code>/api/chat/stream</code>, <code>/api/chat/resume</code>)</li><li>File uploads (<code>/api/upload</code>)</li><li>Compliance scans (<code>/api/scan/*</code>)</li></ul>
+<p>These endpoints return <strong>"No workspace selected. Select a project folder first."</strong> when none is active — there is no default <code>data/</code> folder fallback.</p>
+<hr/>
+<h2 id="3-workspace-storage-layout">3. Workspace storage layout</h2>
+<p>When a workspace is active, storage resolves as follows:</p>
+<pre><code>/path/to/your-project/
+├── contract_A.pdf            ← raw uploads land here (visible as project docs)
+├── agreement_B.docx          ← visible to the user
+├── memo.txt
+└── workspace/                ← private data folder (created automatically)
+    ├── chroma_db/            ← vector index (per project)
+    ├── bm25_index/           ← sparse index
+    ├── processed/            ← temp artifacts (Docling images, etc.)
+    └── history.json          ← chat history + working set + GPU profile</code></pre>
+<p><strong>No workspace active</strong> → falls back to project <code>data/</code> directory:</p>
+<pre><code>project-root/
+└── data/
+    ├── raw/
+    ├── chroma_db/
+    ├── bm25_index/
+    └── processed/</code></pre>
+<p>Workspace override is <strong>runtime-only</strong> (resets on server restart or <code>DELETE /api/workspace</code>).</p>
+<hr/>
+<h2 id="4-background-folder-watcher-auto-ingestion">4. Background folder watcher (auto-ingestion)</h2>
+<p>The watcher is a <strong>daemon thread</strong> that polls the active workspace folder for new documents and auto-ingests them — drop a contract into the folder and it becomes searchable within seconds, with zero user action.</p>
+<h3 id="how-it-works">How it works</h3>
+<pre><code>┌────────────────────────────────────────────────────────────┐
+│                   FOLDER WATCHER LOOP                       │
+└────────────────────────────────────────────────────────────┘
+
+1. Every 8 seconds (configurable): compute folder fingerprint
+   ├─ {relative_path: (size, mtime_ns)} for supported documents
+   ├─ Excludes workspace/ storage dirs
+   ├─ Excludes temp/lock files (~$*, .~lock*, *.tmp, *.bak, ...)
+   └─ Cheap (no ChromaDB call)
+
+2. Compare fingerprint to last scan:
+   ├─ No change → skip cycle (idle, no disk/GPU work)
+   └─ Changed → proceed to step 3
+
+3. Acquire INGEST_LOCK (non-blocking):
+   ├─ Manual SSE ingest in flight? → skip cycle, retry next poll
+   └─ Lock acquired → proceed to step 4
+
+4. Run stream_ingest_directory():
+   ├─ Docling parses new files
+   ├─ StructureAwareChunker splits them
+   ├─ BGE-M3 embeds chunks
+   ├─ ChromaDB stores vectors
+   └─ BM25 index rebuilt
+
+5. Commit fingerprint → next cycle (8s later)</code></pre>
+<h3 id="key-features">Key features</h3>
+<p><strong>Polling, not fs events</strong></p>
+<ul><li>No new dependency (watchdog)</li><li>Works on all platforms (Windows, macOS, Linux, network drives)</li><li>Trivially safe to restart</li><li>Configurable interval (default 8 seconds)</li></ul>
+<p><strong>Cheap skip detection</strong></p>
+<ul><li>Fingerprint comparison is file metadata only (size + mtime)</li><li>When nothing changed, zero ChromaDB calls</li><li>Only changed fingerprints trigger ingestion</li></ul>
+<p><strong>Serialization with manual ingestion</strong></p>
+<ul><li><code>INGEST_LOCK</code> shared by watcher + SSE manual ingest</li><li>ChromaDB writes never race</li><li>Watcher skips a cycle (non-blocking acquire) when manual ingest is running</li></ul>
+<p><strong>Self-stopping on workspace switch</strong></p>
+<ul><li>Thread checks <code>get_workspace_root()</code> every cycle</li><li>Auto-stops if the active workspace changed (handles missed teardowns)</li></ul>
+<p><strong>Status exposed to UI</strong></p>
+<ul><li><code>GET /api/workspace/watch/status</code> returns live watcher state</li></ul>
+<hr/>
+<h2 id="5-watcher-status-api">5. Watcher status API</h2>
+<pre><span class="lang">bash</span><code>curl http://localhost:8765/api/workspace/watch/status</code></pre>
+<p>Returns:</p>
+<pre><span class="lang">json</span><code>{
+  "watch": {
+    "watching": true,
+    "root": "/absolute/path/to/project",
+    "last_scan_at": 1750000000.0,
+    "last_scan_duration_ms": 45,
+    "files_found": ["contract.pdf", "agreement.docx"],
+    "files_indexed": ["contract.pdf"],
+    "chunks_indexed": 23,
+    "skipped": 1,
+    "last_error": null
+  }
+}</code></pre>
+<p>Fields:</p>
+<ul><li><code>watching</code> — whether the watcher thread is running</li><li><code>root</code> — the folder being watched</li><li><code>last_scan_at</code> — Unix timestamp of last scan</li><li><code>last_scan_duration_ms</code> — how long the scan took</li><li><code>files_found</code> — all supported docs discovered</li><li><code>files_indexed</code> — files actually indexed (excludes already-present ones)</li><li><code>chunks_indexed</code> — total chunks added</li><li><code>skipped</code> — already-indexed file count</li><li><code>last_error</code> — last exception message (null when healthy)</li></ul>
+<hr/>
+<h2 id="6-manual-workspace-ingestion">6. Manual workspace ingestion</h2>
+<p>Trigger a one-time ingestion of <strong>every</strong> supported document in the workspace:</p>
+<h3 id="non-streaming-blocking">Non-streaming (blocking)</h3>
+<pre><span class="lang">bash</span><code>curl -X POST http://localhost:8765/api/workspace/ingest</code></pre>
+<p>Returns when done:</p>
+<pre><span class="lang">json</span><code>{
+  "chunks": 458,
+  "path": "/absolute/path/to/project",
+  "elapsed_ms": 12340
+}</code></pre>
+<h3 id="streaming-sse-with-progress">Streaming (SSE with progress)</h3>
+<pre><span class="lang">bash</span><code>curl -X POST http://localhost:8765/api/workspace/ingest/stream</code></pre>
+<p>Streams events:</p>
+<pre><code>event: ingest_start
+data: {"type":"ingest_start","files":["a.pdf","b.docx"],"total":2,"skipped":0}
+
+event: ingest_progress
+data: {"type":"ingest_progress","file":"a.pdf","current":1,"total":2,"chunks":23}
+
+event: ingest_progress
+data: {"type":"ingest_progress","file":"b.docx","current":2,"total":2,"chunks":45}
+
+event: ingest_done
+data: {"type":"ingest_done","chunks":68,"skipped":0,"elapsed_ms":3456}</code></pre>
+<h4 id="force-re-index">Force re-index</h4>
+<p>Add <code>?force=1</code> to re-index already-indexed files (rebuilds the entire index):</p>
+<pre><span class="lang">bash</span><code>curl -X POST "http://localhost:8765/api/workspace/ingest/stream?force=1"</code></pre>
+<h4 id="cancel-streaming-ingestion">Cancel streaming ingestion</h4>
+<pre><span class="lang">bash</span><code>curl -X POST http://localhost:8765/api/workspace/ingest/cancel</code></pre>
+<p>Stops cleanly at the next file boundary (already-completed files stay indexed).</p>
+<hr/>
+<h2 id="7-workspace-file-listing">7. Workspace file listing</h2>
+<p>Get discovered documents in the active workspace (UI "workspace panel"):</p>
+<pre><span class="lang">bash</span><code>curl http://localhost:8765/api/workspace</code></pre>
+<p>Returns:</p>
+<pre><span class="lang">json</span><code>{
+  "active": true,
+  "path": "/absolute/path/to/project",
+  "name": "project",
+  "workspace_dir": "/absolute/path/to/project/workspace",
+  "gpu_profile": { "residency_mode": "adaptive", ... },
+  "files": [
+    { "name": "contract_A.pdf", "size": 123456, "modified": 1750000000.0 },
+    { "name": "agreement_B.docx", "size": 67890, "modified": 1750000100.0 }
+  ]
+}</code></pre>
+<p>Files are:</p>
+<ul><li>Capped at <strong>50 documents</strong> (UI limit)</li><li>Filtered to supported extensions (see <code>SUPPORTED_EXTENSIONS</code>)</li><li>Excludes <code>workspace/</code> storage dirs</li><li>Excludes temp/lock files</li></ul>
+<hr/>
+<h2 id="8-configuration">8. Configuration</h2>
+<p>All watcher configuration is in <code>backend/legal_retrieval/workspace_watcher.py</code>:</p>
+<table><thead><tr><th>Constant</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>DEFAULT_POLL_INTERVAL</code></td><td><code>8.0</code></td><td>Seconds between folder scans</td></tr><tr><td><code>INGEST_LOCK</code></td><td>(threading.Lock)</td><td>Serializes all ingestion (watcher + manual)</td></tr></tbody></table>
+<p><strong>Note:</strong> The poll interval is hardcoded, not an env var. To change it, pass <code>poll_interval=&lt;seconds&gt;</code> when constructing <code>WorkspaceWatcher()</code> (or modify <code>DEFAULT_POLL_INTERVAL</code> directly).</p>
+<hr/>
+<h2 id="9-per-project-gpu-profiles">9. Per-project GPU profiles</h2>
+<p>Each workspace carries its <strong>own GPU residency profile</strong> (mode, hot window, max resident, ...) persisted in <code>workspace/history.json</code> under <code>"gpu_profile"</code>.</p>
+<pre><span class="lang">bash</span><code># Get active project's GPU profile
+curl http://localhost:8765/api/gpu/profile
+
+# Apply and persist a profile to the active project
+curl -X POST http://localhost:8765/api/gpu/profile \
+  -H "Content-Type: application/json" \
+  -d '{"residency_mode":"persistent","max_resident":3}'</code></pre>
+<p>When you switch projects (<code>POST /api/workspace</code>), the new project's GPU profile is <strong>automatically loaded</strong> — settings never leak between projects.</p>
+<p>See <a href="gpu-management.html"><code>GPU_MANAGEMENT.md</code></a> §7 for GPU profile details.</p>
+<hr/>
+<h2 id="10-workspace-history-chat-working-set-gpu">10. Workspace history (chat + working set + GPU)</h2>
+<p><code>workspace/history.json</code> stores:</p>
+<ul><li><code>conversations</code> — per-project chat history</li><li><code>activeConversationId</code> — last-selected conversation</li><li><code>starred_messages</code> — user-starred messages (optional)</li><li><code>working_set</code> — pinned sources</li><li><code>gpu_profile</code> — per-project GPU residency settings</li></ul>
+<p>The frontend auto-saves this file via <code>POST /api/workspace/history</code>:</p>
+<pre><span class="lang">bash</span><code>curl -X POST http://localhost:8765/api/workspace/history \
+  -H "Content-Type: application/json" \
+  -d @history.json</code></pre>
+<p>Read it back:</p>
+<pre><span class="lang">bash</span><code>curl http://localhost:8765/api/workspace/history</code></pre>
+<p>Returns:</p>
+<pre><span class="lang">json</span><code>{
+  "history": {
+    "conversations": [ ... ],
+    "gpu_profile": { ... }
+  }
+}</code></pre>
+<p><strong>Schema:</strong></p>
+<ul><li><code>conversations</code> — array of conversation objects (messages, sources, ...)</li><li><code>gpu_profile</code> — GPU residency settings (see <code>GPU_PROFILE_FIELDS</code> in <code>config.py</code>)</li></ul>
+<p>Frontend keys (<code>freebuff-chat-storage</code>, <code>freebuff-working-set</code>) are <strong>scoped per project</strong> via a hash suffix — switching workspaces in the UI re-points the localStorage keys, and the server-side <code>history.json</code> acts as the durable backup.</p>
+<hr/>
+<h2 id="11-implementation-details">11. Implementation details</h2>
+<table><thead><tr><th>File</th><th>Responsibility</th></tr></thead><tbody><tr><td><code>backend/legal_retrieval/workspace_watcher.py</code></td><td>Watcher thread, fingerprinting, auto-ingestion</td></tr><tr><td><code>backend/legal_retrieval/config.py</code></td><td>Workspace root storage, path resolution, GPU profile persistence</td></tr><tr><td><code>backend/main.py</code></td><td><code>/api/workspace</code> endpoints, watcher start/stop</td></tr><tr><td><code>backend/tests/test_workspace.py</code></td><td>Watcher tests (fingerprint, auto-ingest, lock coordination)</td></tr></tbody></table>
+<h3 id="watcher-lifecycle">Watcher lifecycle</h3>
+<ul><li><strong>Started</strong> — <code>POST /api/workspace</code> starts the watcher on the selected folder</li><li><strong>Stopped</strong> — <code>DELETE /api/workspace</code> stops it</li><li><strong>Self-stops</strong> — if <code>get_workspace_root()</code> changes out from under it (leaked thread guard)</li></ul>
+<h3 id="thread-safety">Thread safety</h3>
+<ul><li><code>_lock</code> protects <code>_status</code> (the snapshot returned by <code>status()</code>)</li><li><code>INGEST_LOCK</code> serializes ChromaDB writes (shared with manual ingest)</li><li>Non-blocking acquire — watcher skips a cycle when manual ingest is running</li></ul>
+<hr/>
+<h2 id="12-troubleshooting">12. Troubleshooting</h2>
+<table><thead><tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr></thead><tbody><tr><td>Watcher not running</td><td>No workspace active</td><td>Select a folder via <code>/api/workspace</code></td></tr><tr><td>New files not indexed</td><td>Watcher stopped or errored</td><td>Check <code>/api/workspace/watch/status</code> → <code>last_error</code></td></tr><tr><td>Files indexed twice</td><td>Manual ingest + watcher both ran</td><td>This is safe — <code>stream_ingest_directory</code> skips already-indexed files</td></tr><tr><td>Watcher slow</td><td>Large corpus, small GPU</td><td>Lower <code>embedding_batch_size</code> or use CPU; watcher respects GPU manager tuning</td></tr><tr><td>Fingerprint false-positive</td><td>File mtime changed but content same</td><td>Harmless — <code>stream_ingest_directory</code> skips re-indexing</td></tr></tbody></table>
+<hr/>
+<h2 id="13-why-polling-not-fs-events">13. Why polling, not fs events?</h2>
+<table><thead><tr><th>Approach</th><th>Pros</th><th>Cons</th></tr></thead><tbody><tr><td><strong>Polling</strong> (current)</td><td>✅ No new dependency&lt;br&gt;✅ Works on network drives&lt;br&gt;✅ Cross-platform (no platform-specific quirks)&lt;br&gt;✅ Trivially safe to restart</td><td>⚠️ 8-second latency (tunable)</td></tr><tr><td><strong>fs events</strong> (watchdog/chokidar)</td><td>✅ Instant reaction</td><td>❌ New dependency&lt;br&gt;❌ Platform-specific edge cases&lt;br&gt;❌ Network drive issues&lt;br&gt;❌ Missed events on restart</td></tr></tbody></table>
+<p>For a desktop app with human-paced workflows (dropping contracts), 8-second latency is imperceptible — the simplicity/reliability trade-off favors polling.</p>
+<hr/>
+<h2 id="14-future-enhancements">14. Future enhancements</h2>
+<p>Planned but not yet implemented:</p>
+<ul><li><strong>Recursive subdirectory support</strong> — currently only top-level files are watched</li><li><strong>Configurable poll interval via env var</strong> (<code>PLR_WATCHER_POLL_INTERVAL</code>)</li><li><strong>Watcher pause/resume</strong> — UI button to temporarily disable auto-ingest</li><li><strong>Per-file progress in watcher status</strong> — currently only totals</li><li><strong>Selective file-type watching</strong> — watch only PDFs, ignore images, etc.</li></ul>
+<p>See <a href="pipeline-roadmap.html"><code>PIPELINE_ROADMAP.md</code></a> for other planned features.</p>
+<hr/>
+<h2 id="15-related-documentation">15. Related documentation</h2>
+<table><thead><tr><th>Doc</th><th>What's covered</th></tr></thead><tbody><tr><td><a href="backend.html"><code>BACKEND.md</code></a> §2</td><td>Workspace API endpoints</td></tr><tr><td><a href="architecture.html"><code>ARCHITECTURE.md</code></a></td><td>System overview, storage layout</td></tr><tr><td><a href="gpu-management.html"><code>GPU_MANAGEMENT.md</code></a> §7</td><td>Per-project GPU profiles</td></tr><tr><td><a href="data-flow.html"><code>DATA_FLOW.md</code></a></td><td>Ingestion pipeline deep dive</td></tr><tr><td><a href="troubleshooting.html"><code>TROUBLESHOOTING.md</code></a> §4</td><td>Workspace-related failures</td></tr></tbody></table>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>Why do I need a workspace?</h3><p>A project folder is required — there is no default fallback. It scopes retrieval to the right corpus, keeps per-project indexes and history separate, and prevents results bleeding between cases.</p></div><div class="faq-item"><h3>How do I set up a workspace?</h3><p>Click 'Work in a folder' in the app and pick your project directory. Then run 'Ingest all files' (or attach files individually) to index everything; uploads land in the active workspace.</p></div><div class="faq-item"><h3>What lives in the workspace?</h3><p>Raw uploads, processed chunks, the vector + BM25 indexes, and project-scoped history. Switching folders switches the whole working set, and folder-specific project history is saved.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

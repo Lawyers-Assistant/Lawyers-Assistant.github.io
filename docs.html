@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Documentation — Lawyer Assistant Docs</title>
+<meta name="description" content="All Lawyer Assistant documentation — quickstart, architecture, backend API, frontend, API providers, launcher, security and troubleshooting, with search."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs.html"/>
+<meta name="keywords" content="lawyer assistant docs, legal AI documentation, RAG documentation, quickstart, architecture, backend API"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Documentation — Lawyer Assistant Docs"/>
+<meta property="og:description" content="All Lawyer Assistant documentation — quickstart, architecture, backend API, frontend, API providers, launcher, security and troubleshooting, with search."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Documentation — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="All Lawyer Assistant documentation — quickstart, architecture, backend API, frontend, API providers, launcher, security and troubleshooting, with search."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="index.html"><img src="assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="index.html">Home</a><a href="docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap">
+  <div class="hub-hero">
+    <span style="font-family:var(--font-m);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--brass)">The documentation</span>
+    <h1>Everything about <span style="font-style:italic;color:var(--brass-2)">the assistant.</span></h1>
+    <p class="lead">Guides, references, and deep dives — from a five-minute quickstart to the internals of the retrieval pipeline, GPU manager, security model, and every API endpoint.</p>
+    <div class="doc-search">
+      <svg class="s-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="docSearch" type="search" placeholder="Search all 28 docs — try &ldquo;ollama&rdquo;, &ldquo;api&rdquo;, &ldquo;gpu&rdquo;…" autocomplete="off" spellcheck="false" aria-label="Search documentation"/>
+      <button class="s-clear" id="docSearchClear" aria-label="Clear search" title="Clear search">&times;</button>
+    </div>
+    <div class="search-meta" id="docSearchMeta"></div>
+    <div class="hub-count">28 documents · grouped by topic · press <b style="color:var(--brass-2)">/</b> to search</div>
+  </div>
+  <div class="group"><div class="group-head"><h2>🚀 Getting started</h2></div><div class="docs-grid"><a class="doc-card" href="docs/quickstart.html" data-slug="quickstart" data-title="Quickstart — run the desktop app" data-blurb="Clone → install → run → first query → verify"><span class="d-name">Quickstart — run the desktop app</span><span class="d-blurb">Clone → install → run → first query → verify</span><span class="d-file">QUICKSTART.md</span></a><a class="doc-card" href="docs/development.html" data-slug="development" data-title="Development — Workflows, Debugging &amp; Tools" data-blurb="Dev environment, hot reload, debugging, profiling"><span class="d-name">Development — Workflows, Debugging &amp; Tools</span><span class="d-blurb">Dev environment, hot reload, debugging, profiling</span><span class="d-file">DEVELOPMENT.md</span></a><a class="doc-card" href="docs/testing.html" data-slug="testing" data-title="Testing — Test Suites, Benchmarks &amp; Quality Assurance" data-blurb="Test suite, fixtures, running the tests"><span class="d-name">Testing — Test Suites, Benchmarks &amp; Quality Assurance</span><span class="d-blurb">Test suite, fixtures, running the tests</span><span class="d-file">TESTING.md</span></a><a class="doc-card" href="docs/benchmarking.html" data-slug="benchmarking" data-title="Benchmarking — Performance Evaluation &amp; Quality Metrics" data-blurb="Performance benchmarks &amp; metrics"><span class="d-name">Benchmarking — Performance Evaluation &amp; Quality Metrics</span><span class="d-blurb">Performance benchmarks &amp; metrics</span><span class="d-file">BENCHMARKING.md</span></a><a class="doc-card" href="docs/configuration.html" data-slug="configuration" data-title="Configuration Reference — Complete Environment Variables &amp; Settings" data-blurb="Every environment variable &amp; setting"><span class="d-name">Configuration Reference — Complete Environment Variables &amp; Settings</span><span class="d-blurb">Every environment variable &amp; setting</span><span class="d-file">CONFIGURATION.md</span></a><a class="doc-card" href="docs/deployment.html" data-slug="deployment" data-title="Deployment — Building &amp; Packaging for Production" data-blurb="Production deployment &amp; hardening"><span class="d-name">Deployment — Building &amp; Packaging for Production</span><span class="d-blurb">Production deployment &amp; hardening</span><span class="d-file">DEPLOYMENT.md</span></a></div></div><div class="group"><div class="group-head"><h2>🏛️ Architecture &amp; core</h2></div><div class="docs-grid"><a class="doc-card" href="docs/architecture.html" data-slug="architecture" data-title="Architecture — Lawyer Assistant" data-blurb="System overview, ports, runtime modes"><span class="d-name">Architecture — Lawyer Assistant</span><span class="d-blurb">System overview, ports, runtime modes</span><span class="d-file">ARCHITECTURE.md</span></a><a class="doc-card" href="docs/backend.html" data-slug="backend" data-title="Backend — FastAPI server, agents, tools, retrieval &amp; scan" data-blurb="FastAPI endpoints, routers, tools, retrieval, scan"><span class="d-name">Backend — FastAPI server, agents, tools, retrieval &amp; scan</span><span class="d-blurb">FastAPI endpoints, routers, tools, retrieval, scan</span><span class="d-file">BACKEND.md</span></a><a class="doc-card" href="docs/frontend.html" data-slug="frontend" data-title="Frontend — React UI, stores, streaming &amp; theming" data-blurb="React layout, stores, streaming, theming"><span class="d-name">Frontend — React UI, stores, streaming &amp; theming</span><span class="d-blurb">React layout, stores, streaming, theming</span><span class="d-file">FRONTEND.md</span></a><a class="doc-card" href="docs/data-flow.html" data-slug="data-flow" data-title="Data Flow" data-blurb="Document ingestion: parse → chunk → embed → index"><span class="d-name">Data Flow</span><span class="d-blurb">Document ingestion: parse → chunk → embed → index</span><span class="d-file">DATA_FLOW.md</span></a><a class="doc-card" href="docs/chatbot-flow.html" data-slug="chatbot-flow" data-title="What Really Happens When You Chat With This Chatbot" data-blurb="Message → intent → tools → rerank → LLM → answer"><span class="d-name">What Really Happens When You Chat With This Chatbot</span><span class="d-blurb">Message → intent → tools → rerank → LLM → answer</span><span class="d-file">CHATBOT_FLOW.md</span></a><a class="doc-card" href="docs/pipeline-editor.html" data-slug="pipeline-editor" data-title="Pipeline Editor — visual pipeline configuration" data-blurb="Visual canvas, sub-nodes, toggles, bypass"><span class="d-name">Pipeline Editor — visual pipeline configuration</span><span class="d-blurb">Visual canvas, sub-nodes, toggles, bypass</span><span class="d-file">PIPELINE_EDITOR.md</span></a><a class="doc-card" href="docs/pipeline-json.html" data-slug="pipeline-json" data-title="Pipeline Layout JSON — spec for AI models &amp; hand-editors" data-blurb="Exact JSON schema for pipeline layouts"><span class="d-name">Pipeline Layout JSON — spec for AI models &amp; hand-editors</span><span class="d-blurb">Exact JSON schema for pipeline layouts</span><span class="d-file">PIPELINE_JSON.md</span></a><a class="doc-card" href="docs/pipeline-roadmap.html" data-slug="pipeline-roadmap" data-title="Pipeline Loop — Improvements &amp; Roadmap" data-blurb="Planned improvements to the RAG pipeline"><span class="d-name">Pipeline Loop — Improvements &amp; Roadmap</span><span class="d-blurb">Planned improvements to the RAG pipeline</span><span class="d-file">PIPELINE_ROADMAP.md</span></a></div></div><div class="group"><div class="group-head"><h2>🖥️ GPU &amp; performance</h2></div><div class="docs-grid"><a class="doc-card" href="docs/gpu-management.html" data-slug="gpu-management" data-title="Smart GPU Management — how the app shares a small GPU" data-blurb="VRAM sharing, RAM-first residency, auto-tuning"><span class="d-name">Smart GPU Management — how the app shares a small GPU</span><span class="d-blurb">VRAM sharing, RAM-first residency, auto-tuning</span><span class="d-file">GPU_MANAGEMENT.md</span></a></div></div><div class="group"><div class="group-head"><h2>☁️ API &amp; launcher</h2></div><div class="docs-grid"><a class="doc-card" href="docs/api-provider.html" data-slug="api-provider" data-title="API Provider Mode — run Lawyer Assistant on remote AI" data-blurb="Cloud mode, providers, env vars, rerank modes"><span class="d-name">API Provider Mode — run Lawyer Assistant on remote AI</span><span class="d-blurb">Cloud mode, providers, env vars, rerank modes</span><span class="d-file">API_PROVIDER.md</span></a><a class="doc-card" href="docs/launcher.html" data-slug="launcher" data-title="Setup Launcher" data-blurb="Setup page internals, provider picker, Ollama automation"><span class="d-name">Setup Launcher</span><span class="d-blurb">Setup page internals, provider picker, Ollama automation</span><span class="d-file">LAUNCHER.md</span></a><a class="doc-card" href="docs/cli-tools.html" data-slug="cli-tools" data-title="CLI Tools — Command-Line Utilities Reference" data-blurb="Command-line helpers for ingestion &amp; queries"><span class="d-name">CLI Tools — Command-Line Utilities Reference</span><span class="d-blurb">Command-line helpers for ingestion &amp; queries</span><span class="d-file">CLI_TOOLS.md</span></a></div></div><div class="group"><div class="group-head"><h2>🔒 Security &amp; storage</h2></div><div class="docs-grid"><a class="doc-card" href="docs/security.html" data-slug="security" data-title="Security — Architecture, Policies &amp; Best Practices" data-blurb="CSP, Electron sandbox, key handling, threat model"><span class="d-name">Security — Architecture, Policies &amp; Best Practices</span><span class="d-blurb">CSP, Electron sandbox, key handling, threat model</span><span class="d-file">SECURITY.md</span></a><a class="doc-card" href="docs/storage.html" data-slug="storage" data-title="Storage — Database Schemas, Data Models &amp; Persistence" data-blurb="Where every piece of data lives"><span class="d-name">Storage — Database Schemas, Data Models &amp; Persistence</span><span class="d-blurb">Where every piece of data lives</span><span class="d-file">STORAGE.md</span></a><a class="doc-card" href="docs/workspace.html" data-slug="workspace" data-title="Workspace Management &amp; Auto-Ingestion" data-blurb="Project folders &amp; the workspace model"><span class="d-name">Workspace Management &amp; Auto-Ingestion</span><span class="d-blurb">Project folders &amp; the workspace model</span><span class="d-file">WORKSPACE.md</span></a><a class="doc-card" href="docs/troubleshooting.html" data-slug="troubleshooting" data-title="Troubleshooting — Lawyer Assistant" data-blurb="12 failure scenarios with exact fixes"><span class="d-name">Troubleshooting — Lawyer Assistant</span><span class="d-blurb">12 failure scenarios with exact fixes</span><span class="d-file">TROUBLESHOOTING.md</span></a></div></div><div class="group"><div class="group-head"><h2>📚 Reference</h2></div><div class="docs-grid"><a class="doc-card" href="docs/glossary.html" data-slug="glossary" data-title="Glossary — Lawyer Assistant" data-blurb="One-line definitions of every term"><span class="d-name">Glossary — Lawyer Assistant</span><span class="d-blurb">One-line definitions of every term</span><span class="d-file">GLOSSARY.md</span></a><a class="doc-card" href="docs/agent-knowledge-base.html" data-slug="agent-knowledge-base" data-title="Agent Knowledge Base — answering questions about this app" data-blurb="Fast Q&amp;A for AI agents &amp; developers"><span class="d-name">Agent Knowledge Base — answering questions about this app</span><span class="d-blurb">Fast Q&amp;A for AI agents &amp; developers</span><span class="d-file">AGENT_KNOWLEDGE_BASE.md</span></a><a class="doc-card" href="docs/changelog.html" data-slug="changelog" data-title="Changelog — Lawyer Assistant" data-blurb="Recent feature history"><span class="d-name">Changelog — Lawyer Assistant</span><span class="d-blurb">Recent feature history</span><span class="d-file">CHANGELOG.md</span></a><a class="doc-card" href="docs/readme.html" data-slug="readme" data-title="📚 Documentation — Lawyer Assistant" data-blurb="The documentation index itself"><span class="d-name">📚 Documentation — Lawyer Assistant</span><span class="d-blurb">The documentation index itself</span><span class="d-file">README.md</span></a><a class="doc-card" href="docs/ui-brainstorm.html" data-slug="ui-brainstorm" data-title="🏛️ Making It Smooth &amp; Trustworthy for Lawyers" data-blurb="Design explorations &amp; future UI ideas"><span class="d-name">🏛️ Making It Smooth &amp; Trustworthy for Lawyers</span><span class="d-blurb">Design explorations &amp; future UI ideas</span><span class="d-file">UI_BRAINSTORM.md</span></a><a class="doc-card" href="docs/chatbot-ui-design.html" data-slug="chatbot-ui-design" data-title="Chatbot UI Design Recommendation for Lawyer Assistant" data-blurb="Chat UI design notes"><span class="d-name">Chatbot UI Design Recommendation for Lawyer Assistant</span><span class="d-blurb">Chat UI design notes</span><span class="d-file">chatbot-ui-design.md</span></a></div></div>
+</div>
+<script>
+(function () {
+  var INDEX = null;
+  var indexLoading = null;
+  function ensureIndex() {
+    if (INDEX) return Promise.resolve(INDEX);
+    if (!indexLoading) {
+      indexLoading = fetch('docs-index.json').then(function (r) { return r.json(); })
+        .then(function (d) { INDEX = d; })
+        .catch(function () { INDEX = {}; });
+    }
+    return indexLoading;
+  }
+  var input = document.getElementById('docSearch');
+  var clear = document.getElementById('docSearchClear');
+  var meta = document.getElementById('docSearchMeta');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.doc-card'));
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.group'));
+  var total = cards.length;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function highlight(text, terms) {
+    var lower = String(text).toLowerCase();
+    var out = '';
+    var i = 0;
+    while (i < lower.length) {
+      var best = -1, bestLen = 0;
+      terms.forEach(function (term) {
+        if (!term) return;
+        var idx = lower.indexOf(term, i);
+        if (idx !== -1 && (best === -1 || idx < best)) { best = idx; bestLen = term.length; }
+      });
+      if (best === -1) break;
+      out += esc(text.slice(i, best)) + '<mark>' + esc(text.slice(best, best + bestLen)) + '</mark>';
+      i = best + bestLen;
+    }
+    out += esc(text.slice(i));
+    return out;
+  }
+
+  function run() {
+    var q = input.value.trim().toLowerCase();
+    var terms = q.split(/\s+/).filter(Boolean);
+    var count = 0;
+    cards.forEach(function (card) {
+      var idx = INDEX[card.getAttribute('data-slug')];
+      var hay = ((idx ? idx.t + ' ' + idx.b + ' ' + idx.x : '') + ' ' + card.getAttribute('data-title') + ' ' + card.getAttribute('data-blurb')).toLowerCase();
+      var match = terms.length === 0 || terms.every(function (t) { return hay.indexOf(t) !== -1; });
+      card.style.display = match ? '' : 'none';
+      if (match) {
+        count++;
+        card.querySelector('.d-name').innerHTML = highlight(card.getAttribute('data-title'), terms);
+        card.querySelector('.d-blurb').innerHTML = highlight(card.getAttribute('data-blurb'), terms);
+      }
+    });
+    groups.forEach(function (g) {
+      var vis = Array.prototype.some.call(g.querySelectorAll('.doc-card'), function (c) { return c.style.display !== 'none'; });
+      g.style.display = vis ? '' : 'none';
+    });
+    clear.classList.toggle('show', input.value.length > 0);
+    if (terms.length) {
+      if (count === 0) {
+        meta.innerHTML = '<div class="search-empty">No documents match — try &ldquo;ollama&rdquo;, &ldquo;api&rdquo;, &ldquo;gpu&rdquo;…</div>';
+      } else {
+        meta.innerHTML = '<b>' + count + '</b> of ' + total + ' docs match';
+      }
+    } else {
+      meta.innerHTML = '';
+    }
+  }
+
+  function doSearch() { ensureIndex().then(run); }
+  input.addEventListener('input', doSearch);
+  clear.addEventListener('click', function () { input.value = ''; doSearch(); input.focus(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && document.activeElement !== input && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      input.focus();
+    }
+    if (e.key === 'Escape' && document.activeElement === input) { input.blur(); }
+  });
+})();
+</script>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="index.html">Home</a><a href="docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

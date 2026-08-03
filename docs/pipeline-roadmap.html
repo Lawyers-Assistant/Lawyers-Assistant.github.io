@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pipeline Loop — Improvements &amp; Roadmap — Lawyer Assistant Docs</title>
+<meta name="description" content="Planned improvements to the Lawyer Assistant RAG pipeline: query expansion, verification nodes, config-driven graphs, and next retrieval milestones."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/pipeline-roadmap.html"/>
+<meta name="keywords" content="pipeline roadmap, query expansion, verification node, config driven pipeline, RAG roadmap"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Pipeline Loop — Improvements &amp; Roadmap — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Planned improvements to the Lawyer Assistant RAG pipeline: query expansion, verification nodes, config-driven graphs, and next retrieval milestones."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/pipeline-roadmap.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Pipeline Loop — Improvements &amp; Roadmap — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Planned improvements to the Lawyer Assistant RAG pipeline: query expansion, verification nodes, config-driven graphs, and next retrieval milestones."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Pipeline Loop — Improvements &amp; Roadmap", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/pipeline-roadmap.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What improvements are planned?", "acceptedAnswer": {"@type": "Answer", "text": "The roadmap covers query expansion, a dedicated verification node, config-driven (YAML/JSON) pipeline definitions, and more granular retrieval controls — each with an estimated effort."}}, {"@type": "Question", "name": "When will these ship?", "acceptedAnswer": {"@type": "Answer", "text": "Items are ordered by effort and impact — the fastest wins (roughly 2–4 hours each) are planned first. The roadmap is a living document; check it before filing feature requests."}}, {"@type": "Question", "name": "Can I request a roadmap item?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — the doc invites opening an issue on the GitHub repo for missing capabilities, and links each planned feature to the docs that will change when it lands."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link active" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Pipeline Loop — Improvements &amp; Roadmap</span></div>
+    <h1>Pipeline Loop — Improvements &amp; Roadmap</h1>
+    <div class="doc-intro"><strong>Why:</strong> Expands queries with synonyms and related terms before embedding — directly improves retrieval recall.</div>
+    
+<blockquote>What the node-based pipeline system could benefit from, organized by priority.</blockquote>
+<hr/>
+<h2 id="current-state">Current State ✅</h2>
+<h3 id="architecture">Architecture</h3>
+<pre><code>┌─────────────┐
+│   START     │
+└──────┬──────┘
+       │
+┌──────▼──────┐
+│  Retrieval  │◄──────────────┐
+└──────┬──────┘               │
+       │                      │
+┌──────▼──────┐          (retry)
+│ Verification│               │
+└──────┬──────┘          ┌────┴────┐
+       │                 │ Retry   │
+  (pass)│(fail)          └─────────┘
+┌──────▼──────┐
+│  Generation │
+└──────┬──────┘
+       │
+┌──────▼──────┐
+│ Post-Gen    │
+│ Check       │
+└──────┬──────┘
+       │
+┌──────▼──────┐
+│   END       │
+└─────────────┘</code></pre>
+<h3 id="components">Components</h3>
+<table><thead><tr><th>Component</th><th>File</th><th>Status</th></tr></thead><tbody><tr><td>Core engine</td><td><code>backend/legal_retrieval/pipeline_nodes.py</code></td><td>✅ Done</td></tr><tr><td>RAG graph pipeline</td><td><code>backend/legal_retrieval/pipeline_graph.py</code></td><td>✅ Done</td></tr><tr><td>Backend API wiring</td><td><code>backend/main.py</code></td><td>✅ Done</td></tr><tr><td>Per-query visualization</td><td><code>frontend/src/components/Sources/PipelineExecution.tsx</code></td><td>✅ Done</td></tr><tr><td>Performance dashboard</td><td><code>frontend/src/components/Sources/PipelineDashboard.tsx</code></td><td>✅ Done</td></tr><tr><td>Log storage per conversation</td><td><code>frontend/src/store/chatStore.ts</code></td><td>✅ Done</td></tr></tbody></table>
+<blockquote><strong>Note:</strong> Effort estimates below are rough approximations for a single developer. Actual time depends on testing, code review, and integration complexity.</blockquote>
+<hr/>
+<h2 id="high-priority">🔴 High Priority</h2>
+<h3 id="1-query-expansion-node">1. Query Expansion Node</h3>
+
+<p><strong>Implementation:</strong></p>
+<ul><li>New node: <code>QueryExpansionNode</code> in <code>pipeline_graph.py</code></li><li>Uses LLM or synonym dictionary to generate 2–3 query variants</li><li>Runs retrieval for each variant, merges results via RRF</li><li>Insert before retrieval: <code>query_expansion → retrieval → verification → ...</code></li></ul>
+<p><strong>Estimated effort:</strong> 1–2 hours</p>
+<p><strong>Graph change:</strong></p>
+<pre><code>query_expansion → retry_retrieval → verification → generation → post_check → success
+                                                    ↓ (fail)
+                                                  abstain</code></pre>
+<hr/>
+<h3 id="2-streaming-pipeline-progress">2. Streaming Pipeline Progress</h3>
+<p><strong>Status: implemented.</strong> Nodes execute in real-time instead of waiting for the entire pipeline to complete.</p>
+<p><strong>Implementation (as shipped):</strong></p>
+<ul><li>Backend: Server-Sent Events (SSE) on <code>/api/chat/stream</code></li><li>Each node emits progress events: <code>{ node: "retrieval", status: "running" }</code>, <code>{ node: "retrieval", status: "done", elapsed_ms: 120 }</code></li><li>Frontend: a <code>fetch</code>-based SSE line parser (in <code>services/api.ts</code>) updates <code>PipelineExecution</code> in real-time</li><li>Nodes pulse/highlight when active</li></ul>
+<hr/>
+<h2 id="medium-priority">🟡 Medium Priority</h2>
+<h3 id="3-langgraph-stategraph-integration">3. LangGraph StateGraph Integration</h3>
+<p><strong>Why:</strong> Lets agents use the pipeline as LangGraph tools for agentic workflows.</p>
+<p><strong>Implementation:</strong></p>
+<ul><li>Wrap <code>build_rag_pipeline()</code> output as a LangGraph <code>StateGraph</code></li><li>Each <code>PipelineNode</code> maps to a LangGraph node</li><li>Conditional edges map to LangGraph conditional routing</li><li>Expose via <code>get_legal_rag_tool()</code> for agent use</li></ul>
+<p><strong>Estimated effort:</strong> 2–3 hours</p>
+<hr/>
+<h3 id="4-pipeline-caching">4. Pipeline Caching</h3>
+<p><strong>Why:</strong> Cache retrieval results for repeated/similar queries — saves embedding + search time.</p>
+<p><strong>Implementation:</strong></p>
+<ul><li>Add <code>CacheNode</code> that checks a query cache before retrieval</li><li>Cache key: SHA256 of normalized query text</li><li>Cache storage: SQLite or in-memory LRU with TTL</li><li>Cache invalidation: on ingestion or manual <code>--clear-cache</code></li><li>Hit/miss stats in the dashboard</li></ul>
+<p><strong>Estimated effort:</strong> 2–3 hours</p>
+<hr/>
+<h3 id="5-custom-node-composition">5. Custom Node Composition</h3>
+<p><strong>Why:</strong> Let users define custom pipeline workflows via config (YAML/JSON).</p>
+<p><strong>Implementation:</strong></p>
+<ul><li>Define a pipeline schema:</li></ul>
+<pre><span class="lang">yaml</span><code>  pipeline:
+    nodes:
+      - name: expand
+        type: query_expansion
+      - name: retrieve
+        type: retrieval
+        retries: 2
+      - name: verify
+        type: verification
+      - name: generate
+        type: generation
+    edges:
+      expand: [retrieve]
+      retrieve: [verify]
+      verify:
+        pass: [generate]
+        fail: [abstain]</code></pre>
+<ul><li><code>PipelineBuilder.from_config(yaml_str)</code> parses and builds the graph</li><li>Store pipeline configs in <code>data/pipelines/</code></li></ul>
+<p><strong>Estimated effort:</strong> 3–4 hours</p>
+<hr/>
+<h2 id="nice-to-have">🟢 Nice to Have</h2>
+<h3 id="6-pipeline-debug-endpoint">6. Pipeline Debug Endpoint</h3>
+<p><strong>Why:</strong> Full execution trace for debugging pipeline behavior.</p>
+<p><strong>Implementation:</strong></p>
+<ul><li>New endpoint: <code>GET /api/pipeline/trace?query=...</code></li><li>Returns full context dump: every node's input/output, timing, errors</li><li>Frontend: "Debug" button in the pipeline section opens a modal with the trace</li></ul>
+<p><strong>Estimated effort:</strong> 1–2 hours</p>
+<hr/>
+<h3 id="7-node-timeout-handling">7. Node Timeout Handling</h3>
+<p><strong>Why:</strong> Kill stuck nodes (e.g., LLM hanging) after configurable timeout.</p>
+<p><strong>Implementation:</strong></p>
+<ul><li>Add <code>timeout_ms</code> to <code>NodeConfig</code> (already exists but unused)</li><li><code>Pipeline.run()</code> wraps <code>node.run()</code> in a <code>threading.Timer</code> or <code>asyncio.wait_for</code></li><li>On timeout: log error, mark node as FAILURE, continue pipeline</li></ul>
+<p><strong>Estimated effort:</strong> 1–2 hours</p>
+<hr/>
+<h3 id="8-a-b-testing-support">8. A/B Testing Support</h3>
+<p><strong>Why:</strong> Compare different pipeline configurations side-by-side.</p>
+<p><strong>Implementation:</strong></p>
+<ul><li>Run the same query through two pipeline configs</li><li>Compare: timing, answer quality, source diversity</li><li>Dashboard shows side-by-side comparison</li><li>Store comparison results for later analysis</li></ul>
+<p><strong>Estimated effort:</strong> 2–3 hours</p>
+<hr/>
+<h3 id="9-pipeline-metrics-export">9. Pipeline Metrics Export</h3>
+<p><strong>Why:</strong> Production monitoring with Prometheus/Grafana.</p>
+<p><strong>Implementation:</strong></p>
+<ul><li>Expose metrics: <code>pipeline_query_total</code>, <code>pipeline_node_duration_seconds</code>, <code>pipeline_node_errors_total</code></li><li>Use <code>prometheus_client</code> library</li><li>Add <code>/metrics</code> endpoint to FastAPI</li></ul>
+<p><strong>Estimated effort:</strong> 2–3 hours</p>
+<hr/>
+<h3 id="10-pipeline-versioning">10. Pipeline Versioning</h3>
+<p><strong>Why:</strong> Track pipeline configuration changes over time.</p>
+<p><strong>Implementation:</strong></p>
+<ul><li>Hash pipeline config (node types, edges, parameters)</li><li>Store version alongside execution logs</li><li>Dashboard shows which pipeline version produced each result</li><li>Rollback support</li></ul>
+<p><strong>Estimated effort:</strong> 2–3 hours</p>
+<hr/>
+<h2 id="effort-summary">Effort Summary</h2>
+<table><thead><tr><th>Priority</th><th>Feature</th><th>Effort</th></tr></thead><tbody><tr><td>🔴</td><td>Query expansion node</td><td>1–2h</td></tr><tr><td>🔴</td><td>Streaming pipeline progress</td><td>3–4h</td></tr><tr><td>🟡</td><td>LangGraph integration</td><td>2–3h</td></tr><tr><td>🟡</td><td>Pipeline caching</td><td>2–3h</td></tr><tr><td>🟡</td><td>Custom node composition</td><td>3–4h</td></tr><tr><td>🟢</td><td>Debug endpoint</td><td>1–2h</td></tr><tr><td>🟢</td><td>Node timeout handling</td><td>1–2h</td></tr><tr><td>🟢</td><td>A/B testing</td><td>2–3h</td></tr><tr><td>🟢</td><td>Metrics export</td><td>2–3h</td></tr><tr><td>🟢</td><td>Pipeline versioning</td><td>2–3h</td></tr></tbody></table>
+<p><strong>Total estimated effort:</strong> ~20–28 hours</p>
+<hr/>
+<h2 id="recommended-implementation-order">Recommended Implementation Order</h2>
+<ol><li><strong>Query expansion node</strong> — Highest impact on retrieval quality</li><li><strong>Node timeout handling</strong> — Quick win, prevents hung pipelines</li><li><strong>Debug endpoint</strong> — Makes development/debugging much easier</li><li><strong>Pipeline caching</strong> — Performance improvement for repeated queries</li><li><strong>Streaming progress</strong> — Best UX improvement</li><li><strong>LangGraph integration</strong> — Enables agentic workflows</li><li><strong>Custom node composition</strong> — Power user feature</li><li><strong>Metrics export</strong> — Production readiness</li><li><strong>A/B testing</strong> — Research/optimization tool</li><li><strong>Pipeline versioning</strong> — Long-term maintainability</li></ol>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>What improvements are planned?</h3><p>The roadmap covers query expansion, a dedicated verification node, config-driven (YAML/JSON) pipeline definitions, and more granular retrieval controls — each with an estimated effort.</p></div><div class="faq-item"><h3>When will these ship?</h3><p>Items are ordered by effort and impact — the fastest wins (roughly 2–4 hours each) are planned first. The roadmap is a living document; check it before filing feature requests.</p></div><div class="faq-item"><h3>Can I request a roadmap item?</h3><p>Yes — the doc invites opening an issue on the GitHub repo for missing capabilities, and links each planned feature to the docs that will change when it lands.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

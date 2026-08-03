@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>What Really Happens When You Chat With This Chatbot — Lawyer Assistant Docs</title>
+<meta name="description" content="The Lawyer Assistant chat flow: message to intent to tool routing to retrieval to rerank to LLM to cited answer, plus reasoning streaming and source collection."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/chatbot-flow.html"/>
+<meta name="keywords" content="chat flow, intent routing, tool routing, rerank answer, cited answer, SSE chat events"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="What Really Happens When You Chat With This Chatbot — Lawyer Assistant Docs"/>
+<meta property="og:description" content="The Lawyer Assistant chat flow: message to intent to tool routing to retrieval to rerank to LLM to cited answer, plus reasoning streaming and source collection."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/chatbot-flow.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="What Really Happens When You Chat With This Chatbot — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="The Lawyer Assistant chat flow: message to intent to tool routing to retrieval to rerank to LLM to cited answer, plus reasoning streaming and source collection."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "What Really Happens When You Chat With This Chatbot", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/chatbot-flow.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What happens after I send a message?", "acceptedAnswer": {"@type": "Answer", "text": "The intent router classifies it and plans a route. The planner node streams a plan, a tool searches your documents (hybrid retrieval), results are reranked, the LLM writes an answer grounded in retrieved passages, and inline citations point at the exact chunks."}}, {"@type": "Question", "name": "How do thinking and answers stream?", "acceptedAnswer": {"@type": "Answer", "text": "The pipeline yields typed events: Status, ToolCall, ToolResult, Thinking (reasoning), Token (answer text), and Done (final answer + sources). The UI renders reasoning in a chain-of-thought panel and tokens live in the message."}}, {"@type": "Question", "name": "What is the context-hint path?", "acceptedAnswer": {"@type": "Answer", "text": "When you right-click a passage and choose 'Ask assistant about selection', the raw selection rides along as a context hint and the pipeline retrieves the exact chunk it came from — so the answer cites that passage instead of re-searching a mangled query."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link active" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>What Really Happens When You Chat With This Chatbot</span></div>
+    <h1>What Really Happens When You Chat With This Chatbot</h1>
+    <div class="doc-intro"><strong>What's indexed (example corpus):</strong> 511 legal documents → 18,836 chunks in ChromaDB. Your project's numbers depend on the folder you select — with a workspace active the index lives under <code>&lt;project&gt;/workspace/chroma_db</code>.</div>
+    
+<blockquote>A complete, step-by-step walkthrough of every system that fires from the moment you type a message until you see the answer.</blockquote>
+<hr/>
+<h2 id="system-overview">System Overview</h2>
+<pre><code>┌─────────────┐     SSE      ┌──────────────┐     HTTP      ┌─────────────┐
+│   Electron   │ ──────────► │   Backend     │ ──────────► │   Ollama     │
+│   Frontend   │ ◄────────── │   FastAPI     │ ◄────────── │   (LLM)      │
+│  (React/Vite)│   streaming │   (Python)    │   response  │  lfm2.5:8b   │
+└─────────────┘              └──────────────┘              └─────────────┘
+                                    │
+                     ┌──────────────┼──────────────┐
+                     ▼              ▼              ▼
+              ┌──────────┐  ┌──────────────┐  ┌──────────┐
+              │ ChromaDB  │  │  BGE-M3      │  │ BGE-     │
+              │ Vector DB │  │  Embedder    │  │ Reranker │
+              │ 18,836    │  │  (1024-dim)  │  │ (cross-  │
+              │ chunks    │  │  CUDA fp16   │  │ encoder) │
+              └──────────┘  └──────────────┘  └──────────┘
+                     │
+                     ▼
+              ┌──────────┐
+              │  BM25     │
+              │  Sparse   │
+              │  Index    │
+              │ 18,820    │
+              │ chunks    │
+              └──────────┘</code></pre>
+
+<hr/>
+<h2 id="the-complete-flow-step-by-step">The Complete Flow: Step by Step</h2>
+<h3 id="step-0-server-startup-happens-once">Step 0: Server Startup (happens once)</h3>
+<p>When you run <code>npm run dev</code> in the <code>frontend/electron/</code> folder:</p>
+<pre><code>1. Python backend starts (FastAPI on port 8765)
+2. Vite dev server starts (port 5173)
+3. Electron loads the Vite URL
+4. Model warmup runs in background thread:
+   ├── BGE-M3 embedder loaded into GPU (~4s)
+   ├── BGE-Reranker loaded into GPU (~1s)
+   ├── Ollama LLM connection verified (~2s)
+   └── Classifier reference embeddings computed (~4s)
+5. Health check passes: GET /api/health → 200 OK</code></pre>
+<h3 id="step-1-you-type-a-message">Step 1: You Type a Message</h3>
+<p><strong>What you see:</strong> You type "hi" or "What is rescission in contract law?" and press Enter.</p>
+<p><strong>What happens in the frontend (<code>App.tsx</code>):</strong></p>
+<pre><span class="lang">typescript</span><code>// 1. Message is added to chat history
+addMessage({ role: 'user', content: query })
+
+// 2. A conversation ID is generated (or loaded from localStorage)
+const conversationId = Date.now().toString()
+
+// 3. POST request is sent to backend
+fetch('http://localhost:8765/api/chat/stream', {
+  method: 'POST',
+  body: JSON.stringify({ query, conversation_id: conversationId })
+})
+
+// 4. The SSE stream is consumed via fetch + a line parser (streamChat in
+//    services/api.ts) — not EventSource, so POST body fields (mode, top_k,
+//    attachments, context_hint) can ride along.</code></pre>
+<h3 id="step-2-backend-receives-the-request">Step 2: Backend Receives the Request</h3>
+<p><strong>File:</strong> <code>backend/main.py</code></p>
+<pre><span class="lang">python</span><code>@app.post("/api/chat/stream")
+async def chat_stream(request: ChatRequest):
+    # 1. Create an SSE streaming response
+    return StreamingResponse(
+        event_generator(request.query, request.conversation_id),
+        media_type="text/event-stream"
+    )</code></pre>
+<h3 id="step-3-intent-classification-0-3ms">Step 3: Intent Classification (0.3ms)</h3>
+<p><strong>File:</strong> <code>backend/legal_retrieval/intent_classifier.py</code></p>
+<p>The system instantly classifies your message into one of two categories:</p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                  INTENT CLASSIFIER                       │
+│                                                          │
+│  Input: "hi"                                             │
+│  → Matched GREETING_EXACT set: {'hi', 'hey', ...}       │
+│  → Output: GREETING (0.3ms)                              │
+│                                                          │
+│  Input: "What is rescission in contract law?"            │
+│  → Not a greeting pattern                                │
+│  → Output: PLANNER (0.7ms)                               │
+│                                                          │
+│  Input: (file attached)                                  │
+│  → File detected in message                              │
+│  → Output: SCAN (routes to scan pipeline)                │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<p><strong>Greeting detection rules:</strong></p>
+<ul><li>Exact matches: <code>hi</code>, <code>hey</code>, <code>hello</code>, <code>yo</code>, <code>sup</code>, <code>howdy</code>, <code>hiya</code>, <code>gm</code>, <code>ga</code>, <code>ge</code>, <code>good morning</code>, <code>good afternoon</code>, <code>good evening</code></li><li>Regex patterns: <code>^(hi|hey|hello|yo|sup|howdy|hiya)\s*[!.?]?$</code></li><li>Everything else → PLANNER path</li></ul>
+<h3 id="step-4a-greeting-path-instant-no-llm">Step 4A: Greeting Path (instant, no LLM)</h3>
+<p><strong>If intent = GREETING:</strong></p>
+<pre><span class="lang">python</span><code># No LLM call, no retrieval, no tools
+yield StatusEvent("✨ Generating greeting...")
+yield ThinkingEvent("Greeting detected, generating friendly response")
+yield TokenEvent("Hello! I'm your legal document assistant...")
+yield DoneEvent(answer="Hello! ...", sources=[], ...)</code></pre>
+<p><strong>Total time:</strong> &lt;100ms (string formatting only)</p>
+<hr/>
+<h3 id="step-4b-planner-path-the-main-flow">Step 4B: Planner Path (the main flow)</h3>
+<p><strong>File:</strong> <code>backend/legal_retrieval/router_intent.py</code></p>
+<h4 id="step-4b-1-planner-node-llm-call-1-plan-only">Step 4B.1: Planner Node (LLM call #1 — plan only)</h4>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                    PLANNER NODE                          │
+│                                                          │
+│  Model: lfm2.5:8b via Ollama                             │
+│                                                          │
+│  System Prompt:                                          │
+│  "You are a legal research planner. Your ONLY job is     │
+│   to write a brief plan and output a DIRECTIVE.          │
+│   You NEVER answer the question yourself."               │
+│                                                          │
+│  DIRECTIVES available:                                   │
+│    SEARCH: &lt;query&gt;     — search indexed documents        │
+│    SCAN: &lt;document_id&gt; — scan document against playbook  │
+│    INGEST: &lt;file_path&gt; — ingest a new document           │
+│    ANSWER:             — answer directly (no tools)      │
+│                                                          │
+│  User: "What is rescission in contract law?"             │
+│                                                          │
+│  LLM Output:                                             │
+│  "I will search for documents about rescission in        │
+│   contract law."                                         │
+│  DIRECTIVE: SEARCH: What is rescission in contract law?  │
+│                                                          │
+│  Tokens: ~800 generated in ~2-3s                         │
+│  Status events streamed to frontend as thinking tokens   │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<h4 id="step-4b-2-directive-parser">Step 4B.2: Directive Parser</h4>
+<p>The directive text is parsed to extract the tool to call and its arguments:</p>
+<pre><span class="lang">python</span><code># Parser extracts:
+tool_name = "SEARCH"
+tool_input = "What is rescission in contract law?"
+# The exact user query is preserved — not modified by the LLM</code></pre>
+<h3 id="step-5-tool-execution-search-documents">Step 5: Tool Execution — search_documents</h3>
+<p><strong>File:</strong> <code>backend/legal_retrieval/tools.py</code> → <code>_search_documents_impl()</code></p>
+<p>This is where the heavy lifting happens. The search has <strong>6 sub-steps</strong>:</p>
+<hr/>
+<h4 id="step-5-1-query-embedding-bge-m3">Step 5.1: Query Embedding (BGE-M3)</h4>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│              BGE-M3 EMBEDDER (CUDA)                      │
+│                                                          │
+│  Input: "What is rescission in contract law?"            │
+│  Model: BAAI/bge-m3 (1024-dim, XLM-RoBERTa)            │
+│  Device: CUDA (GPU)                                      │
+│  Normalization: L2 (for cosine similarity)               │
+│                                                          │
+│  Output: [0.0234, -0.0156, 0.0891, ...]  (1024 floats)  │
+│                                                          │
+│  Time: ~5s first query (model load)                      │
+│        ~0.1s subsequent queries (cached)                 │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<h4 id="step-5-2-dense-retrieval-chromadb">Step 5.2: Dense Retrieval (ChromaDB)</h4>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│              CHROMADB DENSE SEARCH                        │
+│                                                          │
+│  Collection: legal_chunks (18,836 vectors)               │
+│  Metric: cosine similarity (HNSW index)                  │
+│  top_k: 50                                               │
+│                                                          │
+│  Operation: Find 50 chunks most similar to query vector  │
+│  Result: 50 chunks with cosine scores (0.0 - 1.0)       │
+│                                                          │
+│  Time: ~0.5s                                             │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<h4 id="step-5-3-sparse-retrieval-bm25">Step 5.3: Sparse Retrieval (BM25)</h4>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│              BM25 SPARSE SEARCH                           │
+│                                                          │
+│  Index: 18,820 chunks (loaded from pickle)               │
+│  Tokenizer: whitespace splitting                         │
+│  top_k: 50                                               │
+│                                                          │
+│  Operation: Keyword matching — finds chunks containing   │
+│  "rescission", "contract", "law" even if embedding       │
+│  similarity is low                                       │
+│                                                          │
+│  Result: 50 chunks with BM25 scores                      │
+│                                                          │
+│  Time: ~0.3s                                             │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<p><strong>Why both?</strong> Dense catches semantic meaning ("contract termination" ≈ "rescission"). Sparse catches exact keywords ("Rescission" appears verbatim in a clause). Neither alone is perfect.</p>
+<h4 id="step-5-4-hybrid-merge-combine-and-dedup">Step 5.4: Hybrid Merge (combine_and_dedup)</h4>
+<p>The default merge strategy is <strong>combine_and_dedup</strong> (union of dense + sparse results, deduplicated by chunk id); <code>rrf</code> (reciprocal rank fusion) and <code>boost_only</code> are configurable alternatives.</p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│              HYBRID MERGE (combine_and_dedup)             │
+│                                                          │
+│  Input:                                                  │
+│    50 dense results (by embedding similarity)            │
+│    50 sparse results (by BM25 keyword match)             │
+│                                                          │
+│  Process:                                                │
+│    1. Collect all unique chunk_ids from both lists       │
+│    2. Deduplicate by chunk_id                            │
+│    3. For each unique chunk:                             │
+│       - If in BOTH: mark as "hybrid" (strongest signal)  │
+│       - If dense-only: mark as "dense"                   │
+│       - If sparse-only: mark as "sparse"                 │
+│                                                          │
+│  Output: ~80-100 unique chunks                           │
+│                                                          │
+│  Time: &lt;10ms (set operations)                            │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<h4 id="step-5-5-reranking-bge-reranker-v2-m3">Step 5.5: Reranking (BGE-Reranker-v2-M3)</h4>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│              CROSS-ENCODER RERANKER                       │
+│                                                          │
+│  Model: BAAI/bge-reranker-v2-m3                          │
+│  Device: CUDA (GPU), fp16, batch_size=32                 │
+│                                                          │
+│  Input: 100 (query, chunk) pairs                         │
+│                                                          │
+│  For each pair, the cross-encoder computes:              │
+│    P(relevant | query, chunk) → score in [0, 1]          │
+│                                                          │
+│  Unlike the embedder (which encodes query and doc        │
+│  SEPARATELY), the reranker processes them TOGETHER       │
+│  in a single forward pass — much more accurate but       │
+│  much slower.                                            │
+│                                                          │
+│  Process:                                                │
+│    Batch 1:  pairs 1-32   → scores                       │
+│    Batch 2:  pairs 33-64  → scores                       │
+│    Batch 3:  pairs 65-96  → scores                       │
+│    Batch 4:  pairs 97-100 → scores                       │
+│                                                          │
+│  Output: 100 reranker_scores (one per chunk)             │
+│                                                          │
+│  Time: ~8s (with fp16 + batch_size=32)                   │
+│         ~300s without optimization                       │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<h4 id="step-5-6-final-selection">Step 5.6: Final Selection</h4>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│              FINAL SELECTION                              │
+│                                                          │
+│  1. Sort 100 chunks by reranker_score descending         │
+│  2. Dedup by file_name (keep highest-scoring per file)   │
+│     → prevents one contract from filling all 5 slots     │
+│  3. Take top 5 (top_k_final)                             │
+│                                                          │
+│  Each result contains:                                   │
+│    - file_name: "Arconic_Trademark_License.pdf"          │
+│    - page: 3                                              │
+│    - section: "License Grant"                             │
+│    - score: 0.82 (reranker confidence)                   │
+│    - text: chunk text (~480 tokens)                      │
+│    - source_text: full original paragraph                 │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="step-6-answer-generation-llm-call-2">Step 6: Answer Generation (LLM call #2)</h3>
+<p><strong>File:</strong> <code>backend/legal_retrieval/router_intent.py</code> — answer node</p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                    ANSWER NODE                            │
+│                                                          │
+│  Model: lfm2.5:8b via Ollama                             │
+│                                                          │
+│  System Prompt:                                          │
+│  "You are a legal document answerer. Base your answer    │
+│   on the document text below. You MAY paraphrase and     │
+│   synthesize. You MAY draw reasonable inferences.        │
+│   NEVER invent facts. Cite file name and page."          │
+│                                                          │
+│  Context (6000 chars max):                               │
+│    1. [0.82] Arconic_Trademark_License.pdf, page 3       │
+│       "The License Grant hereby grants..."               │
+│    2. [0.71] Arconic_Trademark_License.pdf, page 5       │
+│       "Territory: United States and Canada..."           │
+│    3. [0.65] Other_Document.pdf, page 12                 │
+│       ...                                                │
+│                                                          │
+│  User: "What is rescission in contract law?"             │
+│                                                          │
+│  LLM Output (streamed token by token):                   │
+│  "Rescission is the unmaking of a contract between       │
+│   parties. Under [Arconic_Trademark_License.pdf, p.3],   │
+│   the agreement may be rescinded if either party..."     │
+│                                                          │
+│  Tokens: ~500-1000 generated in ~5-15s                   │
+│  Each token is sent as a TokenEvent via SSE              │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="step-7-response-streaming-to-frontend">Step 7: Response Streaming to Frontend</h3>
+<p><strong>File:</strong> <code>backend/main.py</code> — SSE event generator</p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│              SSE EVENT STREAM                             │
+│                                                          │
+│  event: status                                           │
+│  data: {"type":"status","message":"🔍 Searching..."}    │
+│                                                          │
+│  event: thinking                                         │
+│  data: {"type":"thinking","message":"Planning search"}   │
+│                                                          │
+│  event: token                                            │
+│  data: {"type":"token","content":"Rescission"}           │
+│                                                          │
+│  event: token                                            │
+│  data: {"type":"token","content":" is"}                  │
+│                                                          │
+│  event: token                                            │
+│  data: {"type":"token","content":" the"}                 │
+│                                                          │
+│  ... (hundreds of token events) ...                      │
+│                                                          │
+│  event: tool_call                                        │
+│  data: {"type":"tool_call","tool":"search_documents"}    │
+│                                                          │
+│  event: tool_result                                      │
+│  data: {"type":"tool_result","tool":"search_documents",  │
+│         "result":"Found 5 documents..."}                 │
+│                                                          │
+│  event: done                                             │
+│  data: {"type":"done","answer":"Rescission is...",       │
+│         "sources":[{file_name, page, section, score,     │
+│                     text, source_text}],                 │
+│         "metrics":{...}}                                 │
+│                                                          │
+│  event: error (only if something fails)                  │
+│  data: {"type":"error","message":"..."}                  │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="step-8-frontend-renders-the-response">Step 8: Frontend Renders the Response</h3>
+<p><strong>File:</strong> <code>frontend/src/components/Chat/Message.tsx</code></p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│              FRONTEND RENDERING                           │
+│                                                          │
+│  1. User message bubble appears instantly                │
+│                                                          │
+│  2. Typing indicator shows "Thinking..."                 │
+│                                                          │
+│  3. Thinking tokens appear in collapsible "Process"      │
+│     section (shows planner's plan)                       │
+│                                                          │
+│  4. Tool call/status events show pipeline steps:         │
+│     ├── "🔍 Searching documents..."                      │
+│     ├── "📊 Embedding query..."                          │
+│     ├── "🔗 Merging dense + sparse..."                   │
+│     └── "🎯 Reranking candidates..."                     │
+│                                                          │
+│  5. Answer tokens stream in word by word                 │
+│     (Message component appends each token)               │
+│                                                          │
+│  6. Source citations appear as numbered badges [1] [2]   │
+│     in the Sources panel on the right                    │
+│                                                          │
+│  7. DoneEvent triggers:                                  │
+│     ├── Final answer rendered as Markdown                │
+│     ├── Sources panel populated with clickable cards     │
+│     └── Clicking a source opens SourceViewerModal        │
+│         showing the FULL original paragraph              │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<hr/>
+<h2 id="complete-timeline-for-a-legal-query">Complete Timeline for a Legal Query</h2>
+<pre><code>0ms      ── POST /api/chat/stream received
+0.3ms    ── Intent classified: PLANNER
+50ms     ── Planner node: LLM call starts (plan generation)
+2500ms   ── Planner output: "SEARCH: What is rescission..."
+2600ms   ── search_documents tool invoked
+2700ms   ── BGE-M3: query embedded (~100ms if cached)
+3200ms   ── ChromaDB: 50 dense results (~500ms)
+3500ms   ── BM25: 50 sparse results (~300ms)
+3510ms   ── Merge: 100 unique chunks (&lt;10ms)
+3520ms   ── BGE-Reranker: starts processing 100 pairs
+11500ms  ── Reranker: done (~8s with fp16+batch32)
+11510ms  ── Top 5 selected, deduped by file
+11600ms  ── Answer node: LLM call starts (answer generation)
+11600ms  ── First tokens streamed to frontend
+16600ms  ── Last token streamed
+16700ms  ── DoneEvent sent with sources and metrics
+16800ms  ── Frontend: answer fully rendered
+
+Total: ~17 seconds (first query, model warmup included)
+       ~12 seconds (subsequent queries, models cached)</code></pre>
+<p><strong>Breakdown:</strong></p>
+<table><thead><tr><th>Phase</th><th>Time</th><th>% of Total</th></tr></thead><tbody><tr><td>Intent classification</td><td>&lt;1ms</td><td>0%</td></tr><tr><td>Planner (LLM #1)</td><td>~2.5s</td><td>15%</td></tr><tr><td>Query embedding</td><td>~0.1s</td><td>1%</td></tr><tr><td>Dense retrieval</td><td>~0.5s</td><td>3%</td></tr><tr><td>Sparse retrieval</td><td>~0.3s</td><td>2%</td></tr><tr><td>Merge</td><td>&lt;0.01s</td><td>0%</td></tr><tr><td><strong>Reranking</strong></td><td><strong>~8s</strong></td><td><strong>47%</strong></td></tr><tr><td>Answer generation (LLM #2)</td><td>~5s</td><td>30%</td></tr><tr><td>Network overhead</td><td>~0.5s</td><td>3%</td></tr></tbody></table>
+<p><strong>The reranker is the bottleneck</strong> — nearly half the total time.</p>
+<hr/>
+<h2 id="the-scan-path-when-you-attach-a-file">The Scan Path (when you attach a file)</h2>
+<p>When you attach a document, the intent classifier routes to the scan pipeline instead:</p>
+<pre><code>┌─────────────────────────────────────────────────────────┐
+│                    SCAN PIPELINE                          │
+│                                                          │
+│  1. File is saved into the active project folder          │
+│  2. Docling extracts blocks (paragraphs, headings, etc)  │
+│  3. StructureAwareChunker splits into ~480-token chunks   │
+│  4. BGE-M3 embeds all chunks (GPU batch)                 │
+│  5. Chunks stored in ChromaDB (with source_text)          │
+│  6. BM25 index updated                                    │
+│  7. Playbook scanner runs:                                │
+│     ├── Classify each chunk's clause type                │
+│     ├── Match to playbook rules (8 rules in default)     │
+│     ├── LLM checks compliance per (chunk, rule) pair     │
+│     └── Generate compliance flags sorted by severity     │
+│  8. Flags displayed as structured cards in chat          │
+│                                                          │
+│  Total for a 3-page doc: ~30-140s                         │
+│  (depends on number of chunks × rules checked)           │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<hr/>
+<h2 id="models-used">Models Used</h2>
+<table><thead><tr><th>Model</th><th>Purpose</th><th>Size</th><th>Device</th><th>Latency</th></tr></thead><tbody><tr><td>lfm2.5:8b</td><td>LLM (planner + answer)</td><td>8B params</td><td>Ollama</td><td>2-15s per call</td></tr><tr><td>BGE-M3</td><td>Query/chunk embedding</td><td>568M params</td><td>CUDA fp16</td><td>0.1s cached, 4s cold</td></tr><tr><td>BGE-Reranker-v2-M3</td><td>Cross-encoder reranking</td><td>568M params</td><td>CUDA fp16</td><td>8s for 100 pairs</td></tr><tr><td>BM25</td><td>Keyword search</td><td>N/A (index)</td><td>CPU</td><td>0.3s</td></tr></tbody></table>
+<hr/>
+<h2 id="data-storage">Data Storage</h2>
+<table><thead><tr><th>Store</th><th>Contents</th><th>Location</th></tr></thead><tbody><tr><td>ChromaDB</td><td>chunk vectors + metadata</td><td><code>&lt;project&gt;/workspace/chroma_db/</code> (workspace active) or <code>data/chroma_db/</code></td></tr><tr><td>BM25 Index</td><td>Keyword search index (pickle)</td><td><code>&lt;project&gt;/workspace/bm25_index/</code> (workspace active) or <code>data/bm25_index/</code></td></tr><tr><td>SQLite</td><td>Conversation memory (checkpointer)</td><td><code>data/conversations.db</code> (project-independent)</td></tr><tr><td>SQLite</td><td>Scan compliance flags</td><td><code>data/flags.db</code> (project-independent)</td></tr><tr><td>Filesystem</td><td>Source documents</td><td>the active project folder itself (workspace required — no default <code>data/raw/</code> anymore)</td></tr><tr><td>Filesystem</td><td>ML model weights</td><td><code>models/</code></td></tr></tbody></table>
+<hr/>
+<h2 id="key-design-decisions">Key Design Decisions</h2>
+<ol><li><strong>Two LLM calls per query</strong> — planner decides WHAT to search, answer writes HOW to respond. Separation of concerns.</li><li><strong>Hybrid search (dense + sparse)</strong> — dense catches meaning, sparse catches exact terms. Neither alone is sufficient for legal text.</li><li><strong>Cross-encoder reranking</strong> — much more accurate than embedding similarity alone, but 50x slower. Worth it for accuracy.</li><li><strong>Anti-hallucination prompt</strong> — the answer node is told to NEVER invent facts, only use document text with citations.</li><li><strong>source_text storage</strong> — full original paragraphs stored alongside chunks so the SourceViewerModal shows complete context.</li><li><strong>Greeting bypass</strong> — "hi" gets an instant response without touching the LLM or retrieval pipeline.</li><li><strong>HITL (Human-in-the-loop)</strong> — the agent can interrupt before taking actions, waiting for user approval via the resume endpoint.</li></ol>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>What happens after I send a message?</h3><p>The intent router classifies it and plans a route. The planner node streams a plan, a tool searches your documents (hybrid retrieval), results are reranked, the LLM writes an answer grounded in retrieved passages, and inline citations point at the exact chunks.</p></div><div class="faq-item"><h3>How do thinking and answers stream?</h3><p>The pipeline yields typed events: Status, ToolCall, ToolResult, Thinking (reasoning), Token (answer text), and Done (final answer + sources). The UI renders reasoning in a chain-of-thought panel and tokens live in the message.</p></div><div class="faq-item"><h3>What is the context-hint path?</h3><p>When you right-click a passage and choose 'Ask assistant about selection', the raw selection rides along as a context hint and the pipeline retrieves the exact chunk it came from — so the answer cites that passage instead of re-searching a mangled query.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

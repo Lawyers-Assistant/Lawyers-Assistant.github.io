@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Benchmarking — Performance Evaluation &amp; Quality Metrics — Lawyer Assistant Docs</title>
+<meta name="description" content="Benchmark Lawyer Assistant retrieval: chunking throughput, embedding speed (GPU vs CPU), reranker quality, and hybrid search accuracy with Recall@5, MRR, and success rate."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/benchmarking.html"/>
+<meta name="keywords" content="legal AI benchmark, RAG benchmark, recall@5, MRR, retrieval accuracy, chunking throughput, embedding benchmark"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Benchmarking — Performance Evaluation &amp; Quality Metrics — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Benchmark Lawyer Assistant retrieval: chunking throughput, embedding speed (GPU vs CPU), reranker quality, and hybrid search accuracy with Recall@5, MRR, and success rate."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/benchmarking.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Benchmarking — Performance Evaluation &amp; Quality Metrics — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Benchmark Lawyer Assistant retrieval: chunking throughput, embedding speed (GPU vs CPU), reranker quality, and hybrid search accuracy with Recall@5, MRR, and success rate."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Benchmarking — Performance Evaluation &amp; Quality Metrics", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/benchmarking.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What metrics does the benchmark report?", "acceptedAnswer": {"@type": "Answer", "text": "Chunking and embedding throughput (chunks/sec, pairs/sec), GPU vs CPU speed, reranker quality impact, and retrieval accuracy — Recall@5, MRR, and success rate — for dense, sparse, and hybrid search modes."}}, {"@type": "Question", "name": "How do I run a benchmark?", "acceptedAnswer": {"@type": "Answer", "text": "From the backend, run python -m benchmark.runner. It runs the full suite, saves results to metrics.json, and the docs show how to compare runs over time and set regression thresholds in CI."}}, {"@type": "Question", "name": "Which search mode wins in practice?", "acceptedAnswer": {"@type": "Answer", "text": "Hybrid (dense + sparse with fusion and reranking) consistently beats either mode alone on legal corpora — the docs include a sample comparison showing hybrid Recall@5 around 0.86 versus 0.73 for dense-only."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link active" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Benchmarking — Performance Evaluation &amp; Quality Metrics</span></div>
+    <h1>Benchmarking — Performance Evaluation &amp; Quality Metrics</h1>
+    <div class="doc-intro">Comprehensive benchmarking system for evaluating retrieval quality, answer accuracy, and system performance. The benchmark suite provides quantitative metrics to track improvements and regressions.</div>
+    
+
+<hr/>
+<h2 id="1-overview">1. Overview</h2>
+<p>The benchmarking system evaluates three dimensions:</p>
+<ol><li><strong>Retrieval quality</strong> — How well does the system find relevant documents?</li><li><strong>Component performance</strong> — How fast are individual components (chunking, embedding, reranking)?</li><li><strong>End-to-end accuracy</strong> — How accurate are the final answers?</li></ol>
+<h3 id="benchmark-suite-structure">Benchmark suite structure</h3>
+<pre><code>backend/benchmark/
+├── runner.py                  # Main benchmark orchestrator
+├── metrics.py                 # Retrieval metrics (Recall@K, MRR, Precision@K)
+├── failure_analysis.py        # Failure categorization &amp; diagnosis
+├── connector.py               # Pipeline integration
+├── datasets/                  # Benchmark datasets
+│   ├── benchmark_dataset.py   # Main question set (200 questions)
+│   ├── golden_eval.py         # Golden evaluation set
+│   ├── golden_eval_v2.py      # V2 with extended metadata
+│   └── cuad_dataset.py        # CUAD contract understanding
+├── components/                # Component-level benchmarks
+│   ├── test_chunking.py       # Chunking speed &amp; quality
+│   ├── test_embedding.py      # Embedding throughput
+│   ├── test_reranker.py       # Reranking speed vs quality
+│   └── test_retrieval.py      # Retrieval accuracy
+└── results/                   # Benchmark outputs
+    ├── results.json           # Per-question results
+    ├── metrics.json           # Aggregate metrics
+    ├── failures.json          # Failure analysis
+    ├── benchmark_report.md    # Human-readable report
+    └── golden_eval_metrics.json   # Golden eval results</code></pre>
+<hr/>
+<h2 id="2-running-benchmarks">2. Running benchmarks</h2>
+<h3 id="full-retrieval-benchmark-200-questions">Full retrieval benchmark (200 questions)</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python -m benchmark.runner</code></pre>
+<p><strong>What it does:</strong></p>
+<ul><li>Loads 200 legal questions with expected sources</li><li>Runs each query through the retrieval pipeline</li><li>Computes Recall@K, MRR, Precision@K, keyword match</li><li>Generates failure analysis</li><li>Produces <code>benchmark_report.md</code></li></ul>
+<p><strong>Expected runtime:</strong> ~15-25 minutes (depends on GPU)</p>
+<h3 id="subset-benchmark-for-quick-iteration">Subset benchmark (for quick iteration)</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python -m benchmark.runner --max 20</code></pre>
+<p>Runs only the first 20 questions (~2 minutes).</p>
+<h3 id="benchmark-with-different-configurations">Benchmark with different configurations</h3>
+<pre><span class="lang">bash</span><code># Disable reranker (tests dense+sparse only)
+python -m benchmark.runner --skip-reranker
+
+# Different top-K
+python -m benchmark.runner --top-k 20
+
+# Combine options
+python -m benchmark.runner --max 50 --top-k 15 --skip-reranker</code></pre>
+<hr/>
+<h2 id="3-benchmark-metrics">3. Benchmark metrics</h2>
+<h3 id="recall-k">Recall@K</h3>
+<p><strong>Definition:</strong> Fraction of queries where at least one expected source appears in the top-K results.</p>
+<pre><code>Recall@K = (# queries with ≥1 expected source in top-K) / (total queries)</code></pre>
+<p><strong>Example:</strong></p>
+<ul><li>Query: "What is rescission?"</li><li>Expected: <code>["contract_law.pdf"]</code></li><li>Top-5 results: <code>["other.pdf", "contract_law.pdf", "terms.pdf", ...]</code></li><li>Recall@5 = <strong>1.0</strong> (expected source found)</li></ul>
+<p><strong>Interpretation:</strong></p>
+<ul><li>Recall@1 = 0.75 → 75% of queries have the right document as #1 result</li><li>Recall@5 = 0.92 → 92% of queries have the right document in top-5</li><li>Recall@10 = 0.95 → 95% of queries have the right document in top-10</li></ul>
+<h3 id="mean-reciprocal-rank-mrr">Mean Reciprocal Rank (MRR)</h3>
+<p><strong>Definition:</strong> Average of <code>1 / rank</code> where <code>rank</code> is the position of the first expected source.</p>
+<pre><code>MRR = mean(1 / rank_of_first_relevant)</code></pre>
+<p><strong>Example:</strong></p>
+<ul><li>Query 1: Expected source is #1 → 1/1 = 1.0</li><li>Query 2: Expected source is #3 → 1/3 = 0.333</li><li>Query 3: Expected source not in top-10 → 0.0</li><li>MRR = (1.0 + 0.333 + 0.0) / 3 = <strong>0.444</strong></li></ul>
+<p><strong>Interpretation:</strong></p>
+<ul><li>MRR = 1.0 → perfect (every query's top result is correct)</li><li>MRR = 0.5 → expected source typically at rank 2</li><li>MRR = 0.25 → expected source typically at rank 4</li></ul>
+<h3 id="precision-k">Precision@K</h3>
+<p><strong>Definition:</strong> Fraction of top-K results that are relevant (in expected sources).</p>
+<pre><code>Precision@K = (# relevant docs in top-K) / K</code></pre>
+<p><strong>Example:</strong></p>
+<ul><li>Expected: <code>["contract.pdf", "terms.pdf"]</code></li><li>Top-5: <code>["contract.pdf", "other.pdf", "terms.pdf", "misc.pdf", "random.pdf"]</code></li><li>Precision@5 = 2/5 = <strong>0.4</strong></li></ul>
+<p><strong>Interpretation:</strong></p>
+<ul><li>Precision@3 = 0.8 → 80% of top-3 results are relevant</li><li>Precision@5 = 0.6 → 60% of top-5 results are relevant</li></ul>
+<h3 id="keyword-match-rate">Keyword match rate</h3>
+<p><strong>Definition:</strong> Fraction of expected keywords found in the text of the top result.</p>
+<pre><code>KW Match = (# expected keywords in top result) / (total expected keywords)</code></pre>
+<p><strong>Example:</strong></p>
+<ul><li>Expected keywords: <code>["rescission", "contract", "termination"]</code></li><li>Top result text: "The contract may be rescinded..."</li><li>Found: 2/3 (<code>"rescission"</code>, <code>"contract"</code>) → <strong>0.667</strong></li></ul>
+<p><strong>Interpretation:</strong></p>
+<ul><li>KW match = 1.0 → top result contains all expected keywords</li><li>KW match = 0.5 → top result contains half the expected keywords</li><li>KW match = 0.0 → top result contains none (likely wrong document)</li></ul>
+<hr/>
+<h2 id="4-benchmark-dataset">4. Benchmark dataset</h2>
+<p>The main benchmark uses <strong>200 hand-curated legal questions</strong> with ground truth:</p>
+<pre><span class="lang">python</span><code># backend/benchmark/datasets/benchmark_dataset.py
+QUESTIONS = [
+    {
+        "id": "Q001",
+        "question": "What is rescission under contract law?",
+        "category": "contract_law",
+        "difficulty": "easy",
+        "expected_sources": ["contract_basics.pdf", "remedies.pdf"],
+        "expected_keywords": ["rescission", "contract", "void", "remedy"],
+    },
+    # ... 199 more
+]</code></pre>
+<h3 id="dataset-statistics">Dataset statistics</h3>
+<table><thead><tr><th>Category</th><th>Count</th><th>Description</th></tr></thead><tbody><tr><td><strong>contract_law</strong></td><td>60</td><td>Contract formation, terms, remedies</td></tr><tr><td><strong>tort_law</strong></td><td>40</td><td>Negligence, liability, damages</td></tr><tr><td><strong>property_law</strong></td><td>35</td><td>Real property, leases, ownership</td></tr><tr><td><strong>criminal_law</strong></td><td>25</td><td>Offenses, defenses, procedure</td></tr><tr><td><strong>civil_procedure</strong></td><td>20</td><td>Pleadings, discovery, trials</td></tr><tr><td><strong>constitutional_law</strong></td><td>20</td><td>Rights, powers, amendments</td></tr></tbody></table>
+<table><thead><tr><th>Difficulty</th><th>Count</th></tr></thead><tbody><tr><td><strong>easy</strong></td><td>80</td></tr><tr><td><strong>medium</strong></td><td>90</td></tr><tr><td><strong>hard</strong></td><td>30</td></tr></tbody></table>
+<p>Get stats programmatically:</p>
+<pre><span class="lang">python</span><code>from benchmark.datasets.benchmark_dataset import get_dataset_stats
+stats = get_dataset_stats()
+# → {"total": 200, "categories": {...}, "difficulties": {...}}</code></pre>
+<hr/>
+<h2 id="5-reading-benchmark-results">5. Reading benchmark results</h2>
+<p>After running <code>python -m benchmark.runner</code>, results are saved to <code>backend/benchmark/results/</code>:</p>
+<h3 id="benchmark-report-md-human-readable"><code>benchmark_report.md</code> (human-readable)</h3>
+<pre><span class="lang">markdown</span><code># Legal RAG Benchmark Report
+
+**Date**: 2026-08-03 14:23:45
+**Top-K**: 10
+**Reranker**: Enabled
+**Total time**: 892.3s
+
+## Summary
+
+| Metric | Value |
+|--------|-------|
+| Total questions | 200 |
+| Success rate | 87.5% |
+| Recall@1 | 0.695 |
+| Recall@5 | 0.850 |
+| Recall@10 | 0.875 |
+| MRR | 0.782 |
+| Precision@3 | 0.623 |
+| Precision@5 | 0.534 |
+| Keyword match rate | 0.712 |
+| Mean latency | 4461ms |
+
+## Per-Category Breakdown
+
+| Category | N | Success | R@1 | R@5 | MRR | KW Match |
+|----------|---|---------|-----|-----|-----|----------|
+| contract_law | 60 | 92% | 0.733 | 0.900 | 0.810 | 0.756 |
+| tort_law | 40 | 85% | 0.675 | 0.825 | 0.748 | 0.682 |
+...</code></pre>
+<h3 id="metrics-json-machine-readable"><code>metrics.json</code> (machine-readable)</h3>
+<pre><span class="lang">json</span><code>{
+  "total_questions": 200,
+  "successful": 175,
+  "failed": 25,
+  "success_rate": 0.875,
+  "recall_at_1": 0.695,
+  "recall_at_5": 0.850,
+  "recall_at_10": 0.875,
+  "mrr": 0.782,
+  "precision_at_3": 0.623,
+  "precision_at_5": 0.534,
+  "keyword_match_rate": 0.712,
+  "mean_latency_ms": 4461.2,
+  "per_category": { ... },
+  "per_difficulty": { ... },
+  "total_time_s": 892.3,
+  "reranker_enabled": true
+}</code></pre>
+<h3 id="results-json-per-question-details"><code>results.json</code> (per-question details)</h3>
+<pre><span class="lang">json</span><code>[
+  {
+    "question_id": "Q001",
+    "question": "What is rescission under contract law?",
+    "category": "contract_law",
+    "difficulty": "easy",
+    "expected_sources": ["contract_basics.pdf"],
+    "expected_keywords": ["rescission", "contract"],
+    "is_success": true,
+    "recall_at_1": 1.0,
+    "recall_at_5": 1.0,
+    "recall_at_10": 1.0,
+    "mrr": 1.0,
+    "precision_at_3": 0.667,
+    "precision_at_5": 0.400,
+    "keyword_match_rate": 1.0,
+    "latency_ms": 4523.1,
+    "failure_type": "",
+    "retrieved_docs": [
+      {"document_id": "contract_basics.pdf", "score": 0.89},
+      {"document_id": "remedies.pdf", "score": 0.76},
+      ...
+    ]
+  },
+  ...
+]</code></pre>
+<h3 id="failures-json-failure-analysis"><code>failures.json</code> (failure analysis)</h3>
+<pre><span class="lang">json</span><code>{
+  "total_questions": 200,
+  "total_failed": 25,
+  "failure_rate": 0.125,
+  "failure_type_counts": {
+    "missing_data": 10,
+    "embedding_problem": 8,
+    "ocr_problem": 4,
+    "reranker_problem": 3
+  },
+  "worst_failures": [
+    {
+      "question_id": "Q087",
+      "question": "What is the doctrine of adverse possession?",
+      "category": "property_law",
+      "difficulty": "hard",
+      "failure_type": "missing_data",
+      "mrr": 0.0,
+      "possible_fix": "Add more property law documents to corpus"
+    },
+    ...
+  ]
+}</code></pre>
+<hr/>
+<h2 id="6-failure-analysis">6. Failure analysis</h2>
+<p>The benchmark automatically categorizes failures:</p>
+<table><thead><tr><th>Failure Type</th><th>Meaning</th><th>Possible Fix</th></tr></thead><tbody><tr><td><strong>missing_data</strong></td><td>Expected source not in corpus</td><td>Add missing documents</td></tr><tr><td><strong>embedding_problem</strong></td><td>Query/doc embeddings too dissimilar</td><td>Fine-tune embedder on legal text</td></tr><tr><td><strong>ocr_problem</strong></td><td>OCR quality poor for scanned docs</td><td>Improve OCR preprocessing</td></tr><tr><td><strong>reranker_problem</strong></td><td>Reranker demoted correct results</td><td>Tune reranker threshold</td></tr><tr><td><strong>keyword_mismatch</strong></td><td>Query uses different terminology</td><td>Add synonyms or query expansion</td></tr><tr><td><strong>error</strong></td><td>Pipeline exception</td><td>Fix the bug</td></tr></tbody></table>
+<h3 id="diagnosing-a-failure">Diagnosing a failure</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python -m benchmark.failure_analysis</code></pre>
+<p>Opens an interactive session:</p>
+<pre><span class="lang">python</span><code>&gt;&gt;&gt; from benchmark.runner import run_benchmark
+&gt;&gt;&gt; results = run_benchmark(max_questions=200)
+&gt;&gt;&gt; from benchmark.failure_analysis import analyze_failures
+&gt;&gt;&gt; analysis = analyze_failures(results['results'])
+&gt;&gt;&gt; print(analysis['worst_failures'][0])
+{
+  "question_id": "Q087",
+  "question": "What is the doctrine of adverse possession?",
+  "category": "property_law",
+  "failure_type": "missing_data",
+  "possible_fix": "Add more property law documents to corpus"
+}</code></pre>
+<hr/>
+<h2 id="7-golden-evaluation">7. Golden evaluation</h2>
+<p>The <strong>golden eval</strong> is a smaller, curated set of high-confidence questions with verified answers — used to track answer quality (not just retrieval).</p>
+<h3 id="running-golden-eval">Running golden eval</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python -m benchmark.run_golden_eval</code></pre>
+<p><strong>What it does:</strong></p>
+<ul><li>Loads 50 golden questions with verified correct answers</li><li>Runs each through the full RAG pipeline (retrieval + LLM answer)</li><li>Compares generated answer to expected answer (lexical + semantic similarity)</li><li>Computes answer accuracy metrics</li></ul>
+<h3 id="golden-eval-metrics">Golden eval metrics</h3>
+<pre><span class="lang">json</span><code>{
+  "total": 50,
+  "exact_match": 0.24,
+  "f1_score": 0.78,
+  "semantic_similarity": 0.82,
+  "citation_accuracy": 0.91,
+  "abstain_rate": 0.06
+}</code></pre>
+<table><thead><tr><th>Metric</th><th>Meaning</th></tr></thead><tbody><tr><td><strong>exact_match</strong></td><td>Fraction of answers that exactly match expected</td></tr><tr><td><strong>f1_score</strong></td><td>Token-level F1 (precision × recall)</td></tr><tr><td><strong>semantic_similarity</strong></td><td>Cosine similarity of answer embeddings</td></tr><tr><td><strong>citation_accuracy</strong></td><td>Fraction of citations that are correct</td></tr><tr><td><strong>abstain_rate</strong></td><td>Fraction of queries where system abstained</td></tr></tbody></table>
+<hr/>
+<h2 id="8-component-benchmarks">8. Component benchmarks</h2>
+<p>Test individual components in isolation:</p>
+<h3 id="chunking-performance">Chunking performance</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python -m benchmark.components.test_chunking</code></pre>
+<p><strong>Tests:</strong></p>
+<ul><li>Chunks per second (throughput)</li><li>Chunk size distribution (are chunks near target 480 tokens?)</li><li>Section respect (chunks never split headers)</li></ul>
+<p><strong>Output:</strong></p>
+<pre><code>Chunking performance:
+  Documents processed: 100
+  Total chunks: 2,340
+  Throughput: 156.7 chunks/sec
+  Mean chunk size: 478.2 tokens (target: 480)
+  Section violations: 0 (0.0%)</code></pre>
+<h3 id="embedding-performance">Embedding performance</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python -m benchmark.components.test_embedding</code></pre>
+<p><strong>Tests:</strong></p>
+<ul><li>Embedding throughput (chunks/sec)</li><li>GPU vs CPU speed</li><li>Batch size impact</li></ul>
+<p><strong>Output:</strong></p>
+<pre><code>Embedding performance (GPU, batch=32):
+  Chunks embedded: 1,000
+  Throughput: 89.3 chunks/sec
+  Mean latency per chunk: 11.2ms
+  GPU memory peak: 2,341 MB</code></pre>
+<h3 id="reranker-performance">Reranker performance</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python -m benchmark.components.test_reranker</code></pre>
+<p><strong>Tests:</strong></p>
+<ul><li>Reranking throughput (pairs/sec)</li><li>Quality impact (how much does reranking improve Recall@5?)</li><li>Speed vs batch size trade-off</li></ul>
+<p><strong>Output:</strong></p>
+<pre><code>Reranker performance:
+  Query-doc pairs reranked: 500
+  Throughput: 18.7 pairs/sec
+  Recall@5 improvement: +12.3%
+  Mean score change: +0.18 (top result promoted)</code></pre>
+<h3 id="retrieval-accuracy">Retrieval accuracy</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python -m benchmark.components.test_retrieval</code></pre>
+<p><strong>Tests:</strong></p>
+<ul><li>Dense vs sparse vs hybrid accuracy</li><li>Top-K impact on recall</li><li>Search mode comparison</li></ul>
+<p><strong>Output:</strong></p>
+<pre><code>Retrieval mode comparison (100 queries):
+
+Dense only:
+  Recall@5: 0.73
+  MRR: 0.61
+
+Sparse only:
+  Recall@5: 0.68
+  MRR: 0.54
+
+Hybrid (dense + sparse):
+  Recall@5: 0.86
+  MRR: 0.74</code></pre>
+<hr/>
+<h2 id="9-continuous-benchmarking">9. Continuous benchmarking</h2>
+<h3 id="tracking-performance-over-time">Tracking performance over time</h3>
+<p>Save metrics after each benchmark run:</p>
+<pre><span class="lang">bash</span><code>cd backend
+python -m benchmark.runner &gt; results/run_$(date +%Y%m%d_%H%M%S).log
+cp results/metrics.json results/metrics_$(date +%Y%m%d_%H%M%S).json</code></pre>
+<p>Plot trends:</p>
+<pre><span class="lang">python</span><code>import json
+from pathlib import Path
+
+metrics_files = sorted(Path("results").glob("metrics_*.json"))
+recalls = []
+for f in metrics_files:
+    data = json.loads(f.read_text())
+    recalls.append(data["recall_at_5"])
+
+print(f"Recall@5 over {len(recalls)} runs: {recalls}")
+# → [0.82, 0.84, 0.86, 0.87, 0.85, ...]</code></pre>
+<h3 id="regression-detection">Regression detection</h3>
+<p>Set a minimum acceptable threshold:</p>
+<pre><span class="lang">python</span><code>import json
+
+with open("results/metrics.json") as f:
+    metrics = json.load(f)
+
+THRESHOLDS = {
+    "recall_at_5": 0.80,
+    "mrr": 0.70,
+    "success_rate": 0.75,
+}
+
+for metric, min_val in THRESHOLDS.items():
+    actual = metrics[metric]
+    if actual &lt; min_val:
+        raise AssertionError(
+            f"{metric} regression: {actual:.3f} &lt; {min_val:.3f}"
+        )</code></pre>
+<p>Run in CI:</p>
+<pre><span class="lang">yaml</span><code># .github/workflows/benchmark.yml
+- name: Run benchmark
+  run: cd backend &amp;&amp; python -m benchmark.runner --max 50
+- name: Check regressions
+  run: python scripts/check_benchmark_regression.py</code></pre>
+<hr/>
+<h2 id="10-benchmark-configuration">10. Benchmark configuration</h2>
+<p>All benchmark config is in <code>backend/benchmark/connector.py</code>:</p>
+<pre><span class="lang">python</span><code>def create_pipeline():
+    """Create retrieval pipeline for benchmarking."""
+    return RetrievalPipeline(
+        top_k_retrieval=50,
+        top_k_final=10,
+        search_mode="hybrid",
+        skip_rerank=False,
+    )</code></pre>
+<p>Override for custom configs:</p>
+<pre><span class="lang">python</span><code>from benchmark.connector import create_pipeline
+from benchmark.runner import run_benchmark
+
+# Custom pipeline
+pipeline = create_pipeline()
+pipeline.top_k_final = 20
+pipeline.skip_rerank = True
+
+# Run with custom pipeline
+results = run_benchmark(max_questions=100, top_k=20)</code></pre>
+<hr/>
+<h2 id="11-adding-new-benchmark-questions">11. Adding new benchmark questions</h2>
+<p>Edit <code>backend/benchmark/datasets/benchmark_dataset.py</code>:</p>
+<pre><span class="lang">python</span><code>QUESTIONS = [
+    {
+        "id": "Q201",
+        "question": "What is the statute of limitations for breach of contract?",
+        "category": "contract_law",
+        "difficulty": "medium",
+        "expected_sources": ["contract_remedies.pdf", "limitations_act.pdf"],
+        "expected_keywords": ["statute", "limitations", "breach", "contract"],
+    },
+    # ... add more
+]</code></pre>
+<h3 id="question-guidelines">Question guidelines</h3>
+<p><strong>Good question:</strong></p>
+<ul><li>Specific, answerable from corpus</li><li>Expected sources exist in <code>data/raw/</code></li><li>Keywords are distinctive (not generic stopwords)</li><li>Difficulty matches query complexity</li></ul>
+<p><strong>Bad question:</strong></p>
+<ul><li>Too broad ("Tell me about law")</li><li>Expected source not in corpus</li><li>Keywords too generic ("law", "legal", "document")</li></ul>
+<hr/>
+<h2 id="12-benchmarking-best-practices">12. Benchmarking best practices</h2>
+<h3 id="before-benchmarking">Before benchmarking</h3>
+<ol><li>✅ <strong>Ingest corpus</strong> — ensure all documents are indexed</li><li>✅ <strong>Restart backend</strong> — cold start (models warm up on first query)</li><li>✅ <strong>Close other apps</strong> — free GPU memory</li><li>✅ <strong>Use consistent config</strong> — same <code>top_k</code>, <code>skip_rerank</code>, etc.</li></ol>
+<h3 id="interpreting-results">Interpreting results</h3>
+<p><strong>Good retrieval:</strong></p>
+<ul><li>Recall@5 ≥ 0.85</li><li>MRR ≥ 0.70</li><li>Keyword match ≥ 0.65</li></ul>
+<p><strong>Good performance:</strong></p>
+<ul><li>Mean latency ≤ 5 seconds per query</li><li>Success rate ≥ 80%</li></ul>
+<p><strong>Red flags:</strong></p>
+<ul><li>Recall@10 &lt; 0.70 → corpus missing key documents</li><li>MRR &lt; 0.50 → retrieval returning irrelevant results</li><li>Keyword match &lt; 0.50 → wrong documents retrieved</li></ul>
+<h3 id="improving-metrics">Improving metrics</h3>
+<table><thead><tr><th>Metric low</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Recall@5 &lt; 0.80</strong></td><td>Missing documents</td><td>Add more corpus docs</td></tr><tr><td><strong>MRR &lt; 0.65</strong></td><td>Ranking poor</td><td>Enable/tune reranker</td></tr><tr><td><strong>Precision@3 &lt; 0.50</strong></td><td>Too many false positives</td><td>Raise <code>min_score_threshold</code></td></tr><tr><td><strong>Keyword match &lt; 0.60</strong></td><td>Wrong doc types retrieved</td><td>Check chunking/OCR quality</td></tr><tr><td><strong>Latency &gt; 10s</strong></td><td>GPU slow or CPU fallback</td><td>Check GPU manager, batch size</td></tr></tbody></table>
+<hr/>
+<h2 id="13-benchmark-ci-integration">13. Benchmark CI integration</h2>
+<p>Run benchmarks in CI on every PR:</p>
+<pre><span class="lang">yaml</span><code># .github/workflows/benchmark.yml
+name: Benchmark
+on: [pull_request]
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+      - name: Run benchmark subset
+        run: |
+          cd backend
+          python -m benchmark.runner --max 20
+      - name: Check regressions
+        run: |
+          python scripts/check_benchmark_thresholds.py
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: benchmark-results
+          path: backend/benchmark/results/</code></pre>
+<hr/>
+<h2 id="14-cuad-benchmark">14. CUAD benchmark</h2>
+<p>The <strong>CUAD (Contract Understanding Atticus Dataset)</strong> benchmark tests contract understanding:</p>
+<pre><span class="lang">bash</span><code>cd backend
+python -m benchmark.cuad_runner</code></pre>
+<p><strong>What it tests:</strong></p>
+<ul><li>Clause extraction from contracts</li><li>Contractual term identification</li><li>Legal concept recognition</li></ul>
+<p><strong>Metrics:</strong></p>
+<ul><li>Exact match accuracy</li><li>F1 score (token-level overlap)</li><li>Clause recall (fraction of clauses found)</li></ul>
+<p>See <code>backend/benchmark/cuad_runner.py</code> for details.</p>
+<hr/>
+<h2 id="15-troubleshooting-benchmarks">15. Troubleshooting benchmarks</h2>
+<h3 id="pipeline-not-initialized">"Pipeline not initialized"</h3>
+<p><strong>Cause:</strong> ChromaDB not populated</p>
+<p><strong>Fix:</strong></p>
+<pre><span class="lang">bash</span><code>cd backend
+python scripts/ingest_all.py</code></pre>
+<h3 id="benchmark-very-slow">Benchmark very slow</h3>
+<p><strong>Cause:</strong> Running on CPU, not GPU</p>
+<p><strong>Fix:</strong> Check GPU availability:</p>
+<pre><span class="lang">python</span><code>import torch
+print(torch.cuda.is_available())  # should be True</code></pre>
+<p>Set device explicitly:</p>
+<pre><span class="lang">bash</span><code>export PLR_DEVICE=cuda
+python -m benchmark.runner</code></pre>
+<h3 id="oom-during-benchmark">OOM during benchmark</h3>
+<p><strong>Cause:</strong> Batch size too large</p>
+<p><strong>Fix:</strong> Lower batch size:</p>
+<pre><span class="lang">bash</span><code>export PLR_EMBEDDING_BATCH_SIZE=16
+export PLR_RERANKER_BATCH_SIZE=16
+python -m benchmark.runner</code></pre>
+<h3 id="results-don-t-match-readme">Results don't match README</h3>
+<p><strong>Cause:</strong> Different corpus or config</p>
+<p><strong>Fix:</strong> Use the exact corpus + config from the README:</p>
+<ul><li>Corpus: 511 legal documents (18,836 chunks)</li><li>Config: hybrid search, reranker enabled, top_k=5</li></ul>
+<hr/>
+<h2 id="16-benchmark-visualization">16. Benchmark visualization</h2>
+<h3 id="generate-charts-from-results">Generate charts from results</h3>
+<p>After running a benchmark, generate visual charts:</p>
+<pre><span class="lang">bash</span><code>cd backend
+python -m benchmark.visualization</code></pre>
+<p><strong>Generated charts</strong> (saved to <code>backend/benchmark/results/charts/</code>):</p>
+<ol><li><strong>recall_comparison.png</strong> - Bar chart comparing Recall@1, R@5, R@10</li><li><strong>category_breakdown.png</strong> - Per-category Recall@5 horizontal bars</li><li><strong>metrics_overview.png</strong> - 4-panel dashboard with all key metrics</li><li><strong>latency_distribution.png</strong> - Histogram of query latencies</li><li><strong>failure_analysis.png</strong> - Pie chart of failure types</li><li><strong>performance_over_time.png</strong> - Line chart tracking metrics across runs</li></ol>
+<h3 id="installation">Installation</h3>
+<p>Visualization requires matplotlib:</p>
+<pre><span class="lang">bash</span><code>cd backend
+pip install matplotlib</code></pre>
+<h3 id="custom-input">Custom input</h3>
+<p>Specify a different metrics file:</p>
+<pre><span class="lang">bash</span><code>python -m benchmark.visualization --input path/to/metrics.json</code></pre>
+<h3 id="performance-tracking-workflow">Performance tracking workflow</h3>
+<p>Track improvements across development:</p>
+<pre><span class="lang">bash</span><code># Run benchmark and save timestamped results
+cd backend
+python -m benchmark.runner
+cp results/metrics.json results/metrics_$(date +%Y%m%d_%H%M%S).json
+
+# After multiple runs, generate time-series chart
+python -m benchmark.visualization
+# → Creates performance_over_time.png showing trends</code></pre>
+<h3 id="example-charts">Example charts</h3>
+<p><strong>Recall Comparison:</strong></p>
+<ul><li>Bar chart: R@1, R@5, R@10</li><li>Quickly see retrieval quality at different K values</li></ul>
+<p><strong>Category Breakdown:</strong></p>
+<ul><li>Horizontal bars: Recall@5 per category</li><li>Identify which legal domains perform best/worst</li></ul>
+<p><strong>Metrics Overview:</strong></p>
+<ul><li>4-panel dashboard: Recall, Precision, Success by difficulty, Summary stats</li><li>One-page snapshot of entire benchmark</li></ul>
+<p><strong>Latency Distribution:</strong></p>
+<ul><li>Histogram: Query latency distribution</li><li>Mean/median lines for reference</li><li>Identify slow outliers</li></ul>
+<p><strong>Failure Analysis:</strong></p>
+<ul><li>Pie chart: Breakdown of failure types</li><li>Prioritize what to fix next</li></ul>
+<p><strong>Performance Over Time:</strong></p>
+<ul><li>Line chart: R@1, R@5, MRR across multiple runs</li><li>Track improvement/regression trends</li></ul>
+<h3 id="exporting-for-reports">Exporting for reports</h3>
+<p>Charts are saved as high-DPI PNG (150 DPI) for inclusion in:</p>
+<ul><li>Technical documentation</li><li>Progress reports</li><li>Stakeholder presentations</li><li>GitHub README</li></ul>
+<h3 id="programmatic-usage">Programmatic usage</h3>
+<pre><span class="lang">python</span><code>from benchmark.visualization import generate_all_visualizations
+from pathlib import Path
+
+# Generate charts
+generate_all_visualizations(Path("results/metrics.json"))
+
+# Or individual charts
+from benchmark.visualization import plot_recall_comparison, load_results
+
+metrics = load_results(Path("results/metrics.json"))
+plot_recall_comparison(metrics, Path("output/recall.png"))</code></pre>
+<hr/>
+<h2 id="17-related-documentation">17. Related documentation</h2>
+<table><thead><tr><th>Doc</th><th>Coverage</th></tr></thead><tbody><tr><td><a href="testing.html"><code>TESTING.md</code></a></td><td>Unit tests, integration tests</td></tr><tr><td><a href="backend.html"><code>BACKEND.md</code></a></td><td>Retrieval pipeline implementation</td></tr><tr><td><a href="gpu-management.html"><code>GPU_MANAGEMENT.md</code></a></td><td>GPU performance tuning</td></tr><tr><td><a href="data-flow.html"><code>DATA_FLOW.md</code></a></td><td>Ingestion pipeline</td></tr><tr><td><a href="development.html"><code>DEVELOPMENT.md</code></a></td><td>Performance profiling tools</td></tr></tbody></table>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>What metrics does the benchmark report?</h3><p>Chunking and embedding throughput (chunks/sec, pairs/sec), GPU vs CPU speed, reranker quality impact, and retrieval accuracy — Recall@5, MRR, and success rate — for dense, sparse, and hybrid search modes.</p></div><div class="faq-item"><h3>How do I run a benchmark?</h3><p>From the backend, run python -m benchmark.runner. It runs the full suite, saves results to metrics.json, and the docs show how to compare runs over time and set regression thresholds in CI.</p></div><div class="faq-item"><h3>Which search mode wins in practice?</h3><p>Hybrid (dense + sparse with fusion and reranking) consistently beats either mode alone on legal corpora — the docs include a sample comparison showing hybrid Recall@5 around 0.86 versus 0.73 for dense-only.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

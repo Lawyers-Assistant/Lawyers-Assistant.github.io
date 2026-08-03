@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Development — Workflows, Debugging &amp; Tools — Lawyer Assistant Docs</title>
+<meta name="description" content="Set up the Lawyer Assistant dev environment: repo layout, backend on port 8765, Vite dev server on 5173, Electron shell, hot reload, debugging, and profiling workflows."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/development.html"/>
+<meta name="keywords" content="lawyer assistant development, local RAG development, backend 8765, vite dev server, debug legal AI, profile RAG pipeline"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Development — Workflows, Debugging &amp; Tools — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Set up the Lawyer Assistant dev environment: repo layout, backend on port 8765, Vite dev server on 5173, Electron shell, hot reload, debugging, and profiling workflows."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/development.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Development — Workflows, Debugging &amp; Tools — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Set up the Lawyer Assistant dev environment: repo layout, backend on port 8765, Vite dev server on 5173, Electron shell, hot reload, debugging, and profiling workflows."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Development — Workflows, Debugging &amp; Tools", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/development.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I run the app from source for development?", "acceptedAnswer": {"@type": "Answer", "text": "From the repo root run npm run dev, which starts the FastAPI backend (port 8765), the Vite dev server (port 5173), and the Electron shell together. You can also run the backend and frontend separately in their own folders."}}, {"@type": "Question", "name": "Does the frontend hot-reload?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Vite + React Fast Refresh gives sub-second hot module replacement — edit a component and it re-renders without a page reload, preserving the Zustand store state. The Python backend does not auto-reload because model loading is expensive."}}, {"@type": "Question", "name": "How do I debug a slow retrieval step?", "acceptedAnswer": {"@type": "Answer", "text": "Use the profiling workflow documented here — it profiles chunking, embedding, retrieval, and generation separately so you can pinpoint which stage dominates latency on your corpus."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link active" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Development — Workflows, Debugging &amp; Tools</span></div>
+    <h1>Development — Workflows, Debugging &amp; Tools</h1>
+    <div class="doc-intro">Developer guide for working on Lawyer Assistant. Covers development environment setup, debugging strategies, hot reload, database inspection, and performance profiling.</div>
+    
+
+<hr/>
+<h2 id="1-quick-start-for-developers">1. Quick start for developers</h2>
+<pre><span class="lang">bash</span><code># Clone
+git clone https://github.com/haal-lab/Lawyer-Assistant.git
+cd Lawyer-Assistant
+
+# Install Node dependencies (root + frontend + electron)
+npm install
+cd frontend &amp;&amp; npm install
+cd electron &amp;&amp; npm install
+cd ../..
+
+# Python env is auto-created by Electron on first run
+# Or create manually:
+python -m venv .venv
+.venv\Scripts\activate  # Windows
+# source .venv/bin/activate  # macOS/Linux
+pip install -r backend/requirements.txt
+
+# Run the app (starts backend + Vite + Electron)
+npm run dev</code></pre>
+<p><strong>What <code>npm run dev</code> does:</strong></p>
+<ol><li>Starts Electron main process</li><li>Electron spawns Python backend (port 8765)</li><li>Electron spawns Vite dev server (port 5173)</li><li>Electron loads Vite URL in BrowserWindow</li></ol>
+<hr/>
+<h2 id="2-development-modes">2. Development modes</h2>
+<h3 id="mode-1-full-app-electron">Mode 1: Full app (Electron)</h3>
+<pre><span class="lang">bash</span><code>npm run dev  # or: npm start</code></pre>
+<p><strong>Use when:</strong></p>
+<ul><li>Testing Electron-specific features (IPC, native dialogs)</li><li>End-to-end testing</li><li>Building/packaging</li></ul>
+<p><strong>Logs:</strong></p>
+<ul><li>Backend logs → Electron console (stdout/stderr piped)</li><li>Frontend logs → Electron DevTools (Cmd+Option+I / Ctrl+Shift+I)</li></ul>
+<h3 id="mode-2-web-only-browser">Mode 2: Web-only (browser)</h3>
+<pre><span class="lang">bash</span><code>npm run dev:web</code></pre>
+<p>Starts backend + frontend in parallel (no Electron).</p>
+<p><strong>Use when:</strong></p>
+<ul><li>Frontend-only work (faster iteration)</li><li>Backend API testing (via browser DevTools Network tab)</li><li>CSS/UI tweaks</li></ul>
+<p><strong>Access:</strong> <code>http://localhost:5173</code></p>
+<p><strong>Limitations:</strong></p>
+<ul><li>No native file dialogs (falls back to <code>&lt;input webkitdirectory&gt;</code>)</li><li>No Electron IPC (workspace picker limited)</li></ul>
+<h3 id="mode-3-backend-only">Mode 3: Backend-only</h3>
+<pre><span class="lang">bash</span><code>npm run dev:backend</code></pre>
+<p>Starts only the FastAPI server (port 8765).</p>
+<p><strong>Use when:</strong></p>
+<ul><li>Backend-only work</li><li>API testing with <code>curl</code>/Postman</li><li>Running benchmarks</li></ul>
+<p><strong>Test:</strong></p>
+<pre><span class="lang">bash</span><code>curl http://localhost:8765/api/health</code></pre>
+<h3 id="mode-4-frontend-only-vite">Mode 4: Frontend-only (Vite)</h3>
+<pre><span class="lang">bash</span><code>npm run dev:frontend</code></pre>
+<p>Starts only the Vite dev server (requires backend running separately).</p>
+<p><strong>Use when:</strong></p>
+<ul><li>UI iteration (fastest hot reload)</li><li>Component development</li></ul>
+<hr/>
+<h2 id="3-hot-reload-behavior">3. Hot reload behavior</h2>
+<h3 id="frontend-vite-react-fast-refresh">Frontend (Vite + React Fast Refresh)</h3>
+<p><strong>Hot Module Replacement (HMR):</strong></p>
+<ul><li>Edit a <code>.tsx</code> file → component re-renders <strong>without page reload</strong></li><li>State is preserved (Zustand store not reset)</li><li>Sub-second latency</li></ul>
+<p><strong>Full reload triggers:</strong></p>
+<ul><li><code>index.html</code> changes</li><li><code>vite.config.ts</code> changes</li><li>New dependencies added</li></ul>
+<p><strong>Test HMR:</strong></p>
+<pre><span class="lang">tsx</span><code>// frontend/src/App.tsx
+export function App() {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Hello World&lt;/h1&gt;  {/* ← edit this */}
+    &lt;/div&gt;
+  );
+}</code></pre>
+<p>Save → page updates instantly without reload.</p>
+<h3 id="backend-manual-restart">Backend (manual restart)</h3>
+<p>Python backend <strong>does not</strong> auto-reload — restart manually:</p>
+<p><strong>Windows:</strong></p>
+<pre><span class="lang">cmd</span><code>taskkill /F /IM python.exe
+npm run dev</code></pre>
+<p><strong>macOS/Linux:</strong></p>
+<pre><span class="lang">bash</span><code>pkill -f "python.*main.py"
+npm run dev</code></pre>
+<p><strong>Why no auto-reload:</strong></p>
+<ul><li>Model loading is expensive (5-10s warmup)</li><li>ChromaDB connections need clean shutdown</li><li>Electron manages backend lifecycle</li></ul>
+<p><strong>Workaround for rapid backend iteration:</strong></p>
+<pre><span class="lang">bash</span><code># Terminal 1: backend with auto-reload (uvicorn --reload)
+cd backend
+.venv\Scripts\activate
+uvicorn main:app --host 127.0.0.1 --port 8765 --reload
+
+# Terminal 2: frontend
+cd frontend
+npm run dev
+
+# Terminal 3: Electron (optional)
+cd frontend/electron
+npm run dev</code></pre>
+<p>Now backend auto-reloads on Python file changes.</p>
+<hr/>
+<h2 id="4-debugging-strategies">4. Debugging strategies</h2>
+<h3 id="debugging-frontend-react">Debugging frontend (React)</h3>
+<p><strong>React DevTools:</strong></p>
+<ol><li>Open Electron app</li><li>Press <code>Cmd+Option+I</code> (Mac) or <code>Ctrl+Shift+I</code> (Windows)</li><li>Install React DevTools extension (if in browser)</li></ol>
+<p><strong>Zustand state inspection:</strong></p>
+<pre><span class="lang">typescript</span><code>// frontend/src/store/chatStore.ts
+import { devtools } from 'zustand/middleware';
+
+export const useChatStore = create&lt;ChatState&gt;()(
+  devtools(
+    persist(
+      (set) =&gt; ({ ... }),
+      { name: 'freebuff-chat-storage' }
+    ),
+    { name: 'ChatStore' }  // ← shows in Redux DevTools
+  )
+);</code></pre>
+<p>Install Redux DevTools extension → see Zustand state live.</p>
+<p><strong>Console logging:</strong></p>
+<pre><span class="lang">typescript</span><code>// frontend/src/services/api.ts
+export async function* streamChat(request: ChatRequest) {
+  console.log('[API] Streaming chat:', request);
+  for await (const event of parseSSEStream(response.body!)) {
+    console.log('[SSE]', event);
+    yield event;
+  }
+}</code></pre>
+<p><strong>Network inspection:</strong></p>
+<ul><li>DevTools → Network tab</li><li>Filter by <code>localhost:8765</code></li><li>Inspect SSE streams (EventStream)</li></ul>
+<h3 id="debugging-backend-python">Debugging backend (Python)</h3>
+<p><strong>Print debugging:</strong></p>
+<pre><span class="lang">python</span><code># backend/legal_retrieval/retrieval.py
+def query(self, query: str, top_k: int = 5):
+    print(f"[DEBUG] Query: {query}, top_k: {top_k}")
+    results = self._search(query)
+    print(f"[DEBUG] Retrieved {len(results)} results")
+    return results</code></pre>
+<p><strong>Structured logging:</strong></p>
+<pre><span class="lang">python</span><code>from legal_retrieval.logging_setup import get_logger
+
+log = get_logger(__name__)
+log.debug(f"Query: {query}, top_k: {top_k}")
+log.info(f"Retrieved {len(results)} results")</code></pre>
+<p>Set log level:</p>
+<pre><span class="lang">bash</span><code>export PLR_LOG_LEVEL=DEBUG
+python backend/main.py</code></pre>
+<p><strong>Python debugger (pdb):</strong></p>
+<pre><span class="lang">python</span><code>import pdb
+
+def query(self, query: str, top_k: int = 5):
+    pdb.set_trace()  # ← breakpoint here
+    results = self._search(query)
+    return results</code></pre>
+<p>Run backend manually (not via Electron):</p>
+<pre><span class="lang">bash</span><code>cd backend
+.venv\Scripts\activate
+python main.py</code></pre>
+<p>When breakpoint hits:</p>
+<pre><code>(Pdb) p query
+'What is rescission?'
+(Pdb) p top_k
+5
+(Pdb) n  # next line
+(Pdb) c  # continue</code></pre>
+<p><strong>VS Code debugging:</strong></p>
+<p><code>.vscode/launch.json</code>:</p>
+<pre><span class="lang">json</span><code>{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Backend",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend/main.py",
+      "console": "integratedTerminal",
+      "env": {
+        "PLR_LOG_LEVEL": "DEBUG"
+      }
+    }
+  ]
+}</code></pre>
+<p>Set breakpoints in VS Code → F5 to start debugging.</p>
+<h3 id="debugging-electron">Debugging Electron</h3>
+<p><strong>Main process debugging:</strong></p>
+<p><code>frontend/electron/src/main/index.ts</code>:</p>
+<pre><span class="lang">typescript</span><code>console.log('[Main] Starting backend on port 8765');</code></pre>
+<p>Logs appear in the terminal that ran <code>npm run dev</code>.</p>
+<p><strong>Renderer process debugging:</strong></p>
+<p>Same as frontend debugging (DevTools).</p>
+<p><strong>IPC debugging:</strong></p>
+<pre><span class="lang">typescript</span><code>// Main process
+ipcMain.handle('folder:select', async () =&gt; {
+  console.log('[IPC] Folder select requested');
+  const result = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+  console.log('[IPC] Selected:', result.filePaths);
+  return result.filePaths[0];
+});
+
+// Renderer (preload)
+window.electron.invoke('folder:select').then(path =&gt; {
+  console.log('[Renderer] Received path:', path);
+});</code></pre>
+<hr/>
+<h2 id="5-database-inspection">5. Database inspection</h2>
+<h3 id="chromadb-vector-store">ChromaDB (vector store)</h3>
+<p><strong>List collections:</strong></p>
+<pre><span class="lang">python</span><code>from chromadb import PersistentClient
+
+client = PersistentClient(path="data/chroma_db")
+print(client.list_collections())
+# → [Collection(name="legal_chunks")]</code></pre>
+<p><strong>Collection stats:</strong></p>
+<pre><span class="lang">python</span><code>collection = client.get_collection("legal_chunks")
+print(f"Count: {collection.count()}")
+print(f"Metadata: {collection.metadata}")</code></pre>
+<p><strong>Query vectors:</strong></p>
+<pre><span class="lang">python</span><code>results = collection.query(
+    query_texts=["contract law"],
+    n_results=5,
+)
+for doc, dist in zip(results['documents'][0], results['distances'][0]):
+    print(f"{dist:.3f}: {doc[:100]}...")</code></pre>
+<p><strong>Peek at stored chunks:</strong></p>
+<pre><span class="lang">python</span><code>sample = collection.peek(limit=10)
+for meta in sample['metadatas']:
+    print(f"{meta['file_name']} p.{meta['page_number']}")</code></pre>
+<h3 id="sqlite-conversations-flags">SQLite (conversations, flags)</h3>
+<p><strong>LangGraph conversations:</strong></p>
+<pre><span class="lang">bash</span><code>sqlite3 data/conversations.db</code></pre>
+<pre><span class="lang">sql</span><code>.tables
+-- → checkpoints, checkpoint_blobs, checkpoint_writes
+
+SELECT thread_id, checkpoint_id, created_at
+FROM checkpoints
+ORDER BY created_at DESC
+LIMIT 10;</code></pre>
+<p><strong>Compliance flags:</strong></p>
+<pre><span class="lang">bash</span><code>sqlite3 data/flags.db</code></pre>
+<pre><span class="lang">sql</span><code>.tables
+-- → flags
+
+SELECT flag_id, document_id, severity, rule_description
+FROM flags
+WHERE status = 'open'
+ORDER BY severity DESC;</code></pre>
+<h3 id="workspace-history-per-project">Workspace history (per-project)</h3>
+<p><strong>File:</strong> <code>&lt;workspace&gt;/workspace/history.json</code></p>
+<pre><span class="lang">bash</span><code>cat /path/to/project/workspace/history.json | jq .</code></pre>
+<p>Structure:</p>
+<pre><span class="lang">json</span><code>{
+  "conversations": [ ... ],
+  "activeConversationId": "...",
+  "gpu_profile": { ... },
+  "working_set": [ ... ]
+}</code></pre>
+<hr/>
+<h2 id="6-performance-profiling">6. Performance profiling</h2>
+<h3 id="backend-profiling">Backend profiling</h3>
+<p><strong>cProfile (Python built-in):</strong></p>
+<pre><span class="lang">bash</span><code>cd backend
+python -m cProfile -o profile.out -m legal_retrieval.retrieval</code></pre>
+<p>Analyze:</p>
+<pre><span class="lang">python</span><code>import pstats
+
+stats = pstats.Stats('profile.out')
+stats.sort_stats('cumulative')
+stats.print_stats(20)  # top 20 functions</code></pre>
+<p><strong>Line profiler:</strong></p>
+<pre><span class="lang">bash</span><code>pip install line_profiler</code></pre>
+<pre><span class="lang">python</span><code># backend/legal_retrieval/retrieval.py
+@profile  # ← add decorator
+def query(self, query: str):
+    # ... function body</code></pre>
+<p>Run:</p>
+<pre><span class="lang">bash</span><code>kernprof -l -v backend/legal_retrieval/retrieval.py</code></pre>
+<h3 id="gpu-profiling">GPU profiling</h3>
+<p><strong>PyTorch profiler:</strong></p>
+<pre><span class="lang">python</span><code>import torch.profiler
+
+with torch.profiler.profile(
+    activities=[torch.profiler.ProfilerActivity.CPU, torch.profiler.ProfilerActivity.CUDA],
+    record_shapes=True,
+) as prof:
+    # ... code to profile
+    embeddings = embedder.embed(texts)
+
+print(prof.key_averages().table(sort_by="cuda_time_total", row_limit=10))</code></pre>
+<p><strong>nvidia-smi monitoring:</strong></p>
+<pre><span class="lang">bash</span><code>watch -n 1 nvidia-smi</code></pre>
+<h3 id="frontend-profiling">Frontend profiling</h3>
+<p><strong>React DevTools Profiler:</strong></p>
+<ol><li>Open DevTools → Profiler tab</li><li>Click ⏺️ Record</li><li>Interact with app</li><li>Stop recording</li><li>Inspect flame graph (which components re-rendered)</li></ol>
+<p><strong>Chrome DevTools Performance:</strong></p>
+<ol><li>DevTools → Performance tab</li><li>Record → interact → stop</li><li>See JavaScript execution, rendering, painting</li></ol>
+<hr/>
+<h2 id="7-log-file-locations">7. Log file locations</h2>
+<table><thead><tr><th>Log</th><th>Location</th><th>Purpose</th></tr></thead><tbody><tr><td><strong>Backend</strong></td><td><code>logs/legal_retrieval.log</code></td><td>Rotating file (10MB, 5 backups)</td></tr><tr><td><strong>Launcher</strong></td><td><code>launcher/logs/app-*.log</code></td><td>App launch logs</td></tr><tr><td><strong>Ollama serve</strong></td><td><code>launcher/logs/ollama-serve.log</code></td><td>Ollama daemon logs</td></tr><tr><td><strong>Electron console</strong></td><td>Terminal stdout/stderr</td><td>Backend stdout piped to Electron</td></tr></tbody></table>
+<p><strong>Tail logs:</strong></p>
+<pre><span class="lang">bash</span><code>tail -f logs/legal_retrieval.log</code></pre>
+<p><strong>Search logs:</strong></p>
+<pre><span class="lang">bash</span><code>grep "ERROR" logs/legal_retrieval.log
+grep "query" logs/legal_retrieval.log -i</code></pre>
+<hr/>
+<h2 id="8-cli-scripts-for-development">8. CLI scripts for development</h2>
+<p>Located in <code>backend/scripts/</code>:</p>
+<h3 id="ingest-all-py-bulk-ingestion"><code>ingest_all.py</code> — Bulk ingestion</h3>
+<pre><span class="lang">bash</span><code>cd backend
+.venv\Scripts\activate
+python scripts/ingest_all.py
+
+# Options
+python scripts/ingest_all.py --reset      # wipe ChromaDB first
+python scripts/ingest_all.py --device cpu # force CPU
+python scripts/ingest_all.py --batch-size 16  # lower batch size</code></pre>
+<h3 id="query-py-cli-search"><code>query.py</code> — CLI search</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python scripts/query.py "What is rescission?"
+
+# Options
+python scripts/query.py "contract law" --top-k 10
+python scripts/query.py "payment terms" --no-rerank</code></pre>
+<h3 id="chat-cli-py-cli-chat"><code>chat_cli.py</code> — CLI chat</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python scripts/chat_cli.py
+
+&gt; What is rescission under contract law?
+[Agent] Searching documents...
+[Agent] Answer: Rescission is...
+
+&gt; exit</code></pre>
+<h3 id="build-bm25-index-py-rebuild-bm25"><code>build_bm25_index.py</code> — Rebuild BM25</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python scripts/build_bm25_index.py</code></pre>
+<p>Rebuilds <code>data/bm25_index/bm25_index.pkl</code> from ChromaDB chunks.</p>
+<h3 id="compare-v1-v2-retrieval-py-a-b-test"><code>compare_v1_v2_retrieval.py</code> — A/B test</h3>
+<pre><span class="lang">bash</span><code>cd backend
+python scripts/compare_v1_v2_retrieval.py</code></pre>
+<p>Compares two retrieval configs side-by-side.</p>
+<hr/>
+<h2 id="9-testing-during-development">9. Testing during development</h2>
+<h3 id="run-tests-on-file-change-watch-mode">Run tests on file change (watch mode)</h3>
+<pre><span class="lang">bash</span><code>cd backend
+pip install pytest-watch
+ptw tests/ -v</code></pre>
+<h3 id="run-specific-tests">Run specific tests</h3>
+<pre><span class="lang">bash</span><code># Single file
+pytest tests/test_phase3_chunking.py -v
+
+# Single test
+pytest tests/test_phase3_chunking.py::test_chunking_respects_sections -v
+
+# Pattern match
+pytest tests/ -k "chunking" -v</code></pre>
+<h3 id="frontend-type-checking">Frontend type checking</h3>
+<pre><span class="lang">bash</span><code>cd frontend
+npm run typecheck
+
+# Watch mode
+npm run typecheck -- --watch</code></pre>
+<h3 id="lint">Lint</h3>
+<pre><span class="lang">bash</span><code># Frontend
+cd frontend
+npm run lint
+
+# Backend (if ruff/black/pylint installed)
+cd backend
+ruff check .
+black --check .</code></pre>
+<hr/>
+<h2 id="10-common-development-tasks">10. Common development tasks</h2>
+<h3 id="add-a-new-api-endpoint">Add a new API endpoint</h3>
+<ol><li><strong>Backend:</strong> <code>backend/main.py</code></li></ol>
+<pre><span class="lang">python</span><code>@app.get("/api/my-feature")
+async def my_feature(param: str):
+    result = do_something(param)
+    return {"result": result}</code></pre>
+<ol><li><strong>Frontend:</strong> <code>frontend/src/services/api.ts</code></li></ol>
+<pre><span class="lang">typescript</span><code>export async function myFeature(param: string): Promise&lt;{ result: string }&gt; {
+  const response = await fetch(`${API_BASE_URL}/api/my-feature?param=${param}`);
+  return response.json();
+}</code></pre>
+<ol><li><strong>UI:</strong> <code>frontend/src/App.tsx</code></li></ol>
+<pre><span class="lang">typescript</span><code>const handleClick = async () =&gt; {
+  const result = await api.myFeature("test");
+  console.log(result);
+};</code></pre>
+<h3 id="add-a-new-environment-variable">Add a new environment variable</h3>
+<ol><li><strong>Backend:</strong> <code>backend/legal_retrieval/config.py</code></li></ol>
+<pre><span class="lang">python</span><code>@dataclass(frozen=True)
+class MyConfig:
+    my_setting: int = int(os.environ.get("PLR_MY_SETTING", "42"))</code></pre>
+<ol><li><strong>Usage:</strong></li></ol>
+<pre><span class="lang">bash</span><code>export PLR_MY_SETTING=100
+python backend/main.py</code></pre>
+<h3 id="add-a-new-test">Add a new test</h3>
+<ol><li><strong>Create test file:</strong> <code>backend/tests/test_my_feature.py</code></li></ol>
+<pre><span class="lang">python</span><code>import pytest
+
+def test_my_feature():
+    """My feature works correctly."""
+    result = my_function("input")
+    assert result == "expected"</code></pre>
+<ol><li><strong>Run:</strong></li></ol>
+<pre><span class="lang">bash</span><code>cd backend
+pytest tests/test_my_feature.py -v</code></pre>
+<hr/>
+<h2 id="11-troubleshooting-development-issues">11. Troubleshooting development issues</h2>
+<table><thead><tr><th>Issue</th><th>Cause</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Port 8765 busy</strong></td><td>Stale backend process</td><td>Kill Python, restart</td></tr><tr><td><strong>Vite HMR not working</strong></td><td>Browser cache</td><td>Hard refresh (Ctrl+Shift+R)</td></tr><tr><td><strong>Backend not starting</strong></td><td>Python not on PATH</td><td>Check <code>python --version</code></td></tr><tr><td><strong>Models not loading</strong></td><td>Missing <code>models/</code> dir</td><td>Run launcher setup</td></tr><tr><td><strong>Frontend build fails</strong></td><td>Node modules stale</td><td><code>rm -rf node_modules &amp;&amp; npm install</code></td></tr><tr><td><strong>Type errors</strong></td><td>TypeScript strict mode</td><td>Fix types or add <code>// @ts-ignore</code></td></tr><tr><td><strong>Tests fail</strong></td><td>ChromaDB path conflict</td><td>Use <code>tmp_path</code> fixture</td></tr></tbody></table>
+<hr/>
+<h2 id="12-development-best-practices">12. Development best practices</h2>
+<h3 id="code-style">Code style</h3>
+<p><strong>Python (backend):</strong></p>
+<ul><li>PEP 8 style guide</li><li>Type hints for function signatures</li><li>Docstrings for public functions</li></ul>
+<p><strong>TypeScript (frontend):</strong></p>
+<ul><li>Functional components (React Hooks)</li><li>Props interfaces for components</li><li><code>async</code>/<code>await</code> over <code>.then()</code> chains</li></ul>
+<h3 id="git-workflow">Git workflow</h3>
+<pre><span class="lang">bash</span><code># Create feature branch
+git checkout -b feature/my-feature
+
+# Make changes, commit often
+git add .
+git commit -m "feat: add my feature"
+
+# Push
+git push origin feature/my-feature
+
+# Open PR on GitHub</code></pre>
+<h3 id="before-committing">Before committing</h3>
+<pre><span class="lang">bash</span><code># Type check
+cd frontend &amp;&amp; npm run typecheck
+
+# Lint
+cd frontend &amp;&amp; npm run lint
+
+# Tests
+cd backend &amp;&amp; pytest tests/ -v
+
+# Security checks
+npm run check:security</code></pre>
+<hr/>
+<h2 id="13-related-documentation">13. Related documentation</h2>
+<table><thead><tr><th>Doc</th><th>Coverage</th></tr></thead><tbody><tr><td><a href="testing.html"><code>TESTING.md</code></a></td><td>Test suite, fixtures, running tests</td></tr><tr><td><a href="benchmarking.html"><code>BENCHMARKING.md</code></a></td><td>Performance benchmarks</td></tr><tr><td><a href="troubleshooting.html"><code>TROUBLESHOOTING.md</code></a></td><td>Common failures</td></tr><tr><td><a href="architecture.html"><code>ARCHITECTURE.md</code></a></td><td>System overview</td></tr><tr><td><a href="backend.html"><code>BACKEND.md</code></a></td><td>API reference</td></tr><tr><td><a href="frontend.html"><code>FRONTEND.md</code></a></td><td>UI architecture</td></tr><tr><td><a href="configuration.html"><code>CONFIGURATION.md</code></a></td><td>All env vars &amp; settings</td></tr></tbody></table>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>How do I run the app from source for development?</h3><p>From the repo root run npm run dev, which starts the FastAPI backend (port 8765), the Vite dev server (port 5173), and the Electron shell together. You can also run the backend and frontend separately in their own folders.</p></div><div class="faq-item"><h3>Does the frontend hot-reload?</h3><p>Yes. Vite + React Fast Refresh gives sub-second hot module replacement — edit a component and it re-renders without a page reload, preserving the Zustand store state. The Python backend does not auto-reload because model loading is expensive.</p></div><div class="faq-item"><h3>How do I debug a slow retrieval step?</h3><p>Use the profiling workflow documented here — it profiles chunking, embedding, retrieval, and generation separately so you can pinpoint which stage dominates latency on your corpus.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

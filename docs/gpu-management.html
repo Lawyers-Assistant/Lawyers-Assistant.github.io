@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Smart GPU Management — how the app shares a small GPU — Lawyer Assistant Docs</title>
+<meta name="description" content="Lawyer Assistant GPU manager: VRAM sharing across embedder, reranker, and LLM, RAM-first residency, auto-tuning, and manual device control."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://github.com/haal-lab/Lawyer-Assistant/docs/gpu-management.html"/>
+<meta name="keywords" content="GPU management, VRAM sharing, RAM first residency, model eviction, auto tuning, GPU legal AI"/>
+<meta name="author" content="Haal Lab"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Smart GPU Management — how the app shares a small GPU — Lawyer Assistant Docs"/>
+<meta property="og:description" content="Lawyer Assistant GPU manager: VRAM sharing across embedder, reranker, and LLM, RAM-first residency, auto-tuning, and manual device control."/>
+<meta property="og:url" content="https://github.com/haal-lab/Lawyer-Assistant/docs/gpu-management.html"/>
+<meta property="og:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Smart GPU Management — how the app shares a small GPU — Lawyer Assistant Docs"/>
+<meta name="twitter:description" content="Lawyer Assistant GPU manager: VRAM sharing across embedder, reranker, and LLM, RAM-first residency, auto-tuning, and manual device control."/>
+<meta name="twitter:image" content="https://github.com/haal-lab/Lawyer-Assistant/raw/main/website/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* layout */
+.doc-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:44px;padding:40px 0 70px;align-items:start}
+.sidebar{position:sticky;top:86px;max-height:calc(100vh - 110px);overflow-y:auto;padding-right:8px;scrollbar-width:thin}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line-bright);border-radius:99px}
+.side-group{margin-bottom:20px}
+.side-title{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.side-link{display:block;font-size:12.5px;color:var(--muted);padding:4px 10px;border-radius:6px;border-left:2px solid transparent;transition:all .15s ease}
+.side-link:hover{color:var(--paper);background:var(--panel);text-decoration:none}
+.side-link.active{color:var(--brass-2);border-left-color:var(--brass);background:var(--panel)}
+
+/* article */
+article.doc{min-width:0}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.doc h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.01em;margin:8px 0 18px}
+.doc .doc-intro{color:var(--paper-dim);font-size:1.05rem;margin-bottom:30px;max-width:70ch}
+.doc h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.doc h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.doc h4{font-size:1rem;margin:24px 0 8px;color:var(--paper);font-family:var(--font-d);font-weight:500}
+.doc p{margin:0 0 16px;color:var(--paper-dim);font-size:15px}
+.doc strong{color:var(--paper);font-weight:600}
+.doc em{color:var(--brass-2)}
+.doc a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.doc a:hover{text-decoration-color:var(--brass)}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:26px;color:var(--paper-dim);font-size:15px}
+.doc li{margin:5px 0}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 18px;color:var(--paper-dim)}
+.doc blockquote p{margin:0 0 6px}
+.doc blockquote p:last-child{margin:0}
+.doc code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.doc pre{background:#070c09;border:1px solid var(--line);border-radius:12px;padding:18px 20px;overflow-x:auto;margin:0 0 20px;position:relative}
+.doc pre code{background:none;border:none;padding:0;color:#cfe3d4;font-size:12.5px;line-height:1.65;display:block}
+.doc pre .lang{position:absolute;top:10px;right:14px;font-family:var(--font-m);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.doc table{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:13.5px;display:block;overflow-x:auto}
+.doc th,.doc td{border:1px solid var(--line);padding:9px 13px;text-align:left;vertical-align:top}
+.doc th{background:var(--panel);font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-2)}
+.doc td{color:var(--paper-dim)}
+.doc tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.doc td code,.doc th code{font-size:11.5px}
+.doc img{max-width:100%;border-radius:10px;border:1px solid var(--line)}
+
+/* search */
+.doc-search{position:relative;max-width:540px;margin:28px auto 6px}
+.doc-search input{width:100%;padding:13px 46px 13px 40px;font-family:var(--font-s);font-size:14px;color:var(--paper);background:var(--panel);border:1px solid var(--line-bright);border-radius:999px;outline:none;transition:border-color .2s ease,box-shadow .2s ease}
+.doc-search input:focus{border-color:var(--brass);box-shadow:0 0 0 3px rgba(201,163,92,.15)}
+.doc-search input::placeholder{color:var(--faint)}
+.doc-search input::-webkit-search-cancel-button{display:none}
+.s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--faint);pointer-events:none}
+.s-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;display:none;align-items:center;justify-content:center;border:none;border-radius:50%;background:var(--panel-2);color:var(--muted);cursor:pointer;font-size:12px;transition:color .15s,background .15s}
+.s-clear.show{display:flex}
+.s-clear:hover{color:var(--paper);background:var(--line)}
+.search-meta{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-height:20px;margin-top:10px}
+.search-meta b{color:var(--brass-2)}
+.search-empty{font-size:13px;color:var(--muted);letter-spacing:0;text-transform:none;padding:30px 0}
+mark{background:rgba(201,163,92,.3);color:var(--brass-2);border-radius:3px;padding:0 2px}
+
+/* hub */
+.hub-hero{padding:70px 0 30px;text-align:center}
+.hub-hero h1{font-family:var(--font-d);font-weight:500;font-size:clamp(2rem,4.6vw,3.2rem);margin:18px 0 14px;line-height:1.12}
+.hub-hero .lead{color:var(--paper-dim);max-width:62ch;margin:0 auto;font-size:1.05rem}
+.hub-count{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;margin-top:16px}
+.group{margin-bottom:46px}
+.group-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.group-head h2{font-family:var(--font-d);font-weight:500;font-size:1.3rem;color:var(--paper)}
+.group-head::after{content:"";flex:1;height:1px;background:var(--line)}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.doc-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;transition:transform .24s ease,border-color .24s ease,background .24s ease;display:flex;flex-direction:column;gap:8px}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--line-bright);background:var(--panel-2)}
+.doc-card .d-name{font-family:var(--font-d);font-size:1.06rem;color:var(--paper)}
+.doc-card .d-blurb{font-size:12.5px;color:var(--muted);flex:1}
+.doc-card .d-file{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:1020px){.docs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){
+  .doc-grid{grid-template-columns:1fr;gap:20px}
+  .sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 0 6px}
+  .side-group{display:contents}
+  .side-title{display:none}
+  .side-link{font-size:11px;padding:2px 8px;border-left:none;border-bottom:1px solid transparent}
+  .side-link.active{border-left:none;border-bottom-color:var(--brass)}
+  .nav-links{display:none}
+}
+@media(max-width:640px){
+  .docs-grid{grid-template-columns:1fr}
+  .wrap{padding:0 16px}
+  .doc pre{padding:14px}
+  .doc h2{font-size:1.3rem}
+}
+
+/* FAQ (AEO blocks) on doc pages */
+.doc-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.doc-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.doc-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Lawyer Assistant",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Windows, macOS, Linux",
+  "description": "Lawyer Assistant is a free, local-first legal research desktop app. Ask questions in plain English and get answers with citations you can verify, from your own legal documents — fully private and offline.",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "featureList": [
+    "Cited answers from your own documents",
+    "Hybrid search (BM25 + dense vectors + reranking)",
+    "Compliance playbook scan",
+    "Visual pipeline editor",
+    "Local models or your own API (Claude, ChatGPT, Groq, DeepSeek, Mistral, Gemini and more)",
+    "Works 100% offline",
+    "Open source"
+  ],
+  "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Lawyer Assistant",
+  "url": "https://github.com/haal-lab/Lawyer-Assistant",
+  "description": "Free, local-first legal research AI. Cited answers from your own documents — private and offline.",
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Haal Lab",
+  "url": "https://github.com/haal-lab",
+  "brand": "Lawyer Assistant",
+  "founder": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"},
+  "knowsAbout": ["legal research", "retrieval-augmented generation", "local AI", "legal technology"]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Docs", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs.html"},
+    {"@type": "ListItem", "position": 2, "name": "Smart GPU Management — how the app shares a small GPU", "item": "https://github.com/haal-lab/Lawyer-Assistant/docs/gpu-management.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How does GPU memory get shared between models?", "acceptedAnswer": {"@type": "Answer", "text": "The GPU manager registers each model (embedder, reranker, LLM) with a memory reservation. When VRAM runs low, lower-priority models are evicted to RAM — RAM-first residency keeps the system stable instead of crashing on out-of-memory."}}, {"@type": "Question", "name": "Does it auto-tune?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — the manager auto-detects available VRAM, picks sensible residency defaults, and adapts as models load and evict. You can also set device and priorities manually via config."}}, {"@type": "Question", "name": "Can I force CPU-only?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Set the device to CPU and models run from RAM — slower, but zero GPU pressure. The doc explains the trade-off and how to switch per-model."}}]}</script>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html" class="active">Docs</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<div class="wrap doc-grid">
+  <aside class="sidebar"><div class="side-group"><div class="side-title">🚀 Getting started</div><a class="side-link" href="quickstart.html">Quickstart</a><a class="side-link" href="development.html">Development</a><a class="side-link" href="testing.html">Testing</a><a class="side-link" href="benchmarking.html">Benchmarking</a><a class="side-link" href="configuration.html">Configuration</a><a class="side-link" href="deployment.html">Deployment</a></div><div class="side-group"><div class="side-title">🏛️ Architecture &amp; core</div><a class="side-link" href="architecture.html">Architecture</a><a class="side-link" href="backend.html">Backend</a><a class="side-link" href="frontend.html">Frontend</a><a class="side-link" href="data-flow.html">Data Flow</a><a class="side-link" href="chatbot-flow.html">Chatbot Flow</a><a class="side-link" href="pipeline-editor.html">Pipeline Editor</a><a class="side-link" href="pipeline-json.html">Pipeline Json</a><a class="side-link" href="pipeline-roadmap.html">Pipeline Roadmap</a></div><div class="side-group"><div class="side-title">🖥️ GPU &amp; performance</div><a class="side-link active" href="gpu-management.html">Gpu Management</a></div><div class="side-group"><div class="side-title">☁️ API &amp; launcher</div><a class="side-link" href="api-provider.html">Api Provider</a><a class="side-link" href="launcher.html">Launcher</a><a class="side-link" href="cli-tools.html">Cli Tools</a></div><div class="side-group"><div class="side-title">🔒 Security &amp; storage</div><a class="side-link" href="security.html">Security</a><a class="side-link" href="storage.html">Storage</a><a class="side-link" href="workspace.html">Workspace</a><a class="side-link" href="troubleshooting.html">Troubleshooting</a></div><div class="side-group"><div class="side-title">📚 Reference</div><a class="side-link" href="glossary.html">Glossary</a><a class="side-link" href="agent-knowledge-base.html">Agent Knowledge Base</a><a class="side-link" href="changelog.html">Changelog</a><a class="side-link" href="readme.html">Docs index</a><a class="side-link" href="ui-brainstorm.html">Ui Brainstorm</a><a class="side-link" href="chatbot-ui-design.html">Chatbot Ui Design</a></div></aside>
+  <article class="doc">
+    <div class="crumb"><a href="../docs.html">📚 Docs</a> <span style="color:var(--faint)">/</span> <span>Smart GPU Management — how the app shares a small GPU</span></div>
+    <h1>Smart GPU Management — how the app shares a small GPU</h1>
+    <div class="doc-intro">This document explains how the Lawyer Assistant <strong>manages its GPU</strong>. It is written for humans first — if you are just here to understand what the app does with your graphics card, read <strong>§1 and §2</strong>. If you want to tune it, read <strong>§5</strong>. If you want to wire it into new code, read <strong>§6</strong>.</div>
+    
+
+<hr/>
+<h2 id="1-the-problem-this-solves">1. The problem this solves</h2>
+<p>This app runs <strong>three heavy AI models</strong> on one machine:</p>
+<table><thead><tr><th>Model</th><th>What it does</th><th>When it runs</th><th>Size (fp16)</th></tr></thead><tbody><tr><td><strong>BGE-M3 embedder</strong></td><td>Turns text into vectors</td><td>Ingestion + every search query</td><td>~1.1 GB</td></tr><tr><td><strong>BGE-Reranker</strong></td><td>Scores retrieved chunks</td><td>Every search</td><td>~2.2 GB (fp32)</td></tr><tr><td><strong>LLM</strong> (Ollama)</td><td>Writes the final answer</td><td>Every chat answer</td><td>5 GB class</td></tr></tbody></table>
+<p>A typical laptop has an 8 GB GPU (RTX 4060 class) — often less, sometimes shared with the display. <strong>You cannot fit all three models on the GPU at once</strong>, and even two at once leaves no room for the activations (the temporary memory a batch of text needs while being processed). The naïve approach — just load everything onto the GPU and hope — ends in <code>CUDA out of memory</code> at the worst moment.</p>
+<p>The app's answer is a <strong>Smart GPU Manager</strong> (<code>backend/legal_retrieval/gpu_manager.py</code>) that acts like a tiny operating system for VRAM: it decides <strong>which model sits on the GPU at any moment</strong>, evicts the right one when space runs out, and even shrinks the batch size so a burst of work never exceeds the budget.</p>
+<hr/>
+<h2 id="2-the-core-idea-in-one-picture">2. The core idea in one picture</h2>
+<blockquote><strong>Models live in RAM. They visit the GPU only when they work.</strong> When the work is done, they come back to RAM. Re-visiting is fast — a PCIe copy (~0.1–0.3 s), not a slow reload from disk.</blockquote>
+<pre><code>        HOST RAM (always holds every model's weights)
+   ┌───────────────────────────────────────────────────────┐
+   │  BGE-M3 embedder   BGE-Reranker   LLM (via Ollama)    │
+   └───────────────────────────────────────────────────────┘
+            │  promote (load weights to VRAM)
+            ▼
+   ┌───────────────────────────────────────────────────────┐
+   │                    GPU / VRAM (8 GB)                  │
+   │   ▶ only the model whose phase is ACTIVE is here ◀    │
+   └───────────────────────────────────────────────────────┘
+            ▲
+            │  demote (move weights back to RAM)</code></pre>
+<p>This is called <strong>RAM-first residency</strong>: loading a model into host RAM is cheap and happens once; moving it to VRAM and back per phase is a fast copy that leaves the model <em>resident in RAM</em> so the next promotion is near-instant.</p>
+<hr/>
+<h2 id="3-what-actually-happens-during-a-chat-query">3. What actually happens during a chat query</h2>
+<p>Walk through one RAG search and watch the GPU change hands:</p>
+<ol><li><strong>Embed the query</strong> → the manager <strong>promotes the embedder</strong> to VRAM, runs <code>encode()</code>, then (usually) <strong>demotes it</strong> back to RAM.</li><li><strong>Retrieve + rerank</strong> → the manager <strong>promotes the reranker</strong>, runs <code>predict()</code>, demotes it.</li><li><strong>LLM generates the answer</strong> → the LLM is <em>not</em> wrapped in promote/demote: it runs on CPU by default (<code>PLR_LLM_NUM_GPU=0</code>) so it never steals VRAM from the latency-critical embedding/reranking phases.</li></ol>
+<p>So during a single answer, VRAM is handed from the embedder to the reranker and then left alone while the LLM writes text. The GPU is never idle <em>and</em> never overcommitted.</p>
+<h3 id="priority-who-wins-when-space-is-tight">Priority — who wins when space is tight</h3>
+<p>Each model has a priority (lower number = higher priority):</p>
+<pre><code>embedder (0)  &gt;  reranker (1)  &gt;  LLM (2)</code></pre>
+<p>When a model needs VRAM and there isn't enough, the manager evicts <strong>idle lower-priority</strong> models first. It will <strong>never evict a higher-priority model to make room for a lower one</strong> — the embedder keeps its spot even if the reranker really wants it. Among equal priorities, it evicts <strong>cold models before hot ones</strong>, then the least-recently-used.</p>
+<h3 id="the-one-exception-the-llm">The one exception: the LLM</h3>
+<p>Ollama owns its own weights, so the manager can't just "demote" it. Instead, when VRAM is truly tight, the manager calls <strong><code>ollama stop</code></strong> on GPU-resident LLMs to free their VRAM. It uses the CLI when available, and falls back to the <strong>Ollama HTTP API</strong> (<code>keep_alive=0</code>) when the CLI isn't on PATH — which is common on Windows desktop installs, exactly the low-end target this manager is built for. This is off by default in the sense that it only triggers under pressure (<code>PLR_GPU_EVICT_OLLAMA=1</code>).</p>
+<hr/>
+<h2 id="4-three-residency-modes-and-hot-models">4. Three residency modes — and "hot" models</h2>
+<p>After a phase ends, should the model stay on the GPU or go back to RAM? That's the <strong>residency mode</strong> (<code>residency_mode</code>), and it's the main tuning knob:</p>
+<table><thead><tr><th>Mode</th><th>Behavior</th><th>Best for</th></tr></thead><tbody><tr><td><strong><code>eager</code></strong></td><td>Demote after <em>every</em> phase. GPU is almost always empty of models; every phase pays the promote cost.</td><td>Tiny GPUs (4 GB), heavy multitasking</td></tr><tr><td><strong><code>adaptive</code></strong> (default)</td><td>Demote <strong>cold</strong> models; <strong>keep hot models resident</strong> when there's VRAM headroom.</td><td>Most machines — best of both worlds</td></tr><tr><td><strong><code>persistent</code></strong></td><td>Never demote after use; every used model stays resident.</td><td>Capable GPUs, repetitive workloads</td></tr></tbody></table>
+<h3 id="what-does-hot-mean">What does "hot" mean?</h3>
+<p>In <code>adaptive</code> mode, a model becomes <strong>hot</strong> when it is used <code>hot_min_uses</code> (default 2) times within <code>hot_window_seconds</code> (default 120 s) — a sliding window, so old uses expire. A model that keeps getting used (you're searching repeatedly) stays on the GPU and <em>repeat queries skip the promote cost entirely</em>. A model used once ages out and frees VRAM.</p>
+<p>Three guards stop "hot" from becoming "greedy":</p>
+<ol><li><strong>Pressure always wins</strong> — if free VRAM drops below <code>keep_resident_free_mb</code> (1 GB), even hot models are demoted.</li><li><strong>Resident cap</strong> — at most <code>max_resident</code> (2) models stay resident at once; the least valuable idle resident is evicted to make room.</li><li><strong>Never evict higher priority</strong> — the cap cannot force out the embedder to keep the reranker.</li></ol>
+<hr/>
+<h2 id="5-auto-tuned-batch-sizes-the-oom-safety-net">5. Auto-tuned batch sizes (the OOM safety net)</h2>
+<p>Even with one model on the GPU, a huge batch can exhaust VRAM during inference. So the manager also <strong>auto-tunes the batch size</strong> at runtime:</p>
+<pre><code>batch = clamp( (free_VRAM − model_footprint − safety_reserve) ÷ MB_per_sample ,
+               min=1 , max=configured_batch )</code></pre>
+<p>Every <code>encode()</code> / <code>predict()</code> call asks the manager for a safe batch size. Free VRAM is measured <strong>live</strong> via <code>torch.cuda.mem_get_info()</code>, so if the display or another app is eating VRAM, the batch shrinks — and grows back when space returns. The configured batch size (<code>embedding_batch_size</code>, <code>reranker_batch_size</code>) is now just the <strong>cap</strong>.</p>
+<p>Per-sample estimates (tunable in <code>config.py</code>):</p>
+<table><thead><tr><th>Model</th><th>MB per sample</th><th>Basis</th></tr></thead><tbody><tr><td>Embedder</td><td>24 MB</td><td>512-token chunk, fp16 activations</td></tr><tr><td>Reranker</td><td>48 MB</td><td>cross-encoder processes query+doc <strong>pairs</strong> (~2× the embedder)</td></tr></tbody></table>
+<p>If the model couldn't be promoted at all (VRAM too tight) it runs on CPU, where the VRAM budget is meaningless — the manager <strong>keeps the configured batch</strong> instead of collapsing to batch 1, so low-VRAM machines that fell back to CPU aren't slowed down twice.</p>
+<hr/>
+<h2 id="6-where-the-code-lives">6. Where the code lives</h2>
+<table><thead><tr><th>Concern</th><th>File</th></tr></thead><tbody><tr><td>The manager itself (promote/demote/schedule/evict/tune)</td><td><code>backend/legal_retrieval/gpu_manager.py</code></td></tr><tr><td>All knobs, defaults, env vars, per-project profiles</td><td><code>backend/legal_retrieval/config.py</code></td></tr><tr><td>Embedder registers + uses <code>suggest_batch_size</code></td><td><code>backend/legal_retrieval/embedder.py</code></td></tr><tr><td>Reranker registers + uses <code>suggest_batch_size</code></td><td><code>backend/legal_retrieval/reranker.py</code></td></tr><tr><td>LLM registration (so status shows it / budget accounts for it)</td><td><code>backend/legal_retrieval/llm.py</code></td></tr><tr><td>HTTP endpoints (<code>/api/gpu/*</code>)</td><td><code>backend/main.py</code></td></tr><tr><td>Tests (37 pure-logic tests, no GPU needed)</td><td><code>backend/tests/test_gpu_manager.py</code></td></tr></tbody></table>
+<h3 id="the-public-api-for-other-code">The public API for other code</h3>
+<pre><span class="lang">python</span><code>from legal_retrieval.gpu_manager import get_gpu_manager
+
+gpu = get_gpu_manager()
+gpu.register("embedder", vram_estimate_mb=1100,
+             promote=my_promote_fn, demote=my_demote_fn,
+             per_sample_mb=24.0)
+
+with gpu.acquire("embedder"):          # promotes to VRAM for the phase
+    batch = gpu.suggest_batch_size("embedder", 32)
+    device = gpu.current_device("embedder")   # "cuda" if resident, else "cpu"
+    ... run inference ...
+# on exit: demoted per residency mode</code></pre>
+<hr/>
+<h2 id="7-per-project-gpu-profiles">7. Per-project GPU profiles</h2>
+<p>Every workspace project can carry its <strong>own</strong> GPU residency profile (mode, hot window, max resident, …), stored inside <code>&lt;project&gt;/workspace/history.json</code> under the <code>gpu_profile</code> key. Switching folders <strong>reloads that project's profile automatically</strong>; a project with no saved profile resets to defaults — settings never leak between projects. The GPU Residency card in the UI's Workspace panel is the friendly way to edit it.</p>
+<hr/>
+<h2 id="8-configuration-reference-all-env-vars">8. Configuration reference (all env vars)</h2>
+<table><thead><tr><th>Env var</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>PLR_GPU_MANAGER_ENABLED</code></td><td><code>1</code></td><td>Master switch (<code>0</code> = transparent no-op, models stay in RAM)</td></tr><tr><td><code>PLR_GPU_HEADROOM_MB</code></td><td><code>256</code></td><td>VRAM kept free for driver/display/other apps</td></tr><tr><td><code>PLR_GPU_RESIDENCY_MODE</code></td><td><code>adaptive</code></td><td><code>eager</code> \</td></tr><tr><td><code>PLR_GPU_DEMOTE_AFTER_USE</code></td><td>—</td><td>Legacy: <code>1</code>→eager, <code>0</code>→persistent (still honored)</td></tr><tr><td><code>PLR_GPU_KEEP_RESIDENT_FREE_MB</code></td><td><code>1024</code></td><td>Adaptive: min free VRAM to keep a hot model resident</td></tr><tr><td><code>PLR_GPU_HOT_MIN_USES</code></td><td><code>2</code></td><td>Uses inside the window to become "hot"</td></tr><tr><td><code>PLR_GPU_HOT_WINDOW_SECONDS</code></td><td><code>120</code></td><td>Hotness sliding window</td></tr><tr><td><code>PLR_GPU_MAX_RESIDENT</code></td><td><code>2</code></td><td>Max models kept resident simultaneously</td></tr><tr><td><code>PLR_GPU_AUTO_BATCH</code></td><td><code>1</code></td><td>Auto-tune batch sizes from free VRAM (<code>0</code> = fixed batch)</td></tr><tr><td><code>PLR_GPU_BATCH_SAFETY_MB</code></td><td><code>256</code></td><td>Reserve beyond the model when auto-tuning batch</td></tr><tr><td><code>PLR_GPU_EVICT_OLLAMA</code></td><td><code>1</code></td><td>Allow <code>ollama stop</code> under VRAM pressure</td></tr><tr><td><code>PLR_LLM_VRAM_ESTIMATE_MB</code></td><td><code>5000</code></td><td>Fallback footprint for an 8B-class LLM</td></tr><tr><td><code>PLR_LLM_NUM_GPU</code></td><td><code>0</code></td><td><code>0</code> = LLM on CPU (frees VRAM); <code>-1</code> = let Ollama use GPU</td></tr><tr><td><code>PLR_OLLAMA_BASE_URL</code></td><td><code>http://localhost:11434</code></td><td>Ollama HTTP API (used when CLI not on PATH)</td></tr></tbody></table>
+<h3 id="http-endpoints">HTTP endpoints</h3>
+<table><thead><tr><th>Endpoint</th><th>Returns</th></tr></thead><tbody><tr><td><code>GET /api/gpu/status</code></td><td>Device, free/total VRAM, per-model placement + hotness, resident Ollama models</td></tr><tr><td><code>GET /api/gpu/profile</code></td><td>The currently-active residency profile</td></tr><tr><td><code>POST /api/gpu/profile</code></td><td>Apply a profile now <strong>and</strong> persist it to the active project</td></tr></tbody></table>
+<hr/>
+<h2 id="9-how-to-watch-it-work">9. How to watch it work</h2>
+<p>Watch the backend log — the manager logs its decisions:</p>
+<pre><code>[GPU] registered 'embedder' (priority=0, ~1082MB, per_sample=24.0MB, device=cuda)
+[GPU] promoted 'embedder' to VRAM (~1082MB)
+[GPU] auto-tuned embedder batch_size 32 -&gt; 8 (free VRAM 1200MB, ~24MB/sample)
+[GPU] demoted 'embedder' back to RAM
+[GPU] ollama stop lfm2.5:8b (freed VRAM)</code></pre>
+<p>Or query the live snapshot:</p>
+<pre><span class="lang">bash</span><code>curl http://localhost:8765/api/gpu/status</code></pre>
+<p>which reports each model's <code>state</code> (<code>ram</code>/<code>vram</code>), <code>hot</code>, <code>use_count</code>, and <code>per_sample_mb</code> — everything the manager is doing right now.</p>
+<hr/>
+<h2 id="10-design-rules-so-future-changes-don-t-break-the-balance">10. Design rules (so future changes don't break the balance)</h2>
+<ol><li><strong>RAM-first, always.</strong> Never keep an idle model on the GPU when a lower priority model needs the space.</li><li><strong>Never evict a higher-priority model for a lower one.</strong></li><li><strong>Pressure beats preference.</strong> <code>eager</code>/<code>adaptive</code>/<code>persistent</code> all yield to insufficient VRAM.</li><li><strong>Slow operations never hold the lock.</strong> <code>ollama stop</code> (up to 30 s) runs outside both the manager lock and the FastAPI event loop, so a concurrent chat phase is never blocked.</li><li><strong>The refcount is set before promotion</strong>, so a concurrently-acquired slot can never be evicted mid-promotion.</li><li><strong>The configured batch size is a cap, never a floor.</strong> Auto-tuning only ever shrinks it.</li></ol>
+  </article>
+</div>
+<div class="doc-faq">
+  <h2>Questions, answered</h2>
+  <p class="sub">Short, self-contained answers about this guide.</p>
+  <div class="faq-grid"><div class="faq-item"><h3>How does GPU memory get shared between models?</h3><p>The GPU manager registers each model (embedder, reranker, LLM) with a memory reservation. When VRAM runs low, lower-priority models are evicted to RAM — RAM-first residency keeps the system stable instead of crashing on out-of-memory.</p></div><div class="faq-item"><h3>Does it auto-tune?</h3><p>Yes — the manager auto-detects available VRAM, picks sensible residency defaults, and adapts as models load and evict. You can also set device and priorities manually via config.</p></div><div class="faq-item"><h3>Can I force CPU-only?</h3><p>Yes. Set the device to CPU and models run from RAM — slower, but zero GPU pressure. The doc explains the trade-off and how to switch per-model.</p></div></div>
+</div>
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,255 @@
+{
+  "quickstart": {
+    "desc": "Clone, install, and run Lawyer Assistant in minutes. Launcher setup, model downloads, first query, and verification — the fastest path from zero to a cited legal search.",
+    "keywords": "lawyer assistant quickstart, legal AI install, local legal AI setup, first query legal search, lawyer assistant launcher",
+    "faq": [
+      ["How do I install Lawyer Assistant?", "Run the launcher — it creates a Python environment, installs dependencies, downloads the BGE-M3 embedding and BGE-Reranker models, sets up Ollama with a default LLM, then opens the desktop app. On Windows, double-click launch.bat; on macOS/Linux, run launch.sh."],
+      ["How do I run my first legal search?", "After the launcher finishes, pick a project folder, ingest your documents with 'Ingest all files', then ask a question in plain English. The app retrieves from your documents and returns a cited answer you can verify against the exact source passages."],
+      ["Do I need a GPU?", "No. Lawyer Assistant runs on CPU out of the box — slower for embedding but fully functional. If you have an NVIDIA GPU with enough VRAM, the GPU manager automatically uses it and shares memory between the embedding, reranking, and LLM models."]
+    ]
+  },
+  "development": {
+    "desc": "Set up the Lawyer Assistant dev environment: repo layout, backend on port 8765, Vite dev server on 5173, Electron shell, hot reload, debugging, and profiling workflows.",
+    "keywords": "lawyer assistant development, local RAG development, backend 8765, vite dev server, debug legal AI, profile RAG pipeline",
+    "faq": [
+      ["How do I run the app from source for development?", "From the repo root run npm run dev, which starts the FastAPI backend (port 8765), the Vite dev server (port 5173), and the Electron shell together. You can also run the backend and frontend separately in their own folders."],
+      ["Does the frontend hot-reload?", "Yes. Vite + React Fast Refresh gives sub-second hot module replacement — edit a component and it re-renders without a page reload, preserving the Zustand store state. The Python backend does not auto-reload because model loading is expensive."],
+      ["How do I debug a slow retrieval step?", "Use the profiling workflow documented here — it profiles chunking, embedding, retrieval, and generation separately so you can pinpoint which stage dominates latency on your corpus."]
+    ]
+  },
+  "testing": {
+    "desc": "Run the Lawyer Assistant test suite: phase-based unit tests for boot, chunking, embeddings, vector store, retrieval, API provider facade, and end-to-end chat flows.",
+    "keywords": "lawyer assistant tests, legal AI test suite, pytest RAG, chunking tests, retrieval tests, api provider tests",
+    "faq": [
+      ["How do I run the backend tests?", "From the backend folder, run pytest tests/ -v. The suite is organized by phase — boot, document types, chunking, embeddings, vector store, retrieval, and end-to-end chat — so a failure tells you exactly which pipeline stage regressed."],
+      ["Are there integration tests?", "Yes. test_integration_e2e.py runs the full chat flow against the real backend, and test_pipeline_streaming.py verifies SSE streaming events. A dedicated API-provider test file covers the cloud-mode facade with a mock server."],
+      ["Do tests require a GPU or models?", "Most unit tests mock or stub the heavy models. Some phase tests load real embeddings and rerankers on CPU, which is slower but works on any machine. GPU-requiring behavior is isolated in the GPU manager tests."]
+    ]
+  },
+  "benchmarking": {
+    "desc": "Benchmark Lawyer Assistant retrieval: chunking throughput, embedding speed (GPU vs CPU), reranker quality, and hybrid search accuracy with Recall@5, MRR, and success rate.",
+    "keywords": "legal AI benchmark, RAG benchmark, recall@5, MRR, retrieval accuracy, chunking throughput, embedding benchmark",
+    "faq": [
+      ["What metrics does the benchmark report?", "Chunking and embedding throughput (chunks/sec, pairs/sec), GPU vs CPU speed, reranker quality impact, and retrieval accuracy — Recall@5, MRR, and success rate — for dense, sparse, and hybrid search modes."],
+      ["How do I run a benchmark?", "From the backend, run python -m benchmark.runner. It runs the full suite, saves results to metrics.json, and the docs show how to compare runs over time and set regression thresholds in CI."],
+      ["Which search mode wins in practice?", "Hybrid (dense + sparse with fusion and reranking) consistently beats either mode alone on legal corpora — the docs include a sample comparison showing hybrid Recall@5 around 0.86 versus 0.73 for dense-only."]
+    ]
+  },
+  "configuration": {
+    "desc": "Every Lawyer Assistant environment variable and setting: model directories, device, chunk size, top_k, search mode, reranking, and API provider configuration.",
+    "keywords": "lawyer assistant configuration, env vars, model directory, chunk size, top_k, search mode, rerank config",
+    "faq": [
+      ["Where is configuration defined?", "Configuration lives in backend/legal_retrieval/config.py with environment-variable overrides (for example model directories, device, and chunk size). API-provider settings come from a git-ignored api_config.json written by the launcher."],
+      ["What is the default chunk size?", "Documents are chunked near a target of 480 tokens, with section respect so headers are never split across chunks. The value is configurable through the config file or environment variables."],
+      ["How do I change retrieval top_k or disable reranking?", "Set top_k in config, or override per request (validated 1–100). Reranking is on by default and can be disabled with skip_rerank (or --no-rerank on the CLI); the pipeline editor can also toggle it at runtime."]
+    ]
+  },
+  "deployment": {
+    "desc": "Package and deploy Lawyer Assistant: Electron builds for Windows, macOS, and Linux, bundle optimization, CI/CD releases, and production hardening.",
+    "keywords": "lawyer assistant deployment, electron packaging, legal AI distribution, CI/CD release, appimage deb rpm",
+    "faq": [
+      ["How do I build a distributable app?", "The Electron pipeline builds platform packages — AppImage and deb/rpm for Linux, a .app for macOS, and an unpacked Windows build. The docs list the exact dist-electron paths and packaging commands for each OS."],
+      ["Are the AI models bundled in the installer?", "No. Models total roughly 14GB, so they are downloaded on first run rather than bundled — keeping installers small. Embeddings, the reranker, and the Ollama LLM are fetched at setup time."],
+      ["How do I automate releases?", "A GitHub Actions workflow triggers on release, builds all three platforms, and creates a release artifact automatically. The docs include a smoke-test checklist to run on the packaged app before shipping."]
+    ]
+  },
+  "architecture": {
+    "desc": "Lawyer Assistant system architecture: FastAPI backend on port 8765, Vite/React frontend, Electron shell, RAG pipeline with BGE-M3, ChromaDB, BM25, and BGE-Reranker.",
+    "keywords": "lawyer assistant architecture, RAG system architecture, fastapi electron, BGE-M3 chromadb, local RAG",
+    "faq": [
+      ["How is the app structured?", "An Electron shell hosts a Vite/React frontend and a FastAPI backend (port 8765). The backend runs a RAG pipeline — BGE-M3 embeddings, ChromaDB vector store, BM25 index, and BGE-Reranker — over a local Ollama LLM, with optional cloud API providers."],
+      ["Which ports does the app use?", "The backend binds to 8765, the Vite dev server to 5173, and the launcher setup page to 8770. All are localhost-only — nothing is exposed to the network."],
+      ["What are the runtime modes?", "The app supports full desktop mode and split dev modes (backend-only, frontend-only). The architecture doc maps each component to its source folder under backend/ and frontend/."]
+    ]
+  },
+  "backend": {
+    "desc": "Lawyer Assistant backend API: FastAPI endpoints, SSE streaming chat, intent routing, retrieval tools, compliance scan, and configuration on localhost:8765.",
+    "keywords": "lawyer assistant backend, fastapi endpoints, SSE streaming chat, intent router, retrieval api, compliance scan api",
+    "faq": [
+      ["How do I call the chat API?", "POST /api/chat/stream returns an SSE stream of events — status updates, tool calls, retrieval results, reasoning, tokens, and a final done event carrying the answer and cited sources. The UI consumes this stream; a non-streaming /api/chat also exists."],
+      ["How does routing work?", "The intent router classifies each question and plans a route: SEARCH your documents, SCAN a document against the playbook, INGEST files, or VERIFY results. A legacy ReAct agent mode with human-in-the-loop approval is available for retrieval_only and direct flows."],
+      ["What retrieval tools exist?", "The backend exposes hybrid retrieval — BM25 sparse plus dense vectors fused and reranked — and parses tool output into the sources shown in the UI, including chunk scores and file references."]
+    ]
+  },
+  "frontend": {
+    "desc": "Lawyer Assistant frontend: React layout, Zustand stores, SSE streaming chat, source panels, pipeline editor, theming, and the Electron shell.",
+    "keywords": "lawyer assistant frontend, react legal AI, zustand store, SSE streaming UI, pipeline editor, resizable panels",
+    "faq": [
+      ["How is the frontend organized?", "Vite + React with Zustand stores for chat state, provider status, and working sets. Components live under frontend/src/components — Chat, Sources, Pipeline, Sidebar, Scan, and UI — with an Electron preload bridge for desktop APIs."],
+      ["How does streaming rendering work?", "The chat store consumes SSE events from the backend; streaming message components render tokens live while reasoning streams into a separate chain-of-thought panel, and a skeleton message shows while the pipeline boots."],
+      ["Can I resize panels?", "Yes — every major panel (sources, sidebar, working set, chat) has a drag handle, and sizes persist per session. The docs cover the panel storage helpers and right-panel tabs."]
+    ]
+  },
+  "data-flow": {
+    "desc": "How Lawyer Assistant ingests documents: parse, chunk, embed, index with section-aware chunking, OCR, BGE-M3 embeddings, and hybrid ChromaDB + BM25 indexing.",
+    "keywords": "document ingestion, chunk embed index, OCR legal documents, BGE-M3, hybrid index, chromadb bm25",
+    "faq": [
+      ["What happens when I ingest a document?", "The ingestion pipeline parses the file (PDF, DOCX, OCR images, JSON, Markdown, plain text), splits it into section-aware chunks near 480 tokens, embeds each chunk with BGE-M3, and writes both the ChromaDB vector store and the BM25 sparse index."],
+      ["How is OCR handled?", "Scanned images and image-based PDFs are OCR'd during ingestion so their text becomes searchable like any other document — the data-flow doc details the parse step and supported formats."],
+      ["Where is the index stored?", "Everything lives in the active project's data folder — raw uploads, processed chunks, the vector store, and the BM25 index. Nothing is sent to a server in local mode."]
+    ]
+  },
+  "chatbot-flow": {
+    "desc": "The Lawyer Assistant chat flow: message to intent to tool routing to retrieval to rerank to LLM to cited answer, plus reasoning streaming and source collection.",
+    "keywords": "chat flow, intent routing, tool routing, rerank answer, cited answer, SSE chat events",
+    "faq": [
+      ["What happens after I send a message?", "The intent router classifies it and plans a route. The planner node streams a plan, a tool searches your documents (hybrid retrieval), results are reranked, the LLM writes an answer grounded in retrieved passages, and inline citations point at the exact chunks."],
+      ["How do thinking and answers stream?", "The pipeline yields typed events: Status, ToolCall, ToolResult, Thinking (reasoning), Token (answer text), and Done (final answer + sources). The UI renders reasoning in a chain-of-thought panel and tokens live in the message."],
+      ["What is the context-hint path?", "When you right-click a passage and choose 'Ask assistant about selection', the raw selection rides along as a context hint and the pipeline retrieves the exact chunk it came from — so the answer cites that passage instead of re-searching a mangled query."]
+    ]
+  },
+  "pipeline-editor": {
+    "desc": "The Lawyer Assistant visual pipeline editor: canvas, dense/sparse/rerank/ingest/scan sub-nodes, toggles, bypass, and runtime config applied to the backend.",
+    "keywords": "pipeline editor, RAG canvas, sub-node toggle, bypass, skip_rerank, pipeline layout",
+    "faq": [
+      ["What can I edit in the pipeline editor?", "A visual canvas with nodes for each retrieval stage — dense, sparse, rerank, ingest, scan — plus toggles and bypass switches. Removing the rerank node sets skip_rerank; dense and sparse presence sets the search mode and fusion weights."],
+      ["Is the layout persisted?", "Yes. Layouts save to localStorage (pipeline-layout-v1), debounced on every change, and the app re-applies them on restart. A default layout is restored if none is saved."],
+      ["Does the editor affect the backend?", "Yes — the editor POSTs the layout to the backend pipeline config endpoint, so changes apply at runtime: top_k overrides, rerank on/off, and search-mode fusion weights all come from the canvas."]
+    ]
+  },
+  "pipeline-json": {
+    "desc": "The exact JSON schema for Lawyer Assistant pipeline layouts: nodes, edges, sub-node IDs, config overrides, and the runtime application rules.",
+    "keywords": "pipeline json schema, node edges, sub-node ids, pipeline layout format, config override",
+    "faq": [
+      ["What does a pipeline layout JSON look like?", "A JSON object with nodes (each with an id, type, and sub-node state) and edges connecting them. The doc lists every field with examples — including canonical sub-node IDs and per-node config overrides like top_k."],
+      ["How is the layout validated?", "The layout is validated before save and before applying to the backend — unknown node types, dangling edges, and invalid overrides are rejected so the runtime never receives a malformed graph."],
+      ["Where is the source of truth?", "pipelineStorage.ts in the frontend is the canonical implementation; docs/PIPELINE_JSON.md documents the schema. The pipeline config endpoint maps the JSON onto backend flags like skip_rerank and search_mode."]
+    ]
+  },
+  "pipeline-roadmap": {
+    "desc": "Planned improvements to the Lawyer Assistant RAG pipeline: query expansion, verification nodes, config-driven graphs, and next retrieval milestones.",
+    "keywords": "pipeline roadmap, query expansion, verification node, config driven pipeline, RAG roadmap",
+    "faq": [
+      ["What improvements are planned?", "The roadmap covers query expansion, a dedicated verification node, config-driven (YAML/JSON) pipeline definitions, and more granular retrieval controls — each with an estimated effort."],
+      ["When will these ship?", "Items are ordered by effort and impact — the fastest wins (roughly 2–4 hours each) are planned first. The roadmap is a living document; check it before filing feature requests."],
+      ["Can I request a roadmap item?", "Yes — the doc invites opening an issue on the GitHub repo for missing capabilities, and links each planned feature to the docs that will change when it lands."]
+    ]
+  },
+  "gpu-management": {
+    "desc": "Lawyer Assistant GPU manager: VRAM sharing across embedder, reranker, and LLM, RAM-first residency, auto-tuning, and manual device control.",
+    "keywords": "GPU management, VRAM sharing, RAM first residency, model eviction, auto tuning, GPU legal AI",
+    "faq": [
+      ["How does GPU memory get shared between models?", "The GPU manager registers each model (embedder, reranker, LLM) with a memory reservation. When VRAM runs low, lower-priority models are evicted to RAM — RAM-first residency keeps the system stable instead of crashing on out-of-memory."],
+      ["Does it auto-tune?", "Yes — the manager auto-detects available VRAM, picks sensible residency defaults, and adapts as models load and evict. You can also set device and priorities manually via config."],
+      ["Can I force CPU-only?", "Yes. Set the device to CPU and models run from RAM — slower, but zero GPU pressure. The doc explains the trade-off and how to switch per-model."]
+    ]
+  },
+  "api-provider": {
+    "desc": "Lawyer Assistant cloud mode: use Claude, ChatGPT, Groq, Grok, DeepSeek, Mistral, Kimi, Qwen, Gemini, OpenRouter, or Together instead of local Ollama.",
+    "keywords": "api provider, claude groq deepseek, cloud LLM, api_config.json, provider setup, rerank modes",
+    "faq": [
+      ["How do I switch to an API provider?", "In the launcher, choose a provider, paste your API key, and test the connection. Settings are saved to a git-ignored api_config.json; the backend then routes LLM calls to that provider while embeddings and reranking stay local (or follow your rerank mode)."],
+      ["Which providers are supported?", "Claude, ChatGPT/OpenAI, Groq, Grok, DeepSeek, Mistral, Kimi, Qwen, Gemini, OpenRouter, Together, and any OpenAI-compatible endpoint. The launcher lists them in a dropdown and can auto-detect available models."],
+      ["Is my key safe?", "Keys are stored in git-ignored api_config.json, never logged, never displayed after setup, and only sent to the provider you chose over HTTPS. Local mode sends nothing anywhere."]
+    ]
+  },
+  "launcher": {
+    "desc": "The Lawyer Assistant launcher: setup page on port 8770, dependency and model installs, Ollama automation, provider picker, and Install/Launch flow.",
+    "keywords": "launcher setup, ollama automation, model download, provider picker, install launch",
+    "faq": [
+      ["What does the launcher do?", "It creates a Python venv, installs backend and Electron dependencies, downloads the BGE-M3 and BGE-Reranker models, installs and starts Ollama if missing, and then launches the desktop app — all from one setup page on port 8770."],
+      ["Does it manage Ollama?", "Yes. It installs Ollama silently if absent, starts 'ollama serve' as a background process, waits for http://localhost:11434 to respond, and pulls the configured LLM model before marking the step done."],
+      ["Is setup resumable?", "Yes — each step (venv, deps, models, Ollama) can be retried individually if it fails, and completed steps persist across launcher restarts, so you never redo the whole setup."]
+    ]
+  },
+  "cli-tools": {
+    "desc": "Lawyer Assistant command-line tools: ingest documents, run queries, build the BM25 index, and compare retrieval versions without the desktop app.",
+    "keywords": "cli tools, ingest script, query cli, bm25 build, retrieval compare, terminal legal AI",
+    "faq": [
+      ["How do I ingest documents from the terminal?", "Use scripts/ingest_all.py with a folder path — it runs the same parse-to-chunk-to-embed-to-index pipeline the app uses, so the CLI and the UI share one index."],
+      ["How do I query from the terminal?", "scripts/query.py runs a retrieval query and prints the top chunks with scores, useful for debugging retrieval quality or scripting. A chat CLI (scripts/chat_cli.py) offers a full interactive session."],
+      ["Can I compare retrieval versions?", "Yes — scripts/compare_v1_v2_retrieval.py runs the same queries through the two retrieval paths and reports per-query differences, and scripts/build_bm25_index.py rebuilds the sparse index on demand."]
+    ]
+  },
+  "security": {
+    "desc": "Lawyer Assistant security model: CSP, Electron sandbox, API key handling, path traversal protection, file upload limits, data retention, and the full threat model.",
+    "keywords": "legal AI security, csp, electron sandbox, api key protection, path traversal, threat model, data retention",
+    "faq": [
+      ["How are API keys protected?", "Keys are stored in a git-ignored config file with file-permission protection, never logged (redacted from all output), never echoed back to the UI, and only sent to the chosen provider over HTTPS."],
+      ["How does the app prevent path traversal?", "Uploaded files are resolved against the workspace root and rejected if they escape it — the docs show the exact safe-path pattern. Temp and lock files are excluded from scanning entirely."],
+      ["Does the backend expose anything to the network?", "No — the FastAPI server binds to localhost only, CORS allows only the Vite dev server and Electron, and in local mode there are no outbound HTTP requests at all."]
+    ]
+  },
+  "storage": {
+    "desc": "Where Lawyer Assistant stores data: raw uploads, processed chunks, vector index, BM25 index, chat history, compliance flags, logs, and clearing it all.",
+    "keywords": "data storage, vector index location, chat history storage, compliance flags, logs rotation, clear data",
+    "faq": [
+      ["What is stored and where?", "Per-project: raw uploads, processed chunks, the vector index, and BM25 index in the project's data folder. Global: chat history, compliance flags, and config in the app data directory. Logs rotate at 10MB with 5 backups."],
+      ["What is NOT stored?", "API keys stay in git-ignored config (never committed), no telemetry or analytics is collected, and documents are never uploaded to external servers in local mode."],
+      ["How do I clear data?", "The doc lists exact paths and commands to clear per-project data (workspace), global data (conversations, flags), and logs — plus the 14GB model folder if you want a full reset."]
+    ]
+  },
+  "workspace": {
+    "desc": "Lawyer Assistant workspace model: project folders, the folder picker, ingestion workflows, per-project index and history, and the required workspace.",
+    "keywords": "workspace, project folder, folder picker, ingest all files, per project index",
+    "faq": [
+      ["Why do I need a workspace?", "A project folder is required — there is no default fallback. It scopes retrieval to the right corpus, keeps per-project indexes and history separate, and prevents results bleeding between cases."],
+      ["How do I set up a workspace?", "Click 'Work in a folder' in the app and pick your project directory. Then run 'Ingest all files' (or attach files individually) to index everything; uploads land in the active workspace."],
+      ["What lives in the workspace?", "Raw uploads, processed chunks, the vector + BM25 indexes, and project-scoped history. Switching folders switches the whole working set, and folder-specific project history is saved."]
+    ]
+  },
+  "troubleshooting": {
+    "desc": "Fix common Lawyer Assistant problems: Ollama not running, stale processes on 8765/5173, empty search results, venv failures, and model warmup issues.",
+    "keywords": "troubleshooting, ollama not running, port 8765 conflict, empty results, venv failed, model warmup",
+    "faq": [
+      ["Ollama isn't running — what do I do?", "Start it manually (ollama serve) or relaunch the app, then confirm http://localhost:11434 responds. Retrieval still works without Ollama — only LLM generation (answers, verification, scanning) degrades."],
+      ["Why is my search returning no results?", "Usually the corpus was never ingested — make sure a workspace is selected and 'Ingest all files' has run. Also verify the reranker isn't filtering everything and that the query terms actually exist in the index."],
+      ["Port 8765 is already in use?", "A stale backend from a previous session is still listening. The app kills listeners on 8765 and 5173 at startup; if it still conflicts, kill the leftover process and restart. The doc covers the exact commands."],
+      ["Setup fails at the venv step?", "The launcher falls back to system Python if venv creation fails. The troubleshooting guide walks through each failure mode with its exact fix."]
+    ]
+  },
+  "glossary": {
+    "desc": "The Lawyer Assistant glossary: one-line definitions of every term — chunking, embeddings, BM25, dense vectors, reranking, RAG, playbook scan, working set, and more.",
+    "keywords": "glossary, RAG terms, chunk definition, embedding definition, reranker definition, legal AI terms",
+    "faq": [
+      ["What is RAG?", "Retrieval-Augmented Generation — retrieve relevant passages from your documents first, then have the LLM answer grounded in those passages, with citations you can verify."],
+      ["What is the difference between dense and sparse search?", "Dense search matches meaning via vector embeddings (BGE-M3); sparse search matches keywords via BM25. Lawyer Assistant fuses both (hybrid) and reranks the results for best accuracy."],
+      ["What is a playbook scan?", "A compliance check that scores documents against a configurable playbook of rules and flags risky clauses — like missing required contract language — with explanations and persisted history."]
+    ]
+  },
+  "agent-knowledge-base": {
+    "desc": "Fast answers for AI agents and developers working on Lawyer Assistant: canonical docs, ground-truth source files, known traps, and verification rules.",
+    "keywords": "agent knowledge base, ground truth sources, canonical docs, known traps, developer qa",
+    "faq": [
+      ["Where is the ground truth for the app?", "The knowledge base maps each topic to its source file — API endpoints in backend/main.py, retrieval config in config.py, frontend events in chatStore.ts, pipeline layout format in pipelineStorage.ts."],
+      ["What are the known documentation traps?", "The root README is legacy (old CLI/flask), two routers exist (intent-based vs legacy ReAct), and both streaming and non-streaming chat endpoints exist — the knowledge base flags each so agents answer from the current architecture."],
+      ["How should agents verify facts?", "Answer from docs/ first, then verify technical claims against the code with search, quote file + line when unsure, and say so when a fact can't be verified."]
+    ]
+  },
+  "changelog": {
+    "desc": "Lawyer Assistant changelog: recent feature history — API providers, context hints, launcher automation, GPU manager, pipeline editor, and UI improvements.",
+    "keywords": "changelog, release notes, recent features, api providers, context hint, launcher automation",
+    "faq": [
+      ["What is the most recent feature work?", "Recent highlights include API provider support (Claude, Groq, DeepSeek, and more), right-click 'Ask assistant about selection' context hints, the automated launcher with Ollama setup, a GPU memory manager, and the visual pipeline editor."],
+      ["Where can I find what changed in a given area?", "The changelog is organized chronologically with sections per feature area, and each entry links to the doc that describes it in depth — check it before asking what's new."],
+      ["How often is it updated?", "Every meaningful change to the app is recorded here, so the changelog reflects the current state of features better than any single doc."]
+    ]
+  },
+  "readme": {
+    "desc": "The Lawyer Assistant documentation index — canonical read order, topic-to-doc map, and links to every guide from quickstart to security.",
+    "keywords": "documentation index, read order, topic map, all docs",
+    "faq": [
+      ["Where should I start reading?", "Follow the canonical order: the docs index, then QUICKSTART for setup, TROUBLESHOOTING for common failures, ARCHITECTURE for the system overview, then the BACKEND and FRONTEND guides for depth."],
+      ["How are topics mapped to docs?", "The index includes a topic-to-doc table covering API, retrieval, scan, frontend behavior, pipeline editor, Electron shell, and scripts — so you can jump straight to the right file."],
+      ["Do the docs stay current?", "Docs can drift — the index marks the canonical knowledge base and points agents to verify technical claims against source code when in doubt."]
+    ]
+  },
+  "ui-brainstorm": {
+    "desc": "Design explorations for Lawyer Assistant: future UI ideas, interaction refinements, and product directions beyond what is shipped.",
+    "keywords": "ui brainstorm, design ideas, product roadmap ui, interaction design",
+    "faq": [
+      ["Is this a spec or shipped features?", "It's a brainstorming document — design explorations and product ideas that are not all implemented. Treat anything here as proposed unless it's also covered in the frontend or changelog docs."],
+      ["Can I contribute an idea?", "Yes — the doc invites discussion; file an issue or PR on the GitHub repo and link the brainstorm section your idea extends."],
+      ["What areas does it explore?", "Citation interactions, source browsing, panel workflows, onboarding, and other legal-research UX directions — useful reading for design contributors."]
+    ]
+  },
+  "chatbot-ui-design": {
+    "desc": "Chat UI design notes for Lawyer Assistant: message rendering, streaming, selection chips, citation display, and conversation ergonomics.",
+    "keywords": "chat ui design, message streaming, selection chip, citation display, conversation ui",
+    "faq": [
+      ["How are citations shown in the chat UI?", "Inline citation chips render inside the answer and link to the exact source passage; opening one focuses the source viewer. The design doc covers the chip states and interaction details."],
+      ["What is the selection chip?", "When you right-click a passage and choose 'Ask assistant about selection', the raw selection appears as a chip above the query so you (and the pipeline) know exactly what text is being asked about."],
+      ["How does streaming feel?", "Tokens render live with reasoning streamed into a separate thinking panel, keeping the answer readable while the model deliberates. The doc details the event-to-component mapping."]
+    ]
+  }
+}
