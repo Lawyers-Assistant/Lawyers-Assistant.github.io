@@ -42,4 +42,4 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-Sitemap: https://github.com/haal-lab/Lawyer-Assistant/sitemap.xml
+Sitemap: https://lawyers-assistant.github.io/sitemap.xml

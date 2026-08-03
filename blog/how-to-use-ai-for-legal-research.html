@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>How to Use AI for Legal Research Ethically: A Workflow That Survives Scrutiny | Lawyer Assistant</title>
+<meta name="description" content="A practical, ethics-first workflow for using AI in legal research — ABA Formal Opinion 512, competence and supervision duties, and the verification steps that keep you safe from sanctions."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://lawyers-assistant.github.io/blog/how-to-use-ai-for-legal-research.html"/>
+<meta name="keywords" content="how to use ai for legal research, ai ethics lawyers, aba formal opinion 512, legal ai best practices, human in the loop ai law, verify legal ai answers, competent use of ai, legal ai workflow"/>
+<meta name="author" content="Hussain Nazary"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="How to Use AI for Legal Research Ethically"/>
+<meta property="og:description" content="A practical, ethics-first workflow for using AI in legal research — ABA Formal Opinion 512, competence and supervision duties, and verification steps that keep you safe."/>
+<meta property="og:url" content="https://lawyers-assistant.github.io/blog/how-to-use-ai-for-legal-research.html"/>
+<meta property="og:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="How to Use AI for Legal Research Ethically"/>
+<meta name="twitter:description" content="A practical, ethics-first workflow for AI legal research — ABA Formal Opinion 512 and verification steps that keep you safe from sanctions."/>
+<meta name="twitter:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* article */
+.post{padding:50px 0 80px}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:26px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.post-head{margin-bottom:40px;max-width:780px}
+.post-meta{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+.post-meta .cat{color:var(--brass)}
+.post h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4.2vw,2.8rem);line-height:1.16;letter-spacing:-.01em;margin:0 0 16px}
+.post .dek{color:var(--paper-dim);font-size:1.1rem;max-width:64ch}
+.post-body{max-width:760px}
+.post-body h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.post-body h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.post-body p{margin:0 0 18px;color:var(--paper-dim);font-size:15.5px}
+.post-body strong{color:var(--paper);font-weight:600}
+.post-body a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.post-body a:hover{text-decoration-color:var(--brass)}
+.post-body ul,.post-body ol{margin:0 0 18px;padding-left:26px;color:var(--paper-dim);font-size:15.5px}
+.post-body li{margin:6px 0}
+.post-body li::marker{color:var(--brass)}
+.post-body blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:16px 20px;border-radius:0 10px 10px 0;margin:0 0 20px;font-family:var(--font-d);font-size:1.1rem;color:var(--paper-dim)}
+.post-body blockquote p{margin:0 0 6px}
+.post-body blockquote p:last-child{margin:0}
+.post-body hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+.post-body code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.post-end{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.post-end .tag{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.post-end .tag b{color:var(--brass-2);font-weight:500}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:860px){.nav-links{display:none}}
+@media(max-width:640px){.wrap{padding:0 16px}.post{padding:34px 0 60px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How to Use AI for Legal Research Ethically: A Workflow That Survives Scrutiny",
+  "description": "A practical, ethics-first workflow for using AI in legal research — ABA Formal Opinion 512, competence and supervision duties, and the verification steps that keep you safe from sanctions.",
+  "datePublished": "2026-08-08",
+  "dateModified": "2026-08-08",
+  "author": {"@type": "Person", "name": "Hussain Nazary"},
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "mainEntityOfPage": "https://lawyers-assistant.github.io/blog/how-to-use-ai-for-legal-research.html"
+}
+</script>
+
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html" class="active">Blog</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<article class="post">
+  <div class="wrap">
+    <div class="crumb"><a href="../blog.html">✒️ Blog</a> <span style="color:var(--faint)">/</span> <span>Legal research</span></div>
+    <header class="post-head">
+      <div class="post-meta"><span class="cat">Legal research</span><span>Aug 8, 2026</span><span>9 min read</span></div>
+      <h1>How to Use AI for Legal Research Ethically: A Workflow That Survives Scrutiny</h1>
+      <p class="dek">The ethics rules weren't written for AI, but they've already been interpreted for it. Here's a workflow built on ABA Formal Opinion 512 that lets you use AI without becoming a cautionary tale.</p>
+    </header>
+    <div class="post-body">
+      <p>The question is no longer whether lawyers can use AI. It's whether they can use it <em>competently and ethically</em> — and, increasingly, whether they can demonstrate that they did. Courts have sanctioned attorneys for unverified AI citations, and state bars have begun asking pointed questions about AI use in filings. The rules that apply were written before this technology existed, but the bar has already told us how they read.</p>
+
+      <h2>The four rules that govern AI use</h2>
+      <p>ABA Formal Opinion 512 (July 2024) and its state-bar successors map the existing ethics framework onto generative AI. Four duties matter most:</p>
+      <ul>
+        <li><strong>Competence (Model Rule 1.1).</strong> You must understand the benefits and risks of the AI tools you use — including their tendency to hallucinate and their data-handling behavior. Ignorance of your own tools is not a defense.</li>
+        <li><strong>Confidentiality (Model Rule 1.6).</strong> You must take reasonable steps to prevent disclosure of client information — which means knowing where your data goes before you upload it. (We covered this in detail in <a href="../blog/attorney-client-privilege-and-ai.html">our piece on privilege and AI</a>.)</li>
+        <li><strong>Supervision (Model Rules 5.1 and 5.3).</strong> An AI system is, functionally, an outsourced assistant — and you are responsible for its output just as you are for a junior associate's or a vendor's. Review, verify, and stand behind the work.</li>
+        <li><strong>Fees (Model Rule 1.5).</strong> You cannot bill a client for hours of work the AI did in seconds. The time-savings belong to the client, not the invoice.</li>
+      </ul>
+      <p>Read together, the rules add up to a single operational principle: <strong>human-in-the-loop is not a suggestion; it is the legal position.</strong></p>
+
+      <h2>A five-step workflow that survives scrutiny</h2>
+      <p>Whatever tool you choose, this workflow keeps you on the right side of the rules — and it happens to produce better work:</p>
+      <h3>Step 1 — Define the question before you ask it</h3>
+      <p>Write down the legal question, the jurisdiction, and what you actually need to prove. AI mirrors the precision of the question; a vague question yields a confident guess. If you can't state the issue in one sentence, don't ask yet.</p>
+      <h3>Step 2 — Use a grounded tool, not a guessing chatbot</h3>
+      <p>For research that will appear in a filing, use a tool that retrieves from real sources and cites them — not a general chatbot answering from memory. The difference is the difference between a search and a guess, and we've written about <a href="../blog/can-you-trust-ai-legal-research.html">why grounding is the fix for hallucinations</a> at length.</p>
+      <h3>Step 3 — Read every cited source</h3>
+      <p>Open each citation the AI provides. Confirm the case exists, the quote is on the page cited, and the holding actually supports the proposition. This is the step that separates a lawyer from someone who pasted text into a brief. It is not optional.</p>
+      <h3>Step 4 — Check currency and jurisdiction</h3>
+      <p>Has the case been overruled? Is the statute current? Does the authority bind your court? AI is excellent at finding things that are <em>about</em> your topic and unreliable about whether they still <em>govern</em> it. Shepardize or KeyCite before you rely.</p>
+      <h3>Step 5 — Keep a record of your process</h3>
+      <p>If a court or bar asks how your research was conducted, you should be able to say: which tool, what question, which sources were retrieved, and how each was verified. Keeping that record is cheap now and priceless later.</p>
+      <blockquote>
+        <p>"Competence with AI isn't knowing how to prompt. It's knowing what to verify — and verifying it."</p>
+      </blockquote>
+
+      <h2>What to never do</h2>
+      <ul>
+        <li><strong>Never cite an AI answer without reading the source it cites.</strong> The citation may be fabricated even when the prose is fluent.</li>
+        <li><strong>Never paste client material into a public model.</strong> Unless you have verified the tool's data handling and retention, assume the information is being collected. (See the <a href="../blog/attorney-client-privilege-and-ai.html">confidentiality checklist</a>.)</li>
+        <li><strong>Never bill for AI time as if it were your time.</strong> The ethics opinions are explicit; the clients who find out will be worse than the bar that asks.</li>
+        <li><strong>Never let the tool's confidence substitute for your judgment.</strong> A confident wrong answer is still wrong.</li>
+      </ul>
+
+      <h2>How a compliance-friendly tool fits the workflow</h2>
+      <p>The workflow above becomes genuinely easy with a tool designed around it. Lawyer Assistant supports each step natively: you ask in plain English, and it retrieves from <em>your</em> documents with hybrid search, answers only from retrieved passages, and shows inline citations plus a Sources panel listing file, page, and section — the raw material for Steps 3 and 4. It streams its reasoning and shows which pipeline stages ran, so the "record of process" in Step 5 is largely produced for you. And because it runs <a href="../docs/quickstart.html">locally and offline</a>, Step 2's data-handling question is answered by architecture rather than by a privacy policy.</p>
+      <p>None of that removes the human steps. It simply makes the human steps faster and easier to do properly — which is the entire point of an ethics-first tool.</p>
+
+      <h2>The bottom line</h2>
+      <p>The ethics framework around AI isn't hostile to the technology; it's hostile to carelessness. Define the question, ground the answer, read the sources, check the authority, keep the record. Do those five things, and you're not just compliant — you're better researched than most of your peers. Skip them, and no amount of impressive output will protect you.</p>
+    </div>
+    <div class="post-end">
+      <span class="tag">Filed under <b>Legal research</b> · <b>Ethics</b> · <b>ABA 512</b></span>
+      <span class="tag"><a href="../blog.html">← All articles</a></span>
+    </div>
+  </div>
+</article>
+
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html">Blog</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>
