@@ -108,12 +108,22 @@ nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-fi
 .case-sheet{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:0 24px 60px rgba(28,26,22,.10);position:relative}
 .case-sheet img{width:100%;border-radius:12px;border:1px solid var(--line);display:block}
 
-/* ── marquee ── */
-.strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--ink-2);overflow:hidden}
-.marquee{display:flex;width:max-content;animation:marquee 32s linear infinite}
-.marquee:hover{animation-play-state:paused}
-.marquee span{padding:14px 0;font-family:var(--font-m);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* ── download ── */
+.dl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.dl-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:28px;text-align:center;box-shadow:0 6px 20px rgba(28,26,22,.04);transition:transform .24s ease,border-color .24s ease,box-shadow .24s ease;display:flex;flex-direction:column;align-items:center}
+.dl-card:hover{transform:translateY(-4px);border-color:var(--line-bright);box-shadow:0 14px 34px rgba(28,26,22,.08)}
+.dl-icon{width:48px;height:48px;border-radius:14px;background:var(--panel-2);border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;color:var(--brass-2)}
+.dl-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.dl-card h3{font-family:var(--font-d);font-size:1.15rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.dl-card p{font-size:13px;color:var(--muted);line-height:1.65;margin:0 0 20px}
+.dl-card code{font-family:var(--font-m);font-size:12px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.dl-card .btn{margin-top:auto}
+.dl-meta{font-family:var(--font-m);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:12px}
+.dl-foot{text-align:center;font-size:12.5px;color:var(--muted);margin-top:24px}
+.dl-foot a{font-weight:600}
+@media(max-width:860px){.dl-grid{grid-template-columns:1fr}}
+.ex-link{display:inline-block;margin-top:14px;font-family:var(--font-m);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass-2)}
+.ex-link:hover{color:var(--brass);text-decoration:none}
 
 /* ── sections ── */
 section{padding:clamp(64px,9vw,92px) 0}
@@ -282,7 +292,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
   .foot{justify-content:center;text-align:center}
   .foot-links{justify-content:center}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}.marquee{animation:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
 </style>
 
 
@@ -309,6 +319,8 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
     "price": "0",
     "priceCurrency": "USD"
   },
+  "softwareVersion": "1.0.1",
+  "releaseNotes": "https://github.com/haal-lab/Lawyer-Assistant/releases/tag/v1.0.1",
   "featureList": [
     "Cited answers from your own documents",
     "Hybrid search (BM25 + dense vectors + reranking)",
@@ -401,42 +413,10 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
     },
     {
       "@type": "Question",
-      "name": "Which AI models can I use with it?",
+      "name": "Which platforms does Lawyer Assistant support?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Any you trust. Use a fully local Ollama model for maximum privacy, or bring your own API key from Claude, ChatGPT, Groq, Grok, DeepSeek, Mistral, Kimi, Qwen, Gemini, OpenRouter, or Together. Switch providers anytime from one dropdown without changing how you work."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How long does it take to start researching?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Under five minutes. The launcher installs everything — dependencies, models, and Ollama — automatically. Pick a folder of documents, click \"Ingest all files\", and you can ask your first question in plain English with cited answers."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does it work with my existing documents and scans?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Lawyer Assistant ingests PDFs, DOCX files, OCR-readable images and scans, JSON, Markdown, and plain text. Scanned documents are OCR'd so the text inside them becomes searchable, and everything stays indexed locally in your project folder."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is Lawyer Assistant really free?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes — free and open source under the MIT license. There are no subscriptions and no per-document fees. You can audit the code on GitHub, run it on your own hardware, and only pay anything if you choose to bring your own paid API key."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I know the answers come from my documents?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Every answer is grounded in your files through hybrid retrieval — keyword and semantic search combined, then reranked. Inline citations link each claim to the exact source chunk, so you can open the document and confirm the answer yourself instead of trusting the AI blindly."
+        "text": "Windows, macOS, and Linux. Download the Windows installer, the macOS universal archive, or the Linux AppImage from the download section above — free, open source, and set up in minutes."
       }
     }
   ]
@@ -467,20 +447,16 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
     <div class="nav-links" id="navMenu">
-      <a href="#why">Why</a>
-      <a href="#exhibits">Features</a>
+      <a href="#features">Features</a>
       <a href="#process">How it works</a>
-      <a href="#providers">Providers</a>
-      <a href="#compare">Compare</a>
-      <a href="#privacy">Privacy</a>
       <a href="#faq">FAQ</a>
       <a href="install.html">Install</a>
       <a href="docs.html">Docs</a>
       <a href="blog.html">Blog</a>
-      <a class="btn btn-brass nav-menu-cta" href="https://codeload.github.com/haal-lab/Lawyer-Assistant/zip/refs/tags/v1%2C0%2C0" target="_blank" rel="noopener">Get the app <span class="arr">→</span></a>
+      <a class="btn btn-brass nav-menu-cta" href="#download">Get the app <span class="arr">→</span></a>
     </div>
     <div class="nav-cta">
-      <a class="btn btn-brass" href="https://codeload.github.com/haal-lab/Lawyer-Assistant/zip/refs/tags/v1%2C0%2C0" target="_blank" rel="noopener">Get the app <span class="arr">→</span></a>
+      <a class="btn btn-brass" href="#download">Get the app <span class="arr">→</span></a>
     </div>
   </div>
 </nav>
@@ -493,8 +469,8 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       <h1>Your documents. Your questions.<br/><span class="serif-i">Cited answers.</span> Nothing leaves your machine.</h1>
       <p class="lead">Lawyer Assistant is a private research desk for your legal documents. Ask in plain English, watch the reasoning stream in, and verify every answer against the exact passages it cites — fully offline, on your own hardware.</p>
       <div class="hero-actions">
-        <a class="btn btn-brass" href="https://codeload.github.com/haal-lab/Lawyer-Assistant/zip/refs/tags/v1%2C0%2C0" target="_blank" rel="noopener">Download the app <span class="arr">→</span></a>
-        <a class="btn btn-ghost" href="#exhibits">See what it can do</a>
+        <a class="btn btn-brass" href="#download">Download for your platform <span class="arr">→</span></a>
+        <a class="btn btn-ghost" href="#features">See what it can do</a>
       </div>
       <div class="hero-badges">
         <span class="hero-badge"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg> 100% private</span>
@@ -511,57 +487,47 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
   </div>
 </header>
 
-<!-- ══════════ MARQUEE ══════════ -->
-<div class="strip">
-  <div class="marquee" aria-hidden="true">
-    <span>PDF&nbsp;&nbsp;DOCX&nbsp;&nbsp;OCR Images&nbsp;&nbsp;JSON&nbsp;&nbsp;Markdown&nbsp;&nbsp;Plain Text&nbsp;&nbsp;Hybrid Search&nbsp;&nbsp;BM25&nbsp;&nbsp;Dense Vectors&nbsp;&nbsp;Reranking&nbsp;&nbsp;Playbook Scan&nbsp;&nbsp;Citations</span>
-    <span>PDF&nbsp;&nbsp;DOCX&nbsp;&nbsp;OCR Images&nbsp;&nbsp;JSON&nbsp;&nbsp;Markdown&nbsp;&nbsp;Plain Text&nbsp;&nbsp;Hybrid Search&nbsp;&nbsp;BM25&nbsp;&nbsp;Dense Vectors&nbsp;&nbsp;Reranking&nbsp;&nbsp;Playbook Scan&nbsp;&nbsp;Citations</span>
-  </div>
-</div>
-
-<!-- ══════════ WHY ══════════ -->
-<section id="why">
+<!-- ══════════ DOWNLOAD ══════════ -->
+<section id="download">
   <div class="wrap">
     <div class="sec-head center reveal">
-      <span class="eyebrow">The problem</span>
-      <h2>Legal research shouldn't feel like <span class="serif-i">Ctrl+F</span> on a haystack.</h2>
-      <p class="lead">Generic chatbots guess. Cloud legal tools hold your documents hostage. Lawyer Assistant sits between them: real retrieval over <em>your</em> files, with citations you can check.</p>
+      <span class="eyebrow">Free &amp; open source</span>
+      <h2>Download for <span class="serif-i">your platform.</span></h2>
+      <p class="lead">Direct links to the latest release — no account, no sign-up. Pick your system and go.</p>
     </div>
-    <div class="why-card reveal" data-d="1">
-      <div class="why-head">
-        <div class="old">Generic AI chatbot</div>
-        <div class="new">Lawyer Assistant</div>
+    <div class="dl-grid">
+      <div class="dl-card reveal">
+        <span class="dl-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></span>
+        <h3>Windows</h3>
+        <p>Setup installer for Windows 10 &amp; 11. If SmartScreen warns, click <i>More info</i> → <i>Run anyway</i>.</p>
+        <a class="btn btn-brass" href="https://github.com/haal-lab/Lawyer-Assistant/releases/download/v1.0.1/LawyerAssistant-setup-1.0.1.exe" target="_blank" rel="noopener">Download .exe <span class="arr">↓</span></a>
+        <span class="dl-meta">Windows installer · v1.0.1</span>
       </div>
-      <div class="why-row">
-        <div class="why-a"><span class="ic">✕</span> Hallucinates answers with no way to check them</div>
-        <div class="why-b"><span class="ic">✓</span> Answers cite the exact source passages — tap to verify</div>
+      <div class="dl-card reveal" data-d="1">
+        <span class="dl-icon"><svg viewBox="0 0 24 24"><path d="M12 2c2 2 2 3.5 2 5a2 2 0 0 1-4 0c0-1.5 0-3 2-5z"/><path d="M6 10h12a2 2 0 0 1 2 2v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-6a2 2 0 0 1 2-2z"/></svg></span>
+        <h3>macOS</h3>
+        <p>Universal archive (no native build yet) — extract it and run <code>launch.sh</code>. Gatekeeper: right-click → <i>Open</i>.</p>
+        <a class="btn btn-brass" href="https://github.com/haal-lab/Lawyer-Assistant/releases/download/v1.0.1/LawyerAssistant-1.0.1.zip" target="_blank" rel="noopener">Download .zip <span class="arr">↓</span></a>
+        <span class="dl-meta">Universal archive · v1.0.1</span>
       </div>
-      <div class="why-row">
-        <div class="why-a"><span class="ic">✕</span> Doesn't know what's in your documents until you paste them</div>
-        <div class="why-b"><span class="ic">✓</span> Searches your entire workspace: PDFs, scans, contracts, case files</div>
-      </div>
-      <div class="why-row">
-        <div class="why-a"><span class="ic">✕</span> Sends your confidential work to someone else's servers</div>
-        <div class="why-b"><span class="ic">✓</span> Runs locally with a local model — or your own API key if you prefer</div>
-      </div>
-      <div class="why-row">
-        <div class="why-a"><span class="ic">✕</span> No memory of your cases, no way to save what matters</div>
-        <div class="why-b"><span class="ic">✓</span> Starred messages, working sets, per-project history</div>
-      </div>
-      <div class="why-row">
-        <div class="why-a"><span class="ic">✕</span> Can't tell you if a clause violates your compliance rules</div>
-        <div class="why-b"><span class="ic">✓</span> Playbook scan flags risky clauses against your own rules</div>
+      <div class="dl-card reveal" data-d="2">
+        <span class="dl-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 12h18M12 3c2 3 2 15 0 18M12 3c-2 3-2 15 0 18"/></svg></span>
+        <h3>Linux</h3>
+        <p>AppImage — no install needed, just run it. Prefer a tarball? The <code>tar.gz</code> is available too.</p>
+        <a class="btn btn-brass" href="https://github.com/haal-lab/Lawyer-Assistant/releases/download/v1.0.1/LawyerAssistant-linux-1.0.1.AppImage" target="_blank" rel="noopener">Download .AppImage <span class="arr">↓</span></a>
+        <span class="dl-meta">AppImage · v1.0.1</span>
       </div>
     </div>
+    <p class="dl-foot"><b>100% private</b> — runs entirely on your machine, no account, no cloud. Prefer the source? <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">Clone the repo</a> · <a href="install.html">Full install guide <span class="arr">→</span></a></p>
   </div>
 </section>
 
-<!-- ══════════ EXHIBITS / FEATURES ══════════ -->
-<section id="exhibits">
+<!-- ══════════ FEATURES ══════════ -->
+<section id="features">
   <div class="wrap">
     <div class="sec-head reveal">
       <span class="eyebrow">The evidence</span>
-      <h2>Six capabilities, <span class="serif-i">entered into the record.</span></h2>
+      <h2>Three things it <span class="serif-i">does well.</span></h2>
     </div>
     <div class="exhibits">
       <div class="exhibit reveal">
@@ -569,54 +535,22 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
         <div class="ex-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg></div>
         <h3>Answers with citations</h3>
         <p>Every claim is grounded in retrieved passages. Inline citations link straight to the source file, so you can verify before you rely on it.</p>
+        <a class="ex-link" href="docs/chatbot-flow.html">How answers are built <span class="arr">→</span></a>
       </div>
       <div class="exhibit reveal" data-d="1">
         <div class="ex-no">EXHIBIT B</div>
         <div class="ex-icon"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg></div>
         <h3>Compliance playbook scan</h3>
         <p>Define your own rules — jurisdictional, formatting, disclosure — and scan any document against them. Violations are flagged, rated, and explained.</p>
+        <a class="ex-link" href="docs/agent-knowledge-base.html">Playbooks &amp; knowledge bases <span class="arr">→</span></a>
       </div>
       <div class="exhibit reveal" data-d="2">
         <div class="ex-no">EXHIBIT C</div>
         <div class="ex-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
         <h3>Hybrid search engine</h3>
         <p>Semantic understanding <em>and</em> exact keyword matching, fused and re-ranked. Legal shorthand, typos, and paraphrases all find their target.</p>
+        <a class="ex-link" href="docs/pipeline-editor.html">Tune the pipeline <span class="arr">→</span></a>
       </div>
-      <div class="exhibit reveal">
-        <div class="ex-no">EXHIBIT D</div>
-        <div class="ex-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><path d="M13 17h4v4h4"/></svg></div>
-        <h3>Visual pipeline editor</h3>
-        <p>See — and reshape — exactly how your questions are answered. Add or remove reranking, tune search depth, and watch each stage execute live.</p>
-      </div>
-      <div class="exhibit stampable reveal" data-d="1">
-        <div class="ex-no">EXHIBIT E</div>
-        <div class="stamp">Objection overruled</div>
-        <div class="ex-icon"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg></div>
-        <h3>Local model, or your own API</h3>
-        <p>Fully offline with a local model — or plug in Claude, Groq, DeepSeek, Mistral, Kimi, Qwen, ChatGPT and more. Bring your own key, your choice.</p>
-      </div>
-      <div class="exhibit reveal" data-d="2">
-        <div class="ex-no">EXHIBIT F</div>
-        <div class="ex-icon"><svg viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg></div>
-        <h3>Starred notes &amp; working sets</h3>
-        <p>Star the messages and sources that matter, pin passages into a working set, and keep research history per project — your memory, organized.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════ GALLERY ══════════ -->
-<section>
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">In the record</span>
-      <h2>Seen in <span class="serif-i">action.</span></h2>
-    </div>
-    <div class="gallery">
-      <div class="frame reveal"><img src="assets/searching.png" alt="Hybrid search retrieving and reranking results"  loading="lazy" decoding="async"/><span class="cap">01 · Search &amp; retrieval</span></div>
-      <div class="frame reveal" data-d="1"><img src="assets/sources.png" alt="Sources panel with cited documents"  loading="lazy" decoding="async"/><span class="cap">02 · Sources &amp; citations</span></div>
-      <div class="frame reveal"><img src="assets/nodes.png" alt="Visual pipeline editor"  loading="lazy" decoding="async"/><span class="cap">03 · Pipeline editor</span></div>
-      <div class="frame reveal" data-d="1"><img src="assets/final_answer_when_don't_find_answer_from_data.png" alt="Answer with confidence indicator and citations"  loading="lazy" decoding="async"/><span class="cap">04 · Grounded answers</span></div>
     </div>
   </div>
 </section>
@@ -648,125 +582,6 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
   </div>
 </section>
 
-<!-- ══════════ PROVIDERS ══════════ -->
-<section id="providers">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <span class="eyebrow">Choose your engine</span>
-      <h2>Any model you trust. <span class="serif-i">One app.</span></h2>
-      <p class="lead">Pick a fully-local model for total privacy, or connect your own API key from any major provider — switch any time, in one dropdown.</p>
-    </div>
-    <div class="providers reveal" data-d="1">
-      <span class="prov local"><span class="dotp"></span> Ollama <span class="off">(offline)</span></span>
-      <span class="prov"><span class="dotp"></span> Claude</span>
-      <span class="prov"><span class="dotp"></span> ChatGPT</span>
-      <span class="prov"><span class="dotp"></span> Groq</span>
-      <span class="prov"><span class="dotp"></span> Grok</span>
-      <span class="prov"><span class="dotp"></span> DeepSeek</span>
-      <span class="prov"><span class="dotp"></span> Mistral</span>
-      <span class="prov"><span class="dotp"></span> Kimi</span>
-      <span class="prov"><span class="dotp"></span> Qwen</span>
-      <span class="prov"><span class="dotp"></span> OpenRouter</span>
-      <span class="prov"><span class="dotp"></span> Together</span>
-      <span class="prov"><span class="dotp"></span> Gemini</span>
-      <span class="prov"><span class="dotp"></span> …any OpenAI-compatible API</span>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════ COMPARE ══════════ -->
-<section id="compare">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">The docket</span>
-      <h2>How it stacks up <span class="serif-i">against the rest.</span></h2>
-    </div>
-    <div class="reveal" data-d="1">
-      <div class="table-scroll">
-      <table class="compare">
-        <thead>
-          <tr>
-            <th>Capability</th>
-            <th>Generic chatbot</th>
-            <th class="ours">Lawyer Assistant</th>
-            <th>Legal SaaS cloud</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>Runs 100% on your machine</th>
-            <td class="no">✕</td>
-            <td class="ours-col yes">✓</td>
-            <td class="no">✕</td>
-          </tr>
-          <tr>
-            <th>Works fully offline</th>
-            <td class="no">✕</td>
-            <td class="ours-col yes">✓</td>
-            <td class="no">✕</td>
-          </tr>
-          <tr>
-            <th>Answers cite exact source passages</th>
-            <td class="no">✕</td>
-            <td class="ours-col yes">✓</td>
-            <td>Partial</td>
-          </tr>
-          <tr>
-            <th>Your documents stay private</th>
-            <td class="no">✕</td>
-            <td class="ours-col yes">✓</td>
-            <td class="no">✕</td>
-          </tr>
-          <tr>
-            <th>Compliance playbook scan</th>
-            <td class="no">✕</td>
-            <td class="ours-col yes">✓</td>
-            <td class="no">✕</td>
-          </tr>
-          <tr>
-            <th>Custom retrieval pipeline</th>
-            <td class="no">✕</td>
-            <td class="ours-col yes">✓</td>
-            <td class="no">✕</td>
-          </tr>
-          <tr>
-            <th>No per-document subscription fees</th>
-            <td>—</td>
-            <td class="ours-col yes">✓</td>
-            <td class="no">✕</td>
-          </tr>
-        </tbody>
-      </table>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════ PRIVACY ══════════ -->
-<section id="privacy">
-  <div class="wrap">
-    <div class="privacy reveal">
-      <div class="privacy-grid">
-        <div>
-          <span class="eyebrow">Confidentiality</span>
-          <h2>Nothing leaves <span class="serif-i">your chambers.</span></h2>
-          <p class="lead" style="margin-bottom:10px">Ingestion, search, and answering all happen on your hardware. In local mode, no question, document, or answer ever touches a third-party server — a deliberate choice for attorney–client privilege.</p>
-          <p class="muted" style="font-size:14px">Choose an API provider and only your question plus retrieved passages are sent to that provider — clearly shown in the app, never silently.</p>
-          <div class="pt"><span class="pn">01</span><span>Embeddings, index, and history stored in your project folder only.</span></div>
-          <div class="pt"><span class="pn">02</span><span>API keys stored locally; the launcher never displays them after setup.</span></div>
-          <div class="pt"><span class="pn">03</span><span>Works offline — no account, no cloud, no lock-in.</span></div>
-        </div>
-        <div>
-          <div class="seal">
-            <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
-            <div class="core"><span>Verified<br/>Local<br/>Only</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ══════════ FAQ (AEO answer blocks) ══════════ -->
 <section id="faq">
   <div class="wrap">
@@ -789,24 +604,8 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
         <p>Absolutely. With a local Ollama model, Lawyer Assistant is fully functional with no internet connection. Embeddings, search, chat history, and compliance scans all run locally. You only need the internet if you choose an optional cloud API provider instead of a local model.</p>
       </div>
       <div class="faq-item">
-        <h3>Which AI models can I use with it?</h3>
-        <p>Any you trust. Use a fully local Ollama model for maximum privacy, or bring your own API key from Claude, ChatGPT, Groq, Grok, DeepSeek, Mistral, Kimi, Qwen, Gemini, OpenRouter, or Together. Switch providers anytime from one dropdown without changing how you work.</p>
-      </div>
-      <div class="faq-item">
-        <h3>How long does it take to start researching?</h3>
-        <p>Under five minutes. The launcher installs everything — dependencies, models, and Ollama — automatically. Pick a folder of documents, click "Ingest all files", and you can ask your first question in plain English with cited answers.</p>
-      </div>
-      <div class="faq-item">
-        <h3>Does it work with my existing documents and scans?</h3>
-        <p>Yes. Lawyer Assistant ingests PDFs, DOCX files, OCR-readable images and scans, JSON, Markdown, and plain text. Scanned documents are OCR'd so the text inside them becomes searchable, and everything stays indexed locally in your project folder.</p>
-      </div>
-      <div class="faq-item">
-        <h3>Is Lawyer Assistant really free?</h3>
-        <p>Yes — free and open source under the MIT license. There are no subscriptions and no per-document fees. You can audit the code on GitHub, run it on your own hardware, and only pay anything if you choose to bring your own paid API key.</p>
-      </div>
-      <div class="faq-item">
-        <h3>How do I know the answers come from my documents?</h3>
-        <p>Every answer is grounded in your files through hybrid retrieval — keyword and semantic search combined, then reranked. Inline citations link each claim to the exact source chunk, so you can open the document and confirm the answer yourself instead of trusting the AI blindly.</p>
+        <h3>Which platforms does Lawyer Assistant support?</h3>
+        <p>Windows, macOS, and Linux. Download the Windows installer, the macOS universal archive, or the Linux AppImage from the download section above — free, open source, and set up in minutes.</p>
       </div>
     </div>
   </div>
@@ -847,17 +646,17 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
 </section>
 
 <!-- ══════════ CTA ══════════ -->
-<section class="cta-band" id="download">
+<section class="cta-band">
   <div class="wrap">
     <div class="reveal">
-      <span class="eyebrow" style="justify-content:center">Your turn</span>
-      <h2>Give your documents a better <span class="serif-i">advocate.</span></h2>
-      <p class="lead" style="margin-inline:auto">Download the app, drop in your first case folder, and ask your first question — in under five minutes.</p>
+      <span class="eyebrow" style="justify-content:center">Ready when you are</span>
+      <h2>Want the full <span class="serif-i">walkthrough?</span></h2>
+      <p class="lead" style="margin-inline:auto">Step-by-step install guide with SmartScreen and Gatekeeper notes — or jump straight into the documentation.</p>
       <div class="cta-actions">
-        <a class="btn btn-brass" href="https://codeload.github.com/haal-lab/Lawyer-Assistant/zip/refs/tags/v1%2C0%2C0" target="_blank" rel="noopener">Download the app <span class="arr">→</span></a>
-        <a class="btn btn-ghost" href="docs.html">View the full guide</a>
+        <a class="btn btn-brass" href="install.html">View the install guide <span class="arr">→</span></a>
+        <a class="btn btn-ghost" href="docs.html">Read the docs</a>
       </div>
-      <p class="cta-note">FREE &amp; open source · Local models included · Bring your own API key</p>
+      <p class="cta-note">FREE &amp; open source · Windows · macOS · Linux</p>
     </div>
   </div>
 </section>
@@ -870,12 +669,9 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       Lawyer Assistant<span class="dot" style="color:var(--brass)">.</span>
     </div>
     <div class="foot-links">
-      <a href="#why">Why</a>
-      <a href="#exhibits">Features</a>
+      <a href="#top">Home</a>
+      <a href="#features">Features</a>
       <a href="#process">How it works</a>
-      <a href="#providers">Providers</a>
-      <a href="#compare">Compare</a>
-      <a href="#privacy">Privacy</a>
       <a href="#faq">FAQ</a>
       <a href="install.html">Install</a>
       <a href="docs.html">Docs</a>
@@ -920,17 +716,6 @@ if(burger&&menu){
   });
 }
 
-/* compare-table scroll hint */
-document.querySelectorAll('.table-scroll').forEach(t=>{
-  const upd=()=>{
-    const can=t.scrollWidth>t.clientWidth+1;
-    const end=t.scrollLeft+t.clientWidth>=t.scrollWidth-1;
-    t.classList.toggle('can-scroll',can&&!end);
-  };
-  t.addEventListener('scroll',upd);
-  addEventListener('resize',upd);
-  upd();
-});
 </script>
 </body>
 </html>

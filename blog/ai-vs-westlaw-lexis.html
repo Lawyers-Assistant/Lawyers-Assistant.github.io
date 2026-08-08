@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI vs. Westlaw and Lexis: What Actually Changed | Lawyer Assistant</title>
+<meta name="description" content="A fair comparison of AI legal research tools against Westlaw and Lexis — what AI genuinely adds, where the incumbent databases still win, the measured accuracy gap, and how a hybrid workflow looks."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://lawyers-assistant.github.io/blog/ai-vs-westlaw-lexis.html"/>
+<meta name="keywords" content="ai vs westlaw, ai vs lexis, westlaw ai-assisted research review, lexis+ ai review, ai legal research comparison, stanford legal ai benchmark, cocounsel westlaw, shepard's keycite ai"/>
+<meta name="author" content="Hussain Nazary"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="AI vs. Westlaw and Lexis: What Actually Changed"/>
+<meta property="og:description" content="What AI genuinely adds, where the incumbent databases still win, the measured accuracy gap, and how a hybrid workflow looks."/>
+<meta property="og:url" content="https://lawyers-assistant.github.io/blog/ai-vs-westlaw-lexis.html"/>
+<meta property="og:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="AI vs. Westlaw and Lexis: What Actually Changed"/>
+<meta name="twitter:description" content="What AI adds, where the databases still win, and how a hybrid workflow looks."/>
+<meta name="twitter:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* article */
+.post{padding:50px 0 80px}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:26px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.post-head{margin-bottom:40px;max-width:780px}
+.post-meta{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+.post-meta .cat{color:var(--brass)}
+.post h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4.2vw,2.8rem);line-height:1.16;letter-spacing:-.01em;margin:0 0 16px}
+.post .dek{color:var(--paper-dim);font-size:1.1rem;max-width:64ch}
+.post-body{max-width:760px}
+.post-body h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.post-body h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.post-body p{margin:0 0 18px;color:var(--paper-dim);font-size:15.5px}
+.post-body strong{color:var(--paper);font-weight:600}
+.post-body a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.post-body a:hover{text-decoration-color:var(--brass)}
+.post-body ul,.post-body ol{margin:0 0 18px;padding-left:26px;color:var(--paper-dim);font-size:15.5px}
+.post-body li{margin:6px 0}
+.post-body li::marker{color:var(--brass)}
+.post-body blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:16px 20px;border-radius:0 10px 10px 0;margin:0 0 20px;font-family:var(--font-d);font-size:1.1rem;color:var(--paper-dim)}
+.post-body blockquote p{margin:0 0 6px}
+.post-body blockquote p:last-child{margin:0}
+.post-body hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+.post-body code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.post-end{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.post-end .tag{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.post-end .tag b{color:var(--brass-2);font-weight:500}
+/* related reading */
+.related{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.related h4{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:860px){.related-grid{grid-template-columns:1fr}}
+.rel-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.rel-card:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.rel-card .rel-t{font-family:var(--font-d);font-size:14px;font-weight:500;color:var(--paper);line-height:1.35}
+.rel-card .rel-go{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-2);margin-top:8px;display:block}
+
+/* post nav */
+.post-nav{display:flex;gap:12px;margin-top:20px}
+.post-nav .pnav{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.post-nav .pnav:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.post-nav .pn-dir{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:4px}
+.post-nav .pn-t{font-family:var(--font-d);font-size:13.5px;font-weight:500;color:var(--paper);line-height:1.3;display:block}
+.post-nav .pnav.next{text-align:right}
+@media(max-width:640px){.post-nav{flex-direction:column}}
+
+/* post FAQ */
+.post-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.post-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.post-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+/* promo */
+.promo{margin-top:56px;padding:34px 30px;background:radial-gradient(700px 300px at 80% -20%,rgba(201,163,92,.12),transparent 65%),var(--panel);border:1px solid var(--line);border-radius:16px}
+.promo-eyebrow{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:10px}
+.promo h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;color:var(--paper);margin:0 0 8px}
+.promo p{color:var(--muted);font-size:13.5px;margin:0 0 20px;max-width:62ch}
+.promo-links{display:flex;gap:10px;flex-wrap:wrap}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:var(--font-s);font-size:12.5px;font-weight:600;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.promo-btn:hover{text-decoration:none;transform:translateY(-2px)}
+.promo-btn-brass{background:linear-gradient(135deg,#d8b468,#c9a35c 55%,#b08a35);color:#0b110e;box-shadow:0 4px 18px rgba(201,163,92,.25)}
+.promo-btn-brass:hover{box-shadow:0 8px 26px rgba(201,163,92,.35)}
+.promo-btn-ghost{border:1px solid var(--line-bright);color:var(--paper-dim)}
+.promo-btn-ghost:hover{border-color:var(--brass);color:var(--brass-2)}
+@media(max-width:640px){.promo{padding:26px 20px}}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:860px){.nav-links{display:none}}
+@media(max-width:640px){.wrap{padding:0 16px}.post{padding:34px 0 60px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "AI vs. Westlaw and Lexis: What Actually Changed",
+  "description": "A fair comparison of AI legal research tools against Westlaw and Lexis — what AI genuinely adds, where the incumbent databases still win, the measured accuracy gap, and how a hybrid workflow looks.",
+  "datePublished": "2026-08-16",
+  "dateModified": "2026-08-16",
+  "author": {"@type": "Person", "name": "Hussain Nazary"},
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "mainEntityOfPage": "https://lawyers-assistant.github.io/blog/ai-vs-westlaw-lexis.html"
+}
+</script>
+
+<!-- BreadcrumbList — matches the visible breadcrumb -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Blog", "item": "https://lawyers-assistant.github.io/blog.html"},
+    {"@type": "ListItem", "position": 2, "name": "Legal research"}
+  ]
+}
+</script>
+
+<!-- FAQPage — article Q&A for AI extraction -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between AI legal research and traditional Westlaw or Lexis search?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Traditional search requires translating a question into Boolean syntax and reading a list of results; AI accepts a natural-language question and returns a synthesized analysis citing the authorities it retrieved. Both sit on curated corpora — Westlaw's AI-Assisted Research and Lexis+ AI still retrieve from the same editorialized libraries their classic searches use — but the interaction model changed from keyword search to grounded question answering."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which is more accurate — Westlaw AI, Lexis+ AI, or classic search?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Stanford study published in the Journal of Empirical Legal Studies found Lexis+ AI and Ask Practical Law AI produced incorrect or misgrounded answers in more than 17% of queries, while Westlaw's AI-Assisted Research was above 34%. Framed as accuracy, Lexis+ AI answered about 65% of queries accurately and Westlaw's tool about 42%. Classic search does not hallucinate, but it does not answer questions either — it returns documents."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does AI research replace the need for Westlaw or Lexis?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not yet, for most firms. The incumbents still hold advantages AI platforms have not matched: decades of editorial classification (headnotes and key numbers), deeper citators (KeyCite and Shepard's), specialized secondary sources, and historical archives. The emerging best practice is hybrid: use AI to map the issue and synthesize, then use focused database searches to confirm, and always verify citations against a citator."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What do Westlaw and Lexis still do better than AI tools?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Editorial enhancement — attorney-edited headnotes and topic systems built over decades; citator depth — KeyCite and Shepard's have decades of subsequent-history analysis AI is only beginning to match; specialized content — treatises, practice guides, jury instructions, and forms libraries; and historical depth for pre-digital authorities. These are exactly the layers the AI features of both platforms still draw on."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How should a firm combine AI research tools with Westlaw or Lexis?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Start with AI for issue mapping and synthesis — describe the problem in natural language and get the frameworks, leading authorities, and open questions. Then run focused searches to fill gaps and confirm, using a citator for treatment. Verify every AI-generated citation before reliance, as courts increasingly require. Firms that adopt this sequence often find they can reduce — not eliminate — their database subscription."
+      }
+    }
+  ]
+}
+</script>
+
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html" class="active">Blog</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<article class="post">
+  <div class="wrap">
+    <div class="crumb"><a href="../blog.html">✒️ Blog</a> <span style="color:var(--faint)">/</span> <span>Legal research</span></div>
+    <header class="post-head">
+      <div class="post-meta"><span class="cat">Legal research</span><span>Aug 16, 2026</span><span>8 min read</span></div>
+      <h1>AI vs. Westlaw and Lexis: What Actually Changed</h1>
+      <p class="dek">For thirty years legal research meant choosing between two databases. The AI tools claim to replace them; the incumbents claim nothing changed. The evidence says both are wrong — here is the fair comparison.</p>
+    </header>
+    <div class="post-body">
+      <p>Legal research for a generation of lawyers meant one of two logos: Westlaw or Lexis. Each built an enormous curated library — case law, statutes, regulations, treatises — and charged premium prices for access. Then generative AI arrived, and within two years both incumbents had shipped AI features while a wave of new tools claimed to make the databases obsolete. The marketing on both sides is louder than the evidence. This article is the evidence: what the AI tools genuinely add, what the databases still do better, what the independent benchmarks actually measured, and what the smartest firms are doing in practice.</p>
+      <p>It builds on our series — the <a href="how-ai-legal-research-works.html">pipeline behind AI legal research</a>, <a href="can-you-trust-ai-legal-research.html">whether the results can be trusted</a>, and the <a href="verifying-ai-case-citation.html">citation-verification workflow</a> — and asks the question those articles keep circling: does any of this replace the thing you already pay for?</p>
+
+      <h2>The measured accuracy gap</h2>
+      <p>The most careful independent comparison is the <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jels.12413" target="_blank" rel="noopener">Stanford study led by Magesh, Dahl, and Ho</a> — first released in 2024 and published in the <em>Journal of Empirical Legal Studies</em> in 2025. It tested the leading commercial legal AI tools on hundreds of open-ended research queries and graded the answers. The headline numbers:</p>
+      <ul>
+        <li><strong>Lexis+ AI and Ask Practical Law AI</strong> produced incorrect or misgrounded answers in <strong>more than 17%</strong> of queries.</li>
+        <li><strong>Westlaw's AI-Assisted Research</strong> was <strong>above 34%</strong> — roughly twice the error rate.</li>
+        <li>Framed as accuracy, Lexis+ AI answered about <strong>65%</strong> of queries correctly and Westlaw's AI tool about <strong>42%</strong>.</li>
+      </ul>
+      <p>Two things matter about these numbers. First, they are a snapshot, not a verdict — the tools update, and the study itself notes that Ask Practical Law AI's better showing may partly reflect its smaller universe of documents. Second, they are the only independent, published benchmark of these tools, which is exactly why the study was cited by courts and commentators alike. For context on what "incorrect or misgrounded" means, and why misgrounded answers are the more dangerous failure, see our piece on <a href="honest-limits-ai-contract-review.html">the honest limits of AI</a>.</p>
+      <blockquote>
+        <p>"The accuracy gap between the two incumbents' AI tools — 17% versus 34% — matters less than the fact that both are non-zero. Neither tool is a substitute for verification."</p>
+      </blockquote>
+
+      <h2>What AI genuinely adds</h2>
+      <p>The AI research tools are not better search engines; they are a different interaction model, and the difference is real.</p>
+      <h3>Natural-language questions instead of Boolean syntax</h3>
+      <p>Classic Westlaw and Lexis search asks you to translate a legal question into syntax — connectors, terms, field restrictions. AI tools accept the question as you would ask it: "Can a landlord terminate a commercial lease for nonpayment during a force majeure event?" This matters most for junior associates and for unfamiliar areas of law, where the searcher does not yet know the vocabulary the database expects.</p>
+      <h3>Synthesis instead of a results list</h3>
+      <p>A database returns documents; the lawyer reads them and does the synthesis. The AI tools return an analysis: which authorities support your position, which cut against it, where the law is unsettled. That synthesis is the hours of work — and it is the part that must be verified, because synthesis is also where the 17% and 34% error rates live.</p>
+      <h3>Cross-jurisdictional reasoning</h3>
+      <p>When your state has no case directly on point, AI is good at finding analogous reasoning from other jurisdictions — a task that is genuinely tedious in keyword search.</p>
+      <h3>Research-to-drafting continuity</h3>
+      <p>The newer platforms connect research to drafting: the authorities you find become citations in your brief without manual re-entry, and the research context travels with the matter.</p>
+
+      <h2>Where the databases still win</h2>
+      <p>The honest comparison cuts the other way too. There are layers of Westlaw and Lexis that AI platforms have not replicated, and the incumbents' own AI features lean on them:</p>
+      <ul>
+        <li><strong>Editorial enhancement.</strong> Westlaw's headnotes and Key Number System and Lexis's headnote and topic system are decades of attorney-edited classification. They remain the fastest route to comprehensive coverage in well-established areas of law.</li>
+        <li><strong>Citator depth.</strong> KeyCite and Shepard's have refined subsequent-history analysis for decades. AI citation verification is improving, but the established citators remain deeper, especially for older and more specialized authorities. Treatment checking is a job the databases still do best.</li>
+        <li><strong>Specialized content.</strong> Treatises, practice guides, jury instructions, and forms libraries represent enormous editorial investment that AI platforms have not matched at scale.</li>
+        <li><strong>Historical depth.</strong> For pre-digital authorities, the databases hold scanned archives going back more than a century. AI platforms tend to be stronger on recent material and weaker on old.</li>
+      </ul>
+      <p>None of this is accidental. When Thomson Reuters describes Westlaw's AI-Assisted Research "focusing the LLM on the actual language of cases, statutes, and regulations," the value it is describing sits on top of the KeyCite, headnote, and editorial layers built over decades. The AI did not replace the library; it reads the library.</p>
+
+      <h2>How the incumbents responded</h2>
+      <p>Neither duopolist stood still. Thomson Reuters acquired Casetext and folded its CoCounsel AI into the Westlaw platform; RELX launched Lexis+ AI with comparable drafting and analysis features. The result is that the "AI vs. Westlaw" question is partly a false choice: you can now get AI features inside both incumbent platforms, at an additional price, drawing on the same corpora their classic searches use. The real comparison is between AI layered onto the existing libraries and AI built around retrieval from the start — a difference in architecture that shows up in how transparently each tool grounds and cites its answers.</p>
+
+      <h2>The hybrid workflow that is emerging</h2>
+      <p>The firms moving fastest are not choosing sides. They run a deliberate sequence:</p>
+      <ol>
+        <li><strong>Map the issue with AI.</strong> Describe the problem in natural language; get the legal frameworks, leading authorities, and open questions. This replaces the hours associates used to spend reading background material.</li>
+        <li><strong>Fill gaps with focused searches.</strong> If the AI flagged a circuit split, run the targeted search to confirm each circuit's position. If the issue turns on a specialized regulatory scheme, check the treatise commentary.</li>
+        <li><strong>Verify everything with a citator.</strong> Treatment checks — KeyCite or Shepard's — remain the database's job, and they are non-negotiable before anything reaches a filing.</li>
+        <li><strong>Verify every AI citation.</strong> The workflow from our <a href="verifying-ai-case-citation.html">citation-verification guide</a> applies to whatever tool produced the citation, including the incumbents' AI features — the Stanford error rates make that clear.</li>
+      </ol>
+      <p>The key insight: AI reduces the volume of database research without eliminating it. Firms that adopt this sequence often find they can negotiate smaller database packages — fewer searches, lower tiers — which changes the cost math even while keeping both tools.</p>
+
+      <h2>The cost reality</h2>
+      <p>Cost is often what forces the evaluation. Westlaw and Lexis subscriptions for mid-size firms are commonly reported in six figures annually, with prices rising steadily. AI platforms price differently — per seat, per query, or flat-rate — and generally bundle broader capabilities at a lower total price point. But the honest comparison includes the hidden cost: time. If AI produces a usable analysis in minutes instead of hours, the effective cost per research project drops even before subscription savings. And if the AI output must be verified against the database anyway, the savings shrink accordingly — which is why the hybrid sequence above matters.</p>
+
+      <h2>What Lawyer Assistant does about this</h2>
+      <p>Lawyer Assistant is built on the hybrid philosophy this article describes: retrieval-augmented answers grounded in source text with clickable citations, running entirely on your machine — no subscription, no per-query pricing, and no corporate database tier. It does the synthesis layer; the verification, treatment-checking, and judgment stay with you, exactly where the ethics rules and the standing orders put them. It is not a Westlaw replacement, and it does not claim to be; it is the AI layer of the hybrid workflow, free and local.</p>
+
+      <h2>The bottom line</h2>
+      <p>What actually changed is not that AI replaced Westlaw and Lexis. It is that the research workflow changed shape: natural-language questions and synthesized analyses now sit in front of the same curated libraries, and the lawyer's job shifted from finding documents to verifying conclusions. The measured error rates — 17% and 34% — are the reason verification is not optional. The best firms are using AI to do more research and less drudgery, and using the databases for what they still do best: citators, secondary sources, and the final check. That is the fair answer to the question in the title: the tools changed, the libraries didn't, and the lawyer's responsibility got bigger, not smaller.</p>
+
+      <h2>Sources &amp; further reading</h2>
+      <ul>
+        <li>Magesh, Surani, Dahl, Suzgun, Manning &amp; Ho, <em><a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jels.12413" target="_blank" rel="noopener">Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools</a></em> (Stanford RegLab / HAI; Journal of Empirical Legal Studies, 2025) — Lexis+ AI and Ask Practical Law AI &gt;17% incorrect or misgrounded; Westlaw AI-Assisted Research &gt;34%; accuracy framing of 65% versus 42%.</li>
+        <li>Thomson Reuters, <a href="https://legal.thomsonreuters.com/blog/retrieval-augmented-generation-in-legal-tech/" target="_blank" rel="noopener">"Intro to Retrieval-Augmented Generation in Legal Tech"</a> (Dec. 2024) — how Westlaw AI-Assisted Research and CoCounsel layer onto KeyCite, headnotes, and the Westlaw library.</li>
+        <li>Irys, <a href="https://www.irys.ai/guides/ai-vs-westlaw-vs-lexis" target="_blank" rel="noopener">"AI Legal Research vs Westlaw vs Lexis: What Changed in 2026"</a> — industry comparison of AI strengths, database advantages (editorial, citator, secondary, historical), and the hybrid workflow.</li>
+        <li>Ropes &amp; Gray LLP, <a href="https://www.ropesgray.com/en/sites/artificial-intelligence-court-order-tracker" target="_blank" rel="noopener">AI Court Order Tracker</a> — the regulatory backdrop for verification requirements.</li>
+        <li>ABA Formal Opinion 512, "Generative Artificial Intelligence Tools" (July 29, 2024) — competence, confidentiality, candor, and supervision (<a href="https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/ethics-opinions/aba-formal-opinion-512.pdf" target="_blank" rel="noopener">full text (PDF)</a>).</li>
+      </ul>
+      <p style="color:var(--faint);font-size:13px"><em>This article is general information about technology and professional practice. It is not legal advice for any specific matter, and rules vary by jurisdiction — verify against the authority applicable to your matter.</em></p>
+    </div>
+
+    <div class="post-faq">
+      <h2>Questions, answered</h2>
+      <p class="sub">The key questions from this article, answered plainly.</p>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>What is the difference between AI legal research and traditional Westlaw or Lexis search?</h3>
+          <p>Traditional search requires translating a question into Boolean syntax and reading a list of results; AI accepts a natural-language question and returns a synthesized analysis citing the authorities it retrieved. Both sit on curated corpora — Westlaw's AI-Assisted Research and Lexis+ AI still retrieve from the same editorialized libraries their classic searches use — but the interaction model changed from keyword search to grounded question answering.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Which is more accurate — Westlaw AI, Lexis+ AI, or classic search?</h3>
+          <p>The Stanford study published in the Journal of Empirical Legal Studies found Lexis+ AI and Ask Practical Law AI produced incorrect or misgrounded answers in more than 17% of queries, while Westlaw's AI-Assisted Research was above 34%. Framed as accuracy, Lexis+ AI answered about 65% of queries accurately and Westlaw's tool about 42%. Classic search does not hallucinate, but it does not answer questions either — it returns documents.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Does AI research replace the need for Westlaw or Lexis?</h3>
+          <p>Not yet, for most firms. The incumbents still hold advantages AI platforms have not matched: decades of editorial classification (headnotes and key numbers), deeper citators (KeyCite and Shepard's), specialized secondary sources, and historical archives. The emerging best practice is hybrid: use AI to map the issue and synthesize, then use focused database searches to confirm, and always verify citations against a citator.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What do Westlaw and Lexis still do better than AI tools?</h3>
+          <p>Editorial enhancement — attorney-edited headnotes and topic systems built over decades; citator depth — KeyCite and Shepard's have decades of subsequent-history analysis AI is only beginning to match; specialized content — treatises, practice guides, jury instructions, and forms libraries; and historical depth for pre-digital authorities. These are exactly the layers the AI features of both platforms still draw on.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How should a firm combine AI research tools with Westlaw or Lexis?</h3>
+          <p>Start with AI for issue mapping and synthesis — describe the problem in natural language and get the frameworks, leading authorities, and open questions. Then run focused searches to fill gaps and confirm, using a citator for treatment. Verify every AI-generated citation before reliance, as courts increasingly require. Firms that adopt this sequence often find they can reduce — not eliminate — their database subscription.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="related">
+      <h4>Related reading</h4>
+      <div class="related-grid">
+      <a class="rel-card" href="verifying-ai-case-citation.html">
+        <span class="rel-t">Verifying an AI's Case Citation in Five Minutes</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="how-ai-legal-research-works.html">
+        <span class="rel-t">How AI Legal Research Works Under the Hood</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="can-you-trust-ai-legal-research.html">
+        <span class="rel-t">Can You Trust an AI for Legal Research?</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="ai-attorney-client-privilege.html">
+        <span class="rel-t">AI and Attorney-Client Privilege</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      </div>
+    </div>
+    <div class="post-nav">
+      <a class="pnav prev" href="verifying-ai-case-citation.html"><span class="pn-dir">← Older</span><span class="pn-t">Verifying an AI's Case Citation in Five Minutes</span></a>
+      <a class="pnav next" href="ai-attorney-client-privilege.html"><span class="pn-dir">Newer →</span><span class="pn-t">AI and Attorney-Client Privilege: What Happens When the Machine Sees the File</span></a>
+    </div>
+    <div class="post-end">
+      <span class="tag">Filed under <b>Legal research</b> · <b>AI tools</b> · <b>Comparison</b></span>
+      <span class="tag"><a href="../blog.html">← All articles</a></span>
+    </div>
+
+    <div class="promo">
+      <div class="promo-eyebrow">Next steps</div>
+      <h2>Put it to work on your own documents.</h2>
+      <p>Lawyer Assistant runs entirely on your machine — install it in minutes, read the documentation, or browse more notes from the Legal Desk.</p>
+      <div class="promo-links">
+        <a class="promo-btn promo-btn-brass" href="../install.html">Install the app →</a>
+        <a class="promo-btn promo-btn-ghost" href="../docs.html">Read the docs</a>
+        <a class="promo-btn promo-btn-ghost" href="../blog.html">All articles</a>
+        <a class="promo-btn promo-btn-ghost" href="../index.html">Back to home</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../install.html">Install</a><a href="../blog.html">Blog</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

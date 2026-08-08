@@ -44,6 +44,28 @@
 - [Troubleshooting](docs/troubleshooting.html): common failures & fixes.
 - [Glossary](docs/glossary.html): one-line definitions of every term.
 
+## Blog
+
+Notes for lawyers on AI in legal work — practice notes, ethics, and the honest limits.
+
+- [Blog hub](blog.html): all articles.
+- [Disclosure Duties: Do You Have to Tell Clients You Use AI?](blog/ai-disclosure-duties.html): the five situations where disclosure is required, the state-by-state divide, and the courts' own disclosure regime.
+- [ABA Formal Opinion 512 in Practice](blog/aba-formal-opinion-512-in-practice.html): the desk-level guide — competence, confidentiality, candor, supervision, and billing when you use AI.
+- [AI and Attorney-Client Privilege](blog/ai-attorney-client-privilege.html): what happens when the machine sees the file — the doctrine, Heppner, and what makes the expectation of confidentiality reasonable.
+- [AI vs. Westlaw and Lexis: What Actually Changed](blog/ai-vs-westlaw-lexis.html): the fair comparison — what AI adds, where the databases still win, the measured accuracy gap, and the hybrid workflow.
+- [Verifying an AI's Case Citation in Five Minutes](blog/verifying-ai-case-citation.html): the workflow for checking AI-generated citations — existence, holding, treatment — with free tools and red flags.
+- [How AI Legal Research Works Under the Hood](blog/how-ai-legal-research-works.html): the retrieval pipeline — keyword and semantic search, reranking, grounding — and why retrieval decides answer quality.
+- [The Honest Limits of AI Contract Review](blog/honest-limits-ai-contract-review.html): where AI contract review fails in practice, and what still needs a human eye.
+- [Building a Clause Playbook](blog/building-a-clause-playbook.html): turning your firm's judgment into AI-checkable contract review rules.
+- [Force Majeure, Indemnification, and What AI Flags](blog/force-majeure-indemnification-ai-flags.html): the clauses lawyers fight over most, and what AI review flags in them.
+- [How AI Reads a Contract](blog/how-ai-reads-a-contract.html): the contract-review pipeline explained — OCR, hybrid search, clause classification, playbook rules.
+- [AI for Contract Review](blog/ai-contract-review-for-lawyers.html): what machines get right and what they miss.
+- [How to Use AI for Legal Research Ethically](blog/how-to-use-ai-for-legal-research.html): ABA 512, competence, and a verification workflow.
+- [Can You Trust an AI for Legal Research?](blog/can-you-trust-ai-legal-research.html): citations, grounding, and reliability.
+- [Attorney–Client Privilege and AI](blog/attorney-client-privilege-and-ai.html): privilege, confidentiality, and local processing.
+- [Will AI Replace Lawyers?](blog/will-ai-replace-lawyers.html): what the adoption data actually says.
+- [Welcome to the Legal Desk](blog/welcome-to-the-legal-desk.html): what this blog is for.
+
 ## Repository
 
 - Source: https://github.com/haal-lab/Lawyer-Assistant

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Honest Limits of AI Contract Review: What Still Needs a Human Eye | Lawyer Assistant</title>
+<meta name="description" content="The specific ways AI contract review fails in practice — misclassification, missed cross-references, misgrounded flags — and the checklist of what still needs a human eye."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://lawyers-assistant.github.io/blog/honest-limits-ai-contract-review.html"/>
+<meta name="keywords" content="ai contract review limitations, ai contract review mistakes, misgrounded ai answers, ai hallucination contracts, ai due diligence limits, ai contract review verification, human ai contract review"/>
+<meta name="author" content="Hussain Nazary"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="The Honest Limits of AI Contract Review: What Still Needs a Human Eye"/>
+<meta property="og:description" content="The specific ways AI contract review fails in practice — misclassification, missed cross-references, misgrounded flags — and the checklist of what still needs a human eye."/>
+<meta property="og:url" content="https://lawyers-assistant.github.io/blog/honest-limits-ai-contract-review.html"/>
+<meta property="og:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="The Honest Limits of AI Contract Review"/>
+<meta name="twitter:description" content="The specific failure modes — and the checklist of what still needs a human eye."/>
+<meta name="twitter:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* article */
+.post{padding:50px 0 80px}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:26px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.post-head{margin-bottom:40px;max-width:780px}
+.post-meta{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+.post-meta .cat{color:var(--brass)}
+.post h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4.2vw,2.8rem);line-height:1.16;letter-spacing:-.01em;margin:0 0 16px}
+.post .dek{color:var(--paper-dim);font-size:1.1rem;max-width:64ch}
+.post-body{max-width:760px}
+.post-body h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.post-body h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.post-body p{margin:0 0 18px;color:var(--paper-dim);font-size:15.5px}
+.post-body strong{color:var(--paper);font-weight:600}
+.post-body a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.post-body a:hover{text-decoration-color:var(--brass)}
+.post-body ul,.post-body ol{margin:0 0 18px;padding-left:26px;color:var(--paper-dim);font-size:15.5px}
+.post-body li{margin:6px 0}
+.post-body li::marker{color:var(--brass)}
+.post-body blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:16px 20px;border-radius:0 10px 10px 0;margin:0 0 20px;font-family:var(--font-d);font-size:1.1rem;color:var(--paper-dim)}
+.post-body blockquote p{margin:0 0 6px}
+.post-body blockquote p:last-child{margin:0}
+.post-body hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+.post-body code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.post-end{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.post-end .tag{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.post-end .tag b{color:var(--brass-2);font-weight:500}
+/* related reading */
+.related{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.related h4{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:860px){.related-grid{grid-template-columns:1fr}}
+.rel-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.rel-card:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.rel-card .rel-t{font-family:var(--font-d);font-size:14px;font-weight:500;color:var(--paper);line-height:1.35}
+.rel-card .rel-go{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-2);margin-top:8px;display:block}
+
+/* post nav */
+.post-nav{display:flex;gap:12px;margin-top:20px}
+.post-nav .pnav{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.post-nav .pnav:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.post-nav .pn-dir{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:4px}
+.post-nav .pn-t{font-family:var(--font-d);font-size:13.5px;font-weight:500;color:var(--paper);line-height:1.3;display:block}
+.post-nav .pnav.next{text-align:right}
+@media(max-width:640px){.post-nav{flex-direction:column}}
+
+/* post FAQ */
+.post-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.post-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.post-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+/* promo */
+.promo{margin-top:56px;padding:34px 30px;background:radial-gradient(700px 300px at 80% -20%,rgba(201,163,92,.12),transparent 65%),var(--panel);border:1px solid var(--line);border-radius:16px}
+.promo-eyebrow{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:10px}
+.promo h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;color:var(--paper);margin:0 0 8px}
+.promo p{color:var(--muted);font-size:13.5px;margin:0 0 20px;max-width:62ch}
+.promo-links{display:flex;gap:10px;flex-wrap:wrap}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:var(--font-s);font-size:12.5px;font-weight:600;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.promo-btn:hover{text-decoration:none;transform:translateY(-2px)}
+.promo-btn-brass{background:linear-gradient(135deg,#d8b468,#c9a35c 55%,#b08a35);color:#0b110e;box-shadow:0 4px 18px rgba(201,163,92,.25)}
+.promo-btn-brass:hover{box-shadow:0 8px 26px rgba(201,163,92,.35)}
+.promo-btn-ghost{border:1px solid var(--line-bright);color:var(--paper-dim)}
+.promo-btn-ghost:hover{border-color:var(--brass);color:var(--brass-2)}
+@media(max-width:640px){.promo{padding:26px 20px}}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:860px){.nav-links{display:none}}
+@media(max-width:640px){.wrap{padding:0 16px}.post{padding:34px 0 60px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "The Honest Limits of AI Contract Review: What Still Needs a Human Eye",
+  "description": "The specific ways AI contract review fails in practice — misclassification, missed cross-references, misgrounded flags — and the checklist of what still needs a human eye.",
+  "datePublished": "2026-08-13",
+  "dateModified": "2026-08-13",
+  "author": {"@type": "Person", "name": "Hussain Nazary"},
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "mainEntityOfPage": "https://lawyers-assistant.github.io/blog/honest-limits-ai-contract-review.html"
+}
+</script>
+
+<!-- BreadcrumbList — matches the visible breadcrumb -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Blog", "item": "https://lawyers-assistant.github.io/blog.html"},
+    {"@type": "ListItem", "position": 2, "name": "Practice notes"}
+  ]
+}
+</script>
+
+<!-- FAQPage — article Q&A for AI extraction -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Where does AI contract review still fail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In a few predictable places: classifying a clause incorrectly, missing cross-references and defined terms, inheriting OCR or chunking errors, and flagging a clause when the cited passage does not actually support the flag. The 2024 Stanford study of leading legal AI tools found incorrect or misgrounded answers in more than 17% of test queries, with one major tool above 34%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between an incorrect and a misgrounded AI answer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An incorrect answer states the law or the fact wrongly. A misgrounded answer states a correct rule but cites a source that does not support it — the reasoning sounds right, but the paper trail is wrong. Misgrounded answers are the more dangerous failure because they survive a skim and only fail a real verification."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What should a lawyer never delegate to AI in contract review?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The judgment calls: what the parties intended, whether a clause is enforceable under the governing law, whether a deviation is material in this deal, how hard to push back in negotiation, and the final sign-off. Courts have sanctioned lawyers for treating AI output as verified — Mata v. Avianca (S.D.N.Y. 2023) is the landmark example — and ABA Formal Opinion 512 requires verification before reliance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do you catch what the AI missed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Verify every flag against the source passage, confirm the cited text actually supports the claim, check that the clause was classified correctly, and read in context including cross-references and definitions. Then sample the unflagged sections — a read-through of even a small percentage guards against false negatives."
+      }
+    }
+  ]
+}
+</script>
+
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html" class="active">Blog</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<article class="post">
+  <div class="wrap">
+    <div class="crumb"><a href="../blog.html">✒️ Blog</a> <span style="color:var(--faint)">/</span> <span>Practice notes</span></div>
+    <header class="post-head">
+      <div class="post-meta"><span class="cat">Practice notes</span><span>Aug 13, 2026</span><span>9 min read</span></div>
+      <h1>The Honest Limits of AI Contract Review: What Still Needs a Human Eye</h1>
+      <p class="dek">AI contract review is genuinely good — and its failures are structural and predictable. Here's how it goes wrong, what the evidence says, and the checklist of what still belongs to you.</p>
+    </header>
+    <div class="post-body">
+      <p>Every article in this series has ended at the same place: the machine finds, the lawyer decides. That is not a slogan — it is a description of where the technology reliably ends and where the profession reliably begins. This article is the honest companion piece: a specific accounting of <strong>how AI contract review fails</strong>, what the measured error rates actually are, and the concrete checklist of what still needs a human eye.</p>
+
+      <h2>The evidence first</h2>
+      <p>The most careful independent benchmark is the <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jels.12413" target="_blank" rel="noopener">Stanford study led by Magesh, Dahl, and Ho</a> — first released in 2024 and since published in the <em>Journal of Empirical Legal Studies</em>. Testing the leading commercial legal AI research tools on hundreds of open-ended queries, the researchers found that <strong>Lexis+ AI and Ask Practical Law AI produced incorrect or misgrounded information more than 17% of the time, and Westlaw's AI-Assisted Research more than 34% of the time</strong>. The tools marketing themselves as eliminating hallucination did not eliminate it.</p>
+      <p>The study's most important contribution is the distinction between two kinds of error:</p>
+      <ul>
+        <li><strong>Incorrect answers</strong> — the model states the law or the fact wrongly.</li>
+        <li><strong>Misgrounded answers</strong> — the model states a correct rule but cites a source that does not support it.</li>
+      </ul>
+      <p>Misgrounded answers are the more dangerous failure, and not because they're more frequent. A citation that exists — a real section of a real purchase agreement, a real opinion — <strong>disarms skepticism</strong>. The reasoning sounds right and the paper trail looks real, so the flag passes a skim and only fails an actual verification. Add the courts' reaction — <a href="../blog/attorney-client-privilege-and-ai.html">sanctions for unverified AI citations</a>, of which <em>Mata v. Avianca</em> (S.D.N.Y. 2023) is the landmark — and the conclusion writes itself: verification is not a courtesy, it is the job.</p>
+
+      <h2>How AI contract review fails — a taxonomy</h2>
+      <p>The failures cluster in predictable places, most of them inherited from the pipeline described in <a href="how-ai-reads-a-contract.html">how AI reads a contract</a>:</p>
+      <h3>Misclassification</h3>
+      <p>A clause labeled as the wrong type — an indemnity parsed as a warranty, a change-of-control trigger read as an ordinary consent requirement. Drafting style varies so much across firms that classifiers misfire on both ends: false positives that flag benign language, false negatives that miss the actual risk clause. A wrong classification poisons everything downstream, because the playbook comparison is only as good as the label.</p>
+      <h3>Missed cross-references and defined terms</h3>
+      <p>Contracts are hypertext. A defined term ("Company," "Knowledge," "Confidential Information") is defined once in the front of the agreement and used across dozens of operative clauses; "notwithstanding Section 4(a)" qualifies what looks like a standalone obligation. If the retrieval system pulls the operative clause without its qualifiers and definitions, the model analyzes the term in a vacuum — and confidently reports the wrong answer.</p>
+      <h3>OCR and chunking corruption</h3>
+      <p>Scanned contracts introduce character errors — a dollar figure misread by an order of magnitude, a negative particle dropped. Chunking can split a clause mid-sentence, separating an obligation from its exception. The model reads the corrupted fragment literally and reasons confidently from it.</p>
+      <h3>Misgrounded flags</h3>
+      <p>The flag exists, the classification is right — but the cited passage does not actually support the claim made about it. This is the contract-review version of the Stanford finding, and it is why "open the flag and read the source" is non-negotiable.</p>
+      <h3>Presence over judgment</h3>
+      <p>The machine reliably reports whether a carve-out exists. It cannot reliably tell you whether the carve-out is adequate for this deal — whether the IP indemnity actually covers the infringement risk your client faces, or whether the cap, the indemnity, and the insurance policy combine into a coherent risk position.</p>
+      <h3>Context limits on long documents</h3>
+      <p>Very long agreements with schedules and exhibits push models into what researchers call the "lost in the middle" problem — the critical limitation buried in a long schedule can be down-weighted or missed entirely, even in tools with large context windows.</p>
+      <blockquote>
+        <p>"The machine's failure is rarely a loud mistake. It is a quiet, plausible one — a wrong label, a missing qualifier, a citation that almost supports the claim."</p>
+      </blockquote>
+
+      <h2>Why "completeness" is not "understanding"</h2>
+      <p>The entire value proposition of AI contract review is completeness — nothing gets missed, everything gets compared. That is real, and it is the reason the tools earn their place. But completeness is coverage, not comprehension. A complete list of every clause and deviation is not a review memo; it is the raw material for one. The firm that treats the exception list as the finished work product has skipped the step where the law actually happens: reading the flagged clauses in context, against the transaction, against the jurisdiction.</p>
+
+      <h2>What still needs a human eye</h2>
+      <p>Concretely, the judgment that cannot be delegated:</p>
+      <ul>
+        <li><strong>Intent and commercial context.</strong> What the parties meant, and whether a "deviation" is actually the point of the deal.</li>
+        <li><strong>Enforceability under governing law.</strong> Whether a clause survives the jurisdiction — anti-indemnity statutes, UCC versus common law, local practice — the facts that void a clause in one state and enforce it in another.</li>
+        <li><strong>Cross-clause interplay.</strong> How the indemnity, the cap, the insurance, the force majeure clause, and the termination rights work as one risk position — the analysis covered in depth in our look at <a href="force-majeure-indemnification-ai-flags.html">the clauses AI flags</a>.</li>
+        <li><strong>Negotiation strategy.</strong> How hard to push back, what to concede, when to walk away.</li>
+        <li><strong>Definitions, schedules, and exhibits.</strong> The operational appendices where the risk actually lives and where models are most likely to lose the thread.</li>
+        <li><strong>Materiality.</strong> Which flags matter in <em>this</em> deal — the final call that turns a list into a recommendation.</li>
+      </ul>
+
+      <h2>The verification protocol: how to catch what the AI missed</h2>
+      <p>Verification is not a vague intention; it is a procedure. The version that survives both audit and ethics review:</p>
+      <ol>
+        <li><strong>Open every flag against the source.</strong> Confirm the cited passage exists and actually says what the flag claims. This is the direct counter to misgrounding.</li>
+        <li><strong>Confirm the classification.</strong> Is the clause really the type the tool labeled it? One wrong label re-frames the whole comparison.</li>
+        <li><strong>Read in context.</strong> Pull the cross-references and the definitions for every term that qualifies the flagged clause.</li>
+        <li><strong>Spot-check the unflagged sections.</strong> Sample a read-through of sections the tool did not flag — even a small percentage catches false negatives, the errors of omission that a flag list can never reveal.</li>
+        <li><strong>Inspect scanned documents.</strong> For OCR-heavy files, verify the figures and the operative language against the image.</li>
+        <li><strong>Log the misses.</strong> Record every flag that was wrong and every section where the tool stayed silent and missed something. This is the raw material for the playbook review described in <a href="building-a-clause-playbook.html">building a clause playbook</a> — the machine's misses are the best evidence of where its rules need tightening.</li>
+      </ol>
+      <p>This protocol is what <a href="https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/ethics-opinions/aba-formal-opinion-512.pdf" target="_blank" rel="noopener">ABA Formal Opinion 512</a> demands in operational form: the lawyer who uses the tool remains responsible for understanding its limits (Rule 1.1), for supervising everyone who touches it (Rules 5.1 and 5.3), and for protecting the client's confidential information while it's in the tool (Rule 1.6). Delegating the reading does not delegate the responsibility.</p>
+
+      <h2>The practical economics of the limits</h2>
+      <p>There is a reason the efficiency claims deserve scrutiny. Large firms that piloted enterprise AI reported that auditing the machine's output was so labor-intensive it eroded much of the time savings — several prominent firms (including Paul Weiss) spent over a year testing enterprise products before they could demonstrate hard productivity metrics. The lesson is not that the tools fail; it is that <strong>verification is part of the cost of using them</strong>, and the firms that budget for it honestly get the real benefit — coverage and consistency — while the firms that skip it get the risk without the savings.</p>
+
+      <h2>How the honest division of labor works</h2>
+      <p>Put the four posts of this series together and the picture is complete: the pipeline that <a href="how-ai-reads-a-contract.html">reads the contract</a>, the <a href="force-majeure-indemnification-ai-flags.html">clauses that get flagged</a>, the <a href="building-a-clause-playbook.html">playbook that sets the standard</a>, and now the limits that set the boundary. The machine scans, classifies, and compares; the lawyer verifies, judges, and decides. Neither step works without the other, and the boundary between them is not blurry — it is the checklist above.</p>
+
+      <h2>How Lawyer Assistant approaches this</h2>
+      <p>Lawyer Assistant is designed around this division of labor. Every finding in its compliance playbook scan links to the exact source text, so Step 1 of the protocol — open the flag against the source — is a click rather than a search. Because everything runs locally on your machine, the Rule 1.6 half of the equation is handled by architecture, not by promise. The tool does the coverage work; the verification protocol and the judgment stay with you.</p>
+
+      <h2>The bottom line</h2>
+      <p>AI contract review fails in predictable, documented ways — misclassification, missing qualifiers, misgrounded citations, and a quiet confidence in all of them. None of those failures is disqualifying, because all of them are catchable by a disciplined verification step. What would be disqualifying is treating the machine's output as finished work. The tools are excellent readers. They are not yet lawyers — and the gap between the two is exactly the work that still needs a human eye.</p>
+      <blockquote>
+        <p>"The tool guarantees nothing gets missed. The lawyer guarantees nothing gets believed without checking."</p>
+      </blockquote>
+
+      <h2>Sources &amp; further reading</h2>
+      <ul>
+        <li>Magesh, Surani, Dahl, Suzgun, Manning &amp; Ho, <em><a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jels.12413" target="_blank" rel="noopener">Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools</a></em> (Journal of Empirical Legal Studies, 2025) — Lexis+ AI and Ask Practical Law AI &gt;17% incorrect or misgrounded; Westlaw AI-Assisted Research &gt;34%.</li>
+        <li><em><a href="https://www.courtlistener.com/docket/63107798/mata-v-avianca-inc/" target="_blank" rel="noopener">Mata v. Avianca, Inc.</a></em>, 678 F. Supp. 3d 443 (S.D.N.Y. 2023) — sanctions for filing fabricated AI-generated citations.</li>
+        <li><em><a href="https://caselaw.findlaw.com/court/us-2nd-circuit/115760381.html" target="_blank" rel="noopener">Park v. Kim</a></em>, 91 F.4th 610 (2d Cir. 2024) — referral to the grievance panel for a hallucinated citation.</li>
+        <li>ABA Formal Opinion 512, "Generative Artificial Intelligence Tools" (July 29, 2024) — competence, confidentiality, candor, and supervision (<a href="https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/ethics-opinions/aba-formal-opinion-512.pdf" target="_blank" rel="noopener">full text (PDF)</a>).</li>
+        <li>Reported large-firm AI pilot friction (e.g., Paul Weiss) on the labor cost of output verification.</li>
+      </ul>
+      <p style="color:var(--faint);font-size:13px"><em>This article is general information about technology and professional practice. It is not legal advice for any specific matter, and rules vary by jurisdiction — verify against the authority applicable to your matter.</em></p>
+    </div>
+
+    <div class="post-faq">
+      <h2>Questions, answered</h2>
+      <p class="sub">The key questions from this article, answered plainly.</p>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>Where does AI contract review still fail?</h3>
+          <p>In a few predictable places: classifying a clause incorrectly, missing cross-references and defined terms, inheriting OCR or chunking errors, and flagging a clause when the cited passage does not actually support the flag. The 2024 Stanford study of leading legal AI tools found incorrect or misgrounded answers in more than 17% of test queries, with one major tool above 34%.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What is the difference between an incorrect and a misgrounded AI answer?</h3>
+          <p>An incorrect answer states the law or the fact wrongly. A misgrounded answer states a correct rule but cites a source that does not support it — the reasoning sounds right, but the paper trail is wrong. Misgrounded answers are the more dangerous failure because they survive a skim and only fail a real verification.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What should a lawyer never delegate to AI in contract review?</h3>
+          <p>The judgment calls: what the parties intended, whether a clause is enforceable under the governing law, whether a deviation is material in this deal, how hard to push back in negotiation, and the final sign-off. Courts have sanctioned lawyers for treating AI output as verified — Mata v. Avianca (S.D.N.Y. 2023) is the landmark example — and ABA Formal Opinion 512 requires verification before reliance.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How do you catch what the AI missed?</h3>
+          <p>Verify every flag against the source passage, confirm the cited text actually supports the claim, check that the clause was classified correctly, and read in context including cross-references and definitions. Then sample the unflagged sections — a read-through of even a small percentage guards against false negatives.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="related">
+      <h4>Related reading</h4>
+      <div class="related-grid">
+      <a class="rel-card" href="building-a-clause-playbook.html">
+        <span class="rel-t">Building a Clause Playbook: How to Make AI Review Your Firm's Way</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="how-ai-reads-a-contract.html">
+        <span class="rel-t">How AI Reads a Contract: From Raw Text to Risk Flags</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="can-you-trust-ai-legal-research.html">
+        <span class="rel-t">Can you trust an AI for legal research?</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="how-ai-legal-research-works.html">
+        <span class="rel-t">How AI Legal Research Works Under the Hood</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      </div>
+    </div>
+    <div class="post-nav">
+      <a class="pnav prev" href="building-a-clause-playbook.html"><span class="pn-dir">← Older</span><span class="pn-t">Building a Clause Playbook: How to Make AI Review Your Firm's Way</span></a>
+      <a class="pnav next" href="how-ai-legal-research-works.html"><span class="pn-dir">Newer →</span><span class="pn-t">How AI Legal Research Works Under the Hood: Retrieval, Reranking, and Why It Matters</span></a>
+    </div>
+    <div class="post-end">
+      <span class="tag">Filed under <b>Practice notes</b> · <b>Contract review</b> · <b>AI reliability</b></span>
+      <span class="tag"><a href="../blog.html">← All articles</a></span>
+    </div>
+
+    <div class="promo">
+      <div class="promo-eyebrow">Next steps</div>
+      <h2>Put it to work on your own documents.</h2>
+      <p>Lawyer Assistant runs entirely on your machine — install it in minutes, read the documentation, or browse more notes from the Legal Desk.</p>
+      <div class="promo-links">
+        <a class="promo-btn promo-btn-brass" href="../install.html">Install the app →</a>
+        <a class="promo-btn promo-btn-ghost" href="../docs.html">Read the docs</a>
+        <a class="promo-btn promo-btn-ghost" href="../blog.html">All articles</a>
+        <a class="promo-btn promo-btn-ghost" href="../index.html">Back to home</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../install.html">Install</a><a href="../blog.html">Blog</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

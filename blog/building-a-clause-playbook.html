@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Building a Clause Playbook: How to Make AI Review Your Firm's Way | Lawyer Assistant</title>
+<meta name="description" content="How to build a contract playbook that turns your firm's judgment into reusable rules — and how to write those rules so an AI review tool can actually check them."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://lawyers-assistant.github.io/blog/building-a-clause-playbook.html"/>
+<meta name="keywords" content="contract playbook, clause playbook, ai contract review playbook, contract negotiation playbook, legal ops playbook, compliance playbook scan, contract standards"/>
+<meta name="author" content="Hussain Nazary"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Building a Clause Playbook: How to Make AI Review Your Firm's Way"/>
+<meta property="og:description" content="How to build a contract playbook that turns your firm's judgment into reusable rules — and how to write those rules so an AI review tool can actually check them."/>
+<meta property="og:url" content="https://lawyers-assistant.github.io/blog/building-a-clause-playbook.html"/>
+<meta property="og:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Building a Clause Playbook"/>
+<meta name="twitter:description" content="Turn your firm's judgment into reusable rules an AI review tool can actually check."/>
+<meta name="twitter:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* article */
+.post{padding:50px 0 80px}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:26px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.post-head{margin-bottom:40px;max-width:780px}
+.post-meta{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+.post-meta .cat{color:var(--brass)}
+.post h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4.2vw,2.8rem);line-height:1.16;letter-spacing:-.01em;margin:0 0 16px}
+.post .dek{color:var(--paper-dim);font-size:1.1rem;max-width:64ch}
+.post-body{max-width:760px}
+.post-body h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.post-body h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.post-body p{margin:0 0 18px;color:var(--paper-dim);font-size:15.5px}
+.post-body strong{color:var(--paper);font-weight:600}
+.post-body a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.post-body a:hover{text-decoration-color:var(--brass)}
+.post-body ul,.post-body ol{margin:0 0 18px;padding-left:26px;color:var(--paper-dim);font-size:15.5px}
+.post-body li{margin:6px 0}
+.post-body li::marker{color:var(--brass)}
+.post-body blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:16px 20px;border-radius:0 10px 10px 0;margin:0 0 20px;font-family:var(--font-d);font-size:1.1rem;color:var(--paper-dim)}
+.post-body blockquote p{margin:0 0 6px}
+.post-body blockquote p:last-child{margin:0}
+.post-body hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+.post-body code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.post-end{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.post-end .tag{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.post-end .tag b{color:var(--brass-2);font-weight:500}
+/* related reading */
+.related{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.related h4{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:860px){.related-grid{grid-template-columns:1fr}}
+.rel-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.rel-card:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.rel-card .rel-t{font-family:var(--font-d);font-size:14px;font-weight:500;color:var(--paper);line-height:1.35}
+.rel-card .rel-go{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-2);margin-top:8px;display:block}
+
+/* post nav */
+.post-nav{display:flex;gap:12px;margin-top:20px}
+.post-nav .pnav{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.post-nav .pnav:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.post-nav .pn-dir{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:4px}
+.post-nav .pn-t{font-family:var(--font-d);font-size:13.5px;font-weight:500;color:var(--paper);line-height:1.3;display:block}
+.post-nav .pnav.next{text-align:right}
+@media(max-width:640px){.post-nav{flex-direction:column}}
+
+/* post FAQ */
+.post-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.post-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.post-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+/* promo */
+.promo{margin-top:56px;padding:34px 30px;background:radial-gradient(700px 300px at 80% -20%,rgba(201,163,92,.12),transparent 65%),var(--panel);border:1px solid var(--line);border-radius:16px}
+.promo-eyebrow{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:10px}
+.promo h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;color:var(--paper);margin:0 0 8px}
+.promo p{color:var(--muted);font-size:13.5px;margin:0 0 20px;max-width:62ch}
+.promo-links{display:flex;gap:10px;flex-wrap:wrap}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:var(--font-s);font-size:12.5px;font-weight:600;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.promo-btn:hover{text-decoration:none;transform:translateY(-2px)}
+.promo-btn-brass{background:linear-gradient(135deg,#d8b468,#c9a35c 55%,#b08a35);color:#0b110e;box-shadow:0 4px 18px rgba(201,163,92,.25)}
+.promo-btn-brass:hover{box-shadow:0 8px 26px rgba(201,163,92,.35)}
+.promo-btn-ghost{border:1px solid var(--line-bright);color:var(--paper-dim)}
+.promo-btn-ghost:hover{border-color:var(--brass);color:var(--brass-2)}
+@media(max-width:640px){.promo{padding:26px 20px}}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:860px){.nav-links{display:none}}
+@media(max-width:640px){.wrap{padding:0 16px}.post{padding:34px 0 60px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Building a Clause Playbook: How to Make AI Review Your Firm's Way",
+  "description": "How to build a contract playbook that turns your firm's judgment into reusable rules — and how to write those rules so an AI review tool can actually check them.",
+  "datePublished": "2026-08-12",
+  "dateModified": "2026-08-12",
+  "author": {"@type": "Person", "name": "Hussain Nazary"},
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "mainEntityOfPage": "https://lawyers-assistant.github.io/blog/building-a-clause-playbook.html"
+}
+</script>
+
+<!-- BreadcrumbList — matches the visible breadcrumb -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Blog", "item": "https://lawyers-assistant.github.io/blog.html"},
+    {"@type": "ListItem", "position": 2, "name": "Practice notes"}
+  ]
+}
+</script>
+
+<!-- FAQPage — article Q&A for AI extraction -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a contract review playbook?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A written rulebook that captures how your firm handles recurring contract clauses. For each clause type it names the preferred position, pre-approved fallback language, the walkaway line, and who owns each escalation — so a reviewer (human or AI) knows what to accept, what to push back on, and what to escalate without re-deciding every deal."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What should a playbook contain for each clause?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Five things: the baseline or preferred position, tiered pre-approved fallbacks, the hard walkaway line, the escalation owner, and a one-line rationale for why the position exists. Build it for the clause types that carry the risk in your deal flow — typically indemnification, limitation of liability, force majeure, termination, assignment, confidentiality, IP, and payment terms."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do you write rules an AI can actually check?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "State each rule as a checkable condition: the clause type, the condition you care about, the acceptable range, and a severity. For example, limitation of liability must be at least one times annual fees, with carve-outs for IP indemnity, confidentiality, and gross negligence — or force majeure must expressly include pandemic or epidemic. The AI classifies each clause and compares it against those rules, flagging deviations with severity ratings."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who should own and maintain the playbook?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "One named person — usually a legal operations lead or a senior lawyer. Shared ownership means no ownership, and the playbook rots into a private notebook of exceptions. The owner runs a regular review (quarterly is the common cadence), promotes recurring exceptions into the playbook, and keeps the override log honest so the rules stay in touch with real deals."
+      }
+    }
+  ]
+}
+</script>
+
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html" class="active">Blog</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<article class="post">
+  <div class="wrap">
+    <div class="crumb"><a href="../blog.html">✒️ Blog</a> <span style="color:var(--faint)">/</span> <span>Practice notes</span></div>
+    <header class="post-head">
+      <div class="post-meta"><span class="cat">Practice notes</span><span>Aug 12, 2026</span><span>9 min read</span></div>
+      <h1>Building a Clause Playbook: How to Make AI Review Your Firm's Way</h1>
+      <p class="dek">An AI review tool is only as good as the standard you give it. Here's how to build a clause playbook that turns your firm's judgment into reusable rules — and how to write those rules so the machine can actually check them.</p>
+    </header>
+    <div class="post-body">
+      <p>Every firm has a way of reviewing contracts. The problem is that most of the time it lives in someone's head. The senior associate knows the firm's position on limitation of liability; the partner knows the walkaway line on indemnities; the paralegal knows which clauses the client's CFO will never accept. None of it is written down, none of it is consistent, and none of it can be delegated — to a junior, to a sales team, or to an AI.</p>
+      <p>The fix is the thing legal operations people have been building for years: a <strong>contract playbook</strong>. It is the missing ingredient in AI contract review, because the machine's job is to compare every contract against <em>your</em> standard — and if your standard doesn't exist as written rules, the machine has nothing to compare against. This article walks through what a playbook is, how to build one, and how to write it so an AI can actually audit against it.</p>
+
+      <h2>What a playbook is — and what it isn't</h2>
+      <p>A playbook is not a template library or a giant legal encyclopedia. It is a <strong>rulebook for exceptions</strong>: a written record of how your firm handles the clauses that recur in every deal. In the framing used by modern legal operations teams, a playbook does two jobs:</p>
+      <ul>
+        <li><strong>The routing layer.</strong> Which contracts get reviewed by whom — by dollar value and risk tier. A low-risk NDA with a known counterparty may need no legal review; a high-value MSA with heavy liability exposure always does.</li>
+        <li><strong>The position layer.</strong> For every recurring clause, the preferred position, the acceptable fallbacks, and the walkaway line. This is the layer an AI can consume.</li>
+      </ul>
+      <p>Together they make judgment reusable instead of re-litigated on every deal. That is the entire point.</p>
+
+      <h2>The anatomy of one playbook entry</h2>
+      <p>For each clause type you care about, a good entry has five parts:</p>
+      <ol>
+        <li><strong>The baseline.</strong> Your preferred position — what your standard template says, or the language you would write if you could.</li>
+        <li><strong>Tiered fallbacks.</strong> Pre-approved alternatives, ordered by how much they move the risk. Tier one: acceptable without escalation. Tier two: requires a named approver. Each tier makes negotiation faster without losing control.</li>
+        <li><strong>The walkaway line.</strong> The hard boundary — the position so far outside your risk tolerance that the deal must be declined or escalated to a decision-maker.</li>
+        <li><strong>The escalation owner.</strong> Who decides when a request goes beyond the fallbacks. Payment-term exceptions go to finance; liability-cap changes go to the general counsel; never "legal" as an anonymous blob.</li>
+        <li><strong>The rationale.</strong> One line on why the position exists. This is what keeps the playbook alive — a new reviewer can understand <em>why</em> before they negotiate <em>what</em>.</li>
+      </ol>
+
+      <h2>Which clauses to start with</h2>
+      <p>You do not need a playbook for every clause in the Uniform Commercial Code. The negotiation battles concentrate in a small set — the practical "dirty dozen" that drive nearly all the risk and nearly all the back-and-forth:</p>
+      <ul>
+        <li>Indemnification (and its interplay with the cap)</li>
+        <li>Limitation of liability</li>
+        <li>Force majeure</li>
+        <li>Termination rights and cure periods</li>
+        <li>Assignment and change of control</li>
+        <li>Confidentiality and data security</li>
+        <li>Intellectual property ownership and licenses</li>
+        <li>Warranties and disclaimers</li>
+        <li>Payment terms and pricing adjustments</li>
+        <li>Auto-renewal and evergreen terms</li>
+        <li>Governing law and dispute resolution</li>
+        <li>Non-compete and exclusivity</li>
+      </ul>
+      <p>Start with the six that matter most for <em>your</em> deal flow — for a SaaS firm that is typically indemnification, limitation of liability, confidentiality, IP, auto-renewal, and payment terms. Two or three agreement types, six clauses, done well, beats twelve clauses done vaguely.</p>
+
+      <h2>Writing rules an AI can actually check</h2>
+      <p>This is the step that separates a playbook from a policy document. A machine cannot check "liability should be reasonable." It <em>can</em> check a rule with four parts:</p>
+      <ul>
+        <li><strong>The clause type.</strong> Limitation of liability, force majeure, indemnification.</li>
+        <li><strong>The condition.</strong> What you're checking for — the cap amount, the event list, the reciprocal obligation.</li>
+        <li><strong>The acceptable range.</strong> The number or wording that counts as passing.</li>
+        <li><strong>The severity.</strong> How bad a deviation is — high, medium, low.</li>
+      </ul>
+      <p>Concrete examples of checkable rules:</p>
+      <ul>
+        <li>Limitation of liability must cap damages at one times annual fees paid, with carve-outs for IP indemnity, confidentiality and data security breaches, and gross negligence. (<em>Severity: high</em> if the cap is missing or the carve-outs are absent.)</li>
+        <li>Force majeure must expressly include pandemic or epidemic and governmental orders, require notice within 14 days, and must not excuse the payment of money.</li>
+        <li>Indemnities for IP infringement and confidentiality must be mutual, with notice, tender of defense, and cooperation obligations.</li>
+        <li>Termination for convenience requires at least 30 days' notice; auto-renewal requires at least 60 days' notice before the renewal date.</li>
+      </ul>
+      <p>Notice what these rules have in common: they name a clause, a condition, a threshold, and a consequence. That is exactly the format an AI review tool consumes — it classifies each clause in the document, compares it against the rules, and returns a list of deviations rated by severity.</p>
+
+      <h2>Building it from your real deals</h2>
+      <p>The biggest mistake is drafting the playbook from templates and theory instead of from what your firm actually negotiates. The practical method:</p>
+      <ol>
+        <li><strong>Mine the record.</strong> Pull the last 60–90 days of executed contracts. Note every clause where the final language differed from your standard, every redline you accepted, and every exception that was approved.</li>
+        <li><strong>Interview the deal team.</strong> Ask the partners and senior associates what they push back on, what they always concede, and what makes them walk away. The answers become your baselines and walkaway lines.</li>
+        <li><strong>Involve the business.</strong> Sales, procurement, finance, and security see contracts from angles legal doesn't. Payment-term positions belong to finance; data-security requirements belong to security. A playbook built in a legal silo fails in production.</li>
+        <li><strong>Write in plain English.</strong> The playbook is read by lawyers, legal ops, and business reviewers. If a clause position needs three paragraphs to explain, simplify the rule before you ship it.</li>
+        <li><strong>Version it.</strong> Date every revision and record what changed and why. The playbook is a living document; without a version trail it becomes a rumor.</li>
+      </ol>
+
+      <h2>Governance: one owner, regular review</h2>
+      <p>Playbooks fail for a consistent reason: no owner. The standard guidance from legal operations teams is blunt — <strong>shared ownership means no ownership</strong>, and the playbook rots into a private notebook of exceptions. The rules that work name one person: usually a legal operations lead or a senior lawyer, whose job includes:</p>
+      <ul>
+        <li>Running a regular review — quarterly is the common cadence — where exceptions approved since the last review are promoted into the playbook if they're recurring.</li>
+        <li>Keeping an override log, so that when someone goes outside the fallbacks, the reason is recorded rather than lost.</li>
+        <li>Watching the metrics that matter: contract turnaround time, deviation rate from standard clauses, and where approvals bottleneck.</li>
+      </ul>
+      <p>The review loop is what keeps the playbook honest. A rule that gets overridden three times in a quarter is either wrong or undocumented; the review decides which.</p>
+
+      <h2>Common failure modes — and the fix</h2>
+      <ul>
+        <li><strong>Too long.</strong> A 200-page rulebook is a reference manual, not a playbook, and nobody reads it. Keep entries to what a reviewer needs in the moment.</li>
+        <li><strong>Too vague.</strong> "Reasonable," "commercially acceptable," and "industry standard" are not checkable. Convert them into thresholds.</li>
+        <li><strong>No escalation owners.</strong> A fallback without a named approver is a dead end that stalls every deal it touches.</li>
+        <li><strong>Never updated.</strong> A playbook that doesn't reflect what the firm actually accepted last quarter teaches reviewers to ignore it.</li>
+        <li><strong>Built from templates, not deals.</strong> The playbook should be a transcript of your firm's real judgment, not a copy of someone else's.</li>
+      </ul>
+
+      <h2>The AI payoff</h2>
+      <p>With the playbook written as checkable rules, the review workflow — covered in our look at <a href="how-ai-reads-a-contract.html">how AI reads a contract</a> and the <a href="force-majeure-indemnification-ai-flags.html">clauses it actually flags</a> — becomes an audit: classify every clause, compare against the rules, return a rated exception list. The machine guarantees completeness and consistency; the playbook guarantees the comparison means something; the lawyer verifies the flags and judges the materiality. The compounding effect is real: the more matters you run through the same playbook, the more consistent your firm's risk tolerance becomes across deals — which is exactly what clients pay for.</p>
+      <p>Two caveats from the earlier articles apply unchanged: a flag from the machine is a hypothesis until you open the source passage, and the <a href="../blog/attorney-client-privilege-and-ai.html">confidentiality of the contracts</a> depends on the tool you run them through. Grounded review tools and local processing handle both.</p>
+
+      <h2>How Lawyer Assistant implements this</h2>
+      <p>This is the exact design of Lawyer Assistant's <strong>compliance playbook scan</strong>. You define the rules above in plain language — no code — and the app classifies every clause in the document and checks each one against your playbook. Findings come back with severity ratings and explanations, and each finding links to the source text so your verification step is a click away. Because it runs locally on your machine, the standards and the contracts stay on your hardware. Set the rules up once, and running the same scan across the next portfolio takes minutes.</p>
+
+      <h2>A starter playbook to adapt</h2>
+      <p>Eight rules to begin with — adjust the numbers to your firm's actual risk tolerance:</p>
+      <ol>
+        <li>Force majeure must expressly include pandemic or epidemic and governmental orders, require notice within 14 days, and must not excuse the payment of money.</li>
+        <li>Limitation of liability: cap at one times annual fees, with carve-outs for IP indemnity, confidentiality and data security, and gross negligence.</li>
+        <li>Indemnities must be mutual for IP infringement and confidentiality breaches, and must include notice, tender of defense, and cooperation obligations.</li>
+        <li>Termination for convenience requires at least 30 days' notice; termination for cause requires a 30-day cure period.</li>
+        <li>Assignment requires prior written consent, not to be unreasonably withheld.</li>
+        <li>Confidentiality survives for at least three years, or indefinitely for trade secrets.</li>
+        <li>Auto-renewal requires notice of at least 60 days before the renewal date.</li>
+        <li>Governing law and venue must be our home jurisdiction, or a neutral alternative agreed in advance.</li>
+      </ol>
+      <p>Start with these, run them against your last twenty contracts, and watch which ones your own record contradicts. Those are the rules that need the conversation.</p>
+
+      <h2>The bottom line</h2>
+      <p>The AI in your review tool is a comparator, and a comparator needs a standard. A clause playbook turns the judgment your firm has always exercised — inconsistently, in people's heads — into written, checkable rules that every reviewer and every machine can apply the same way. Build it from your real deals, write it in checkable form, give it one owner, and review it quarterly. Do that, and the AI stops being a demo and becomes the enforcement arm of your firm's actual standards.</p>
+      <blockquote>
+        <p>"The playbook is the standard. The AI is the auditor. The lawyer is the judge."</p>
+      </blockquote>
+
+      <h2>Sources &amp; further reading</h2>
+      <ul>
+        <li>Bloomberg Law, <a href="https://pro.bloomberglaw.com/insights/contracts/how-to-create-contract-playbooks/" target="_blank" rel="noopener">"How to Create a Contract Playbook"</a> — routing, fallbacks, escalation protocols.</li>
+        <li>Common Paper, <a href="https://commonpaper.com/blog/contract-playbook/" target="_blank" rel="noopener">"What is a contract playbook? (And what it isn't)"</a> — ownership and scope.</li>
+        <li>HyperStart, <a href="https://www.hyperstart.com/blog/contract-playbook/" target="_blank" rel="noopener">"A Legal Team's Guide on How to Create and Use a Contract Playbook"</a> — ownership, quarterly review, KPIs.</li>
+        <li>Gavel, <a href="https://www.gavel.io/resources/4-contract-playbook-best-practices-for-legal-teams" target="_blank" rel="noopener">"Four Contract Playbook Best Practices"</a> — tiered fallbacks and escalation logic.</li>
+        <li>SpotDraft, <a href="https://www.spotdraft.com/blog/contract-playbook-guide" target="_blank" rel="noopener">"What Is a Contract Playbook?"</a> — building from real redlines and approvals.</li>
+        <li>Juro, <a href="https://juro.com/learn/contract-playbook" target="_blank" rel="noopener">"Contract playbooks in 2026"</a> — how CLM and AI tools apply playbook rules.</li>
+        <li>ABA Formal Opinion 512, "Generative Artificial Intelligence Tools" (July 29, 2024) — the verification duty that applies to AI-assisted review (<a href="https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/ethics-opinions/aba-formal-opinion-512.pdf" target="_blank" rel="noopener">full text (PDF)</a>).</li>
+      </ul>
+      <p style="color:var(--faint);font-size:13px"><em>This article is general information about technology and professional practice. It is not legal advice for any specific matter, and rules vary by jurisdiction — verify against the authority applicable to your matter.</em></p>
+    </div>
+
+    <div class="post-faq">
+      <h2>Questions, answered</h2>
+      <p class="sub">The key questions from this article, answered plainly.</p>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>What is a contract review playbook?</h3>
+          <p>A written rulebook that captures how your firm handles recurring contract clauses. For each clause type it names the preferred position, pre-approved fallback language, the walkaway line, and who owns each escalation — so a reviewer (human or AI) knows what to accept, what to push back on, and what to escalate without re-deciding every deal.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What should a playbook contain for each clause?</h3>
+          <p>Five things: the baseline or preferred position, tiered pre-approved fallbacks, the hard walkaway line, the escalation owner, and a one-line rationale for why the position exists. Build it for the clause types that carry the risk in your deal flow — typically indemnification, limitation of liability, force majeure, termination, assignment, confidentiality, IP, and payment terms.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How do you write rules an AI can actually check?</h3>
+          <p>State each rule as a checkable condition: the clause type, the condition you care about, the acceptable range, and a severity. For example, limitation of liability must be at least one times annual fees, with carve-outs for IP indemnity, confidentiality, and gross negligence — or force majeure must expressly include pandemic or epidemic. The AI classifies each clause and compares it against those rules, flagging deviations with severity ratings.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Who should own and maintain the playbook?</h3>
+          <p>One named person — usually a legal operations lead or a senior lawyer. Shared ownership means no ownership, and the playbook rots into a private notebook of exceptions. The owner runs a regular review (quarterly is the common cadence), promotes recurring exceptions into the playbook, and keeps the override log honest so the rules stay in touch with real deals.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="related">
+      <h4>Related reading</h4>
+      <div class="related-grid">
+      <a class="rel-card" href="force-majeure-indemnification-ai-flags.html">
+        <span class="rel-t">Force Majeure, Indemnification, and What AI Actually Flags in a Review</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="how-ai-reads-a-contract.html">
+        <span class="rel-t">How AI Reads a Contract: From Raw Text to Risk Flags</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="ai-contract-review-for-lawyers.html">
+        <span class="rel-t">AI for Contract Review: What Machines Get Right and What They Miss</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="honest-limits-ai-contract-review.html">
+        <span class="rel-t">The Honest Limits of AI Contract Review</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      </div>
+    </div>
+    <div class="post-nav">
+      <a class="pnav prev" href="force-majeure-indemnification-ai-flags.html"><span class="pn-dir">← Older</span><span class="pn-t">Force Majeure, Indemnification, and What AI Actually Flags in a Review</span></a>
+      <a class="pnav next" href="honest-limits-ai-contract-review.html"><span class="pn-dir">Newer →</span><span class="pn-t">The Honest Limits of AI Contract Review: What Still Needs a Human Eye</span></a>
+    </div>
+    <div class="post-end">
+      <span class="tag">Filed under <b>Practice notes</b> · <b>Contract review</b> · <b>Playbooks</b> · <b>Legal ops</b></span>
+      <span class="tag"><a href="../blog.html">← All articles</a></span>
+    </div>
+
+    <div class="promo">
+      <div class="promo-eyebrow">Next steps</div>
+      <h2>Put it to work on your own documents.</h2>
+      <p>Lawyer Assistant runs entirely on your machine — install it in minutes, read the documentation, or browse more notes from the Legal Desk.</p>
+      <div class="promo-links">
+        <a class="promo-btn promo-btn-brass" href="../install.html">Install the app →</a>
+        <a class="promo-btn promo-btn-ghost" href="../docs.html">Read the docs</a>
+        <a class="promo-btn promo-btn-ghost" href="../blog.html">All articles</a>
+        <a class="promo-btn promo-btn-ghost" href="../index.html">Back to home</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../install.html">Install</a><a href="../blog.html">Blog</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

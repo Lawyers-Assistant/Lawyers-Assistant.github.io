@@ -156,7 +156,9 @@ section{padding:92px 0}
 .prov .off{color:var(--faint);font-size:10px}
 
 /* ── compare ── */
-.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.table-scroll{position:relative;overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.table-scroll::after{content:"";position:absolute;top:0;right:0;bottom:0;width:26px;background:linear-gradient(to left,rgba(255,255,255,.9),transparent);pointer-events:none;opacity:0;transition:opacity .2s ease}
+.table-scroll.can-scroll::after{opacity:1}
 table.compare{width:100%;border-collapse:collapse;font-size:13.5px;min-width:660px}
 .compare th,.compare td{padding:13px 16px;border-bottom:1px solid var(--line);text-align:left}
 .compare thead th{font-family:var(--font-m);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--ink-2)}
@@ -257,6 +259,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
 .pf h3{font-family:var(--font-d);font-size:1.15rem;color:var(--paper);margin:0 0 8px;font-weight:500}
 .pf p{font-size:13px;color:var(--muted);line-height:1.65;margin:0}
 .pf code{font-family:var(--font-m);font-size:12px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.pf .btn{margin-top:16px}
 .nav-links a.active{color:var(--brass-2);font-weight:600}
 
 /* ── install breadcrumb + cross-links ── */
@@ -286,7 +289,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
   "supply": ["A computer running Windows, macOS, or Linux", "A stable internet connection for the first download"],
   "tool": ["Lawyer Assistant launcher (included in the download)"],
   "step": [
-    {"@type": "HowToStep", "position": 1, "name": "Download the app", "text": "Click the Download button to get the Lawyer Assistant archive from GitHub."},
+    {"@type": "HowToStep", "position": 1, "name": "Download the app", "text": "Choose your platform's download button — Windows installer, macOS universal archive, or Linux AppImage — from the downloads section on this page or the homepage."},
     {"@type": "HowToStep", "position": 2, "name": "Extract the archive", "text": "Right-click the downloaded file and choose Extract All (Windows) or double-click it (macOS). Move the extracted folder somewhere you can find it, like Documents."},
     {"@type": "HowToStep", "position": 3, "name": "Run the launcher", "text": "On Windows, double-click launch.bat. On macOS or Linux, run launch.sh. The launcher opens a setup page in your browser.", "url": "https://lawyers-assistant.github.io/docs/launcher.html"},
     {"@type": "HowToStep", "position": 4, "name": "Let the launcher install everything", "text": "Click Install. It sets up Python, installs dependencies, downloads the AI models, and installs Ollama automatically — you do not need to install anything manually.", "url": "https://lawyers-assistant.github.io/docs/launcher.html"},
@@ -317,6 +320,8 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
   "description": "A free, local-first legal research desktop app. Ask questions in plain English and get cited answers from your own legal documents — fully private and offline.",
   "url": "https://lawyers-assistant.github.io",
   "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "softwareVersion": "1.0.1",
+  "releaseNotes": "https://github.com/haal-lab/Lawyer-Assistant/releases/tag/v1.0.1",
   "author": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
   "creator": {"@type": "Person", "name": "Hussain Nazary", "jobTitle": "AI Engineer"}
 }
@@ -345,16 +350,16 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       Lawyer Assistant<span class="dot">.</span>
     </a>
     <div class="nav-links">
-      <a href="index.html#why">Why</a>
-      <a href="index.html#exhibits">Features</a>
-      <a href="index.html#providers">Providers</a>
-      <a href="index.html#faq">FAQ</a>
+      <a href="index.html#features">Features</a>
+      <a href="#why">Why</a>
+      <a href="#providers">Providers</a>
+      <a href="#faq">FAQ</a>
       <a href="install.html" class="active">Install</a>
       <a href="docs.html">Docs</a>
       <a href="blog.html">Blog</a>
     </div>
     <div class="nav-cta">
-      <a class="btn btn-brass" href="https://codeload.github.com/haal-lab/Lawyer-Assistant/zip/refs/tags/v1%2C0%2C0" target="_blank" rel="noopener">Get the app <span class="arr">→</span></a>
+      <a class="btn btn-brass" href="#platforms">Get the app <span class="arr">→</span></a>
     </div>
   </div>
 </nav>
@@ -367,7 +372,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
     <h1>Up and running in <span class="serif-i">under five minutes.</span></h1>
     <p class="lead">No terminal commands. No manual installs. The launcher handles everything — Python, dependencies, AI models, and Ollama — so you can focus on your documents.</p>
     <div class="hero-actions">
-      <a class="btn btn-brass" href="https://codeload.github.com/haal-lab/Lawyer-Assistant/zip/refs/tags/v1%2C0%2C0" target="_blank" rel="noopener">Download the app <span class="arr">→</span></a>
+      <a class="btn btn-brass" href="#platforms">Download for your platform <span class="arr">→</span></a>
     </div>
     <div class="hero-badges">
       <span class="hero-badge"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg> Windows · macOS · Linux</span>
@@ -388,7 +393,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       <div class="istep reveal">
         <div class="istep-no">01</div>
         <h3>Download the app</h3>
-        <p>Click the <b>Download the app</b> button above (or the one at the bottom of this page). You'll get a single archive file with everything inside.</p>
+        <p>Pick your platform above — <b>Windows .exe</b>, <b>macOS archive</b>, or <b>Linux AppImage</b> — and download the file for your system (or use the buttons at the bottom of this page).</p>
       </div>
       <div class="istep reveal" data-d="1">
         <div class="istep-no">02</div>
@@ -422,29 +427,204 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
   </div>
 </section>
 
-<!-- ══════════ PLATFORMS ══════════ -->
+<!-- ══════════ PLATFORMS / DOWNLOADS ══════════ -->
 <section id="platforms">
   <div class="wrap">
     <div class="sec-head center reveal">
-      <span class="eyebrow">One download, three platforms</span>
+      <span class="eyebrow">Direct downloads</span>
       <h2>Works on <span class="serif-i">your computer.</span></h2>
-      <p class="lead">The same archive contains everything for Windows, macOS, and Linux — run the launcher script for your system and you're done.</p>
+      <p class="lead">Three downloads, one app — grab the installer for your system, or the universal archive and run the launcher script.</p>
     </div>
     <div class="platform-grid">
       <div class="pf reveal">
         <span class="pf-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></span>
         <h3>Windows</h3>
-        <p>Double-click <code>launch.bat</code> after extracting. Windows SmartScreen may ask you to confirm — click <i>More info</i> → <i>Run anyway</i>.</p>
+        <p>Setup installer for Windows 10 &amp; 11. If SmartScreen warns, click <i>More info</i> → <i>Run anyway</i>.</p>
+        <a class="btn btn-brass" href="https://github.com/haal-lab/Lawyer-Assistant/releases/download/v1.0.1/LawyerAssistant-setup-1.0.1.exe" target="_blank" rel="noopener">Download .exe <span class="arr">↓</span></a>
       </div>
       <div class="pf reveal" data-d="1">
         <span class="pf-icon"><svg viewBox="0 0 24 24"><path d="M12 2c2 2 2 3.5 2 5a2 2 0 0 1-4 0c0-1.5 0-3 2-5z"/><path d="M6 10h12a2 2 0 0 1 2 2v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-6a2 2 0 0 1 2-2z"/></svg></span>
         <h3>macOS</h3>
-        <p>Double-click <code>launch.sh</code> (or run it from Terminal). If Gatekeeper warns, right-click → <i>Open</i> to allow it once.</p>
+        <p>Universal archive (no native build yet) — extract it and double-click <code>launch.sh</code>. If Gatekeeper warns, right-click → <i>Open</i>.</p>
+        <a class="btn btn-brass" href="https://github.com/haal-lab/Lawyer-Assistant/releases/download/v1.0.1/LawyerAssistant-1.0.1.zip" target="_blank" rel="noopener">Download .zip <span class="arr">↓</span></a>
       </div>
       <div class="pf reveal" data-d="2">
         <span class="pf-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 12h18M12 3c2 3 2 15 0 18M12 3c-2 3-2 15 0 18"/></svg></span>
         <h3>Linux</h3>
-        <p>Run <code>launch.sh</code> from a terminal. Ensure Python 3.11+ is installed; the launcher handles the rest.</p>
+        <p>AppImage — make it executable and run, or extract the <code>tar.gz</code> and use <code>launch.sh</code>.</p>
+        <a class="btn btn-brass" href="https://github.com/haal-lab/Lawyer-Assistant/releases/download/v1.0.1/LawyerAssistant-linux-1.0.1.AppImage" target="_blank" rel="noopener">Download .AppImage <span class="arr">↓</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ WHY ══════════ -->
+<section id="why">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">The problem</span>
+      <h2>Legal research shouldn't feel like <span class="serif-i">Ctrl+F</span> on a haystack.</h2>
+      <p class="lead">Generic chatbots guess. Cloud legal tools hold your documents hostage. Lawyer Assistant sits between them: real retrieval over <em>your</em> files, with citations you can check.</p>
+    </div>
+    <div class="why-card reveal" data-d="1">
+      <div class="why-head">
+        <div class="old">Generic AI chatbot</div>
+        <div class="new">Lawyer Assistant</div>
+      </div>
+      <div class="why-row">
+        <div class="why-a"><span class="ic">✕</span> Hallucinates answers with no way to check them</div>
+        <div class="why-b"><span class="ic">✓</span> Answers cite the exact source passages — tap to verify</div>
+      </div>
+      <div class="why-row">
+        <div class="why-a"><span class="ic">✕</span> Doesn't know what's in your documents until you paste them</div>
+        <div class="why-b"><span class="ic">✓</span> Searches your entire workspace: PDFs, scans, contracts, case files</div>
+      </div>
+      <div class="why-row">
+        <div class="why-a"><span class="ic">✕</span> Sends your confidential work to someone else's servers</div>
+        <div class="why-b"><span class="ic">✓</span> Runs locally with a local model — or your own API key if you prefer</div>
+      </div>
+      <div class="why-row">
+        <div class="why-a"><span class="ic">✕</span> No memory of your cases, no way to save what matters</div>
+        <div class="why-b"><span class="ic">✓</span> Starred messages, working sets, per-project history</div>
+      </div>
+      <div class="why-row">
+        <div class="why-a"><span class="ic">✕</span> Can't tell you if a clause violates your compliance rules</div>
+        <div class="why-b"><span class="ic">✓</span> Playbook scan flags risky clauses against your own rules</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ GALLERY ══════════ -->
+<section id="gallery">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">In the record</span>
+      <h2>Seen in <span class="serif-i">action.</span></h2>
+    </div>
+    <div class="gallery">
+      <div class="frame reveal"><img src="assets/searching.png" alt="Hybrid search retrieving and reranking results"  loading="lazy" decoding="async"/><span class="cap">01 · Search &amp; retrieval</span></div>
+      <div class="frame reveal" data-d="1"><img src="assets/sources.png" alt="Sources panel with cited documents"  loading="lazy" decoding="async"/><span class="cap">02 · Sources &amp; citations</span></div>
+      <div class="frame reveal"><img src="assets/nodes.png" alt="Visual pipeline editor"  loading="lazy" decoding="async"/><span class="cap">03 · Pipeline editor</span></div>
+      <div class="frame reveal" data-d="1"><img src="assets/final_answer_when_don't_find_answer_from_data.png" alt="Answer with confidence indicator and citations"  loading="lazy" decoding="async"/><span class="cap">04 · Grounded answers</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PROVIDERS ══════════ -->
+<section id="providers">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Choose your engine</span>
+      <h2>Any model you trust. <span class="serif-i">One app.</span></h2>
+      <p class="lead">Pick a fully-local model for total privacy, or connect your own API key from any major provider — switch any time, in one dropdown.</p>
+    </div>
+    <div class="providers reveal" data-d="1">
+      <span class="prov local"><span class="dotp"></span> Ollama <span class="off">(offline)</span></span>
+      <span class="prov"><span class="dotp"></span> Claude</span>
+      <span class="prov"><span class="dotp"></span> ChatGPT</span>
+      <span class="prov"><span class="dotp"></span> Groq</span>
+      <span class="prov"><span class="dotp"></span> Grok</span>
+      <span class="prov"><span class="dotp"></span> DeepSeek</span>
+      <span class="prov"><span class="dotp"></span> Mistral</span>
+      <span class="prov"><span class="dotp"></span> Kimi</span>
+      <span class="prov"><span class="dotp"></span> Qwen</span>
+      <span class="prov"><span class="dotp"></span> OpenRouter</span>
+      <span class="prov"><span class="dotp"></span> Together</span>
+      <span class="prov"><span class="dotp"></span> Gemini</span>
+      <span class="prov"><span class="dotp"></span> …any OpenAI-compatible API</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ COMPARE ══════════ -->
+<section id="compare">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">The docket</span>
+      <h2>How it stacks up <span class="serif-i">against the rest.</span></h2>
+    </div>
+    <div class="reveal" data-d="1">
+      <div class="table-scroll">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>Generic chatbot</th>
+            <th class="ours">Lawyer Assistant</th>
+            <th>Legal SaaS cloud</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Runs 100% on your machine</th>
+            <td class="no">✕</td>
+            <td class="ours-col yes">✓</td>
+            <td class="no">✕</td>
+          </tr>
+          <tr>
+            <th>Works fully offline</th>
+            <td class="no">✕</td>
+            <td class="ours-col yes">✓</td>
+            <td class="no">✕</td>
+          </tr>
+          <tr>
+            <th>Answers cite exact source passages</th>
+            <td class="no">✕</td>
+            <td class="ours-col yes">✓</td>
+            <td>Partial</td>
+          </tr>
+          <tr>
+            <th>Your documents stay private</th>
+            <td class="no">✕</td>
+            <td class="ours-col yes">✓</td>
+            <td class="no">✕</td>
+          </tr>
+          <tr>
+            <th>Compliance playbook scan</th>
+            <td class="no">✕</td>
+            <td class="ours-col yes">✓</td>
+            <td class="no">✕</td>
+          </tr>
+          <tr>
+            <th>Custom retrieval pipeline</th>
+            <td class="no">✕</td>
+            <td class="ours-col yes">✓</td>
+            <td class="no">✕</td>
+          </tr>
+          <tr>
+            <th>No per-document subscription fees</th>
+            <td>—</td>
+            <td class="ours-col yes">✓</td>
+            <td class="no">✕</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PRIVACY ══════════ -->
+<section id="privacy">
+  <div class="wrap">
+    <div class="privacy reveal">
+      <div class="privacy-grid">
+        <div>
+          <span class="eyebrow">Confidentiality</span>
+          <h2>Nothing leaves <span class="serif-i">your chambers.</span></h2>
+          <p class="lead" style="margin-bottom:10px">Ingestion, search, and answering all happen on your hardware. In local mode, no question, document, or answer ever touches a third-party server — a deliberate choice for attorney–client privilege.</p>
+          <p class="muted" style="font-size:14px">Choose an API provider and only your question plus retrieved passages are sent to that provider — clearly shown in the app, never silently.</p>
+          <div class="pt"><span class="pn">01</span><span>Embeddings, index, and history stored in your project folder only.</span></div>
+          <div class="pt"><span class="pn">02</span><span>API keys stored locally; the launcher never displays them after setup.</span></div>
+          <div class="pt"><span class="pn">03</span><span>Works offline — no account, no cloud, no lock-in.</span></div>
+        </div>
+        <div>
+          <div class="seal">
+            <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
+            <div class="core"><span>Verified<br/>Local<br/>Only</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -490,9 +670,11 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       <h2>Download <span class="serif-i">and get started.</span></h2>
       <p class="lead" style="margin-inline:auto">The archive includes everything — models and launcher included. Install in minutes, free.</p>
       <div class="cta-actions">
-        <a class="btn btn-brass" href="https://codeload.github.com/haal-lab/Lawyer-Assistant/zip/refs/tags/v1%2C0%2C0" target="_blank" rel="noopener">Download the app <span class="arr">→</span></a>
+        <a class="btn btn-brass" href="https://github.com/haal-lab/Lawyer-Assistant/releases/download/v1.0.1/LawyerAssistant-setup-1.0.1.exe" target="_blank" rel="noopener">Windows .exe <span class="arr">↓</span></a>
+        <a class="btn btn-ghost" href="https://github.com/haal-lab/Lawyer-Assistant/releases/download/v1.0.1/LawyerAssistant-1.0.1.zip" target="_blank" rel="noopener">macOS .zip <span class="arr">↓</span></a>
+        <a class="btn btn-ghost" href="https://github.com/haal-lab/Lawyer-Assistant/releases/download/v1.0.1/LawyerAssistant-linux-1.0.1.AppImage" target="_blank" rel="noopener">Linux .AppImage <span class="arr">↓</span></a>
       </div>
-      <p class="cta-note">FREE &amp; open source · Windows · macOS · Linux</p>
+      <p class="cta-note">FREE &amp; open source · Windows · macOS · Linux · <a href="https://github.com/haal-lab/Lawyer-Assistant/releases" target="_blank" rel="noopener" style="color:var(--brass-2)">all releases</a></p>
     </div>
   </div>
 </section>
@@ -528,6 +710,18 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 const nav = document.querySelector('nav');
 addEventListener('scroll',()=>{
   nav.style.background = scrollY > 10 ? 'rgba(255,255,255,.95)' : 'rgba(255,255,255,.88)';
+});
+
+/* compare-table scroll hint */
+document.querySelectorAll('.table-scroll').forEach(t=>{
+  const upd=()=>{
+    const can=t.scrollWidth>t.clientWidth+1;
+    const end=t.scrollLeft+t.clientWidth>=t.scrollWidth-1;
+    t.classList.toggle('can-scroll',can&&!end);
+  };
+  t.addEventListener('scroll',upd);
+  addEventListener('resize',upd);
+  upd();
 });
 </script>
 </body>

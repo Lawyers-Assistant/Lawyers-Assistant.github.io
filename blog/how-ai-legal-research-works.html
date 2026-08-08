@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>How AI Legal Research Works Under the Hood: Retrieval, Reranking, and Why It Matters | Lawyer Assistant</title>
+<meta name="description" content="The retrieval pipeline behind legal AI research tools — keyword and semantic search, reranking, grounding — and why the retrieval step decides whether the answer can be trusted."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://lawyers-assistant.github.io/blog/how-ai-legal-research-works.html"/>
+<meta name="keywords" content="ai legal research how it works, retrieval augmented generation law, legal ai retrieval, reranking legal research, bm25 dense retrieval legal, rag legal research, ai legal research grounding, legalbench-rag"/>
+<meta name="author" content="Hussain Nazary"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="How AI Legal Research Works Under the Hood: Retrieval, Reranking, and Why It Matters"/>
+<meta property="og:description" content="The retrieval pipeline behind legal AI research tools — and why the retrieval step decides whether the answer can be trusted."/>
+<meta property="og:url" content="https://lawyers-assistant.github.io/blog/how-ai-legal-research-works.html"/>
+<meta property="og:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="How AI Legal Research Works Under the Hood"/>
+<meta name="twitter:description" content="Retrieval, reranking, and grounding — and why the retrieval step decides whether the answer can be trusted."/>
+<meta name="twitter:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* article */
+.post{padding:50px 0 80px}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:26px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.post-head{margin-bottom:40px;max-width:780px}
+.post-meta{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+.post-meta .cat{color:var(--brass)}
+.post h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4.2vw,2.8rem);line-height:1.16;letter-spacing:-.01em;margin:0 0 16px}
+.post .dek{color:var(--paper-dim);font-size:1.1rem;max-width:64ch}
+.post-body{max-width:760px}
+.post-body h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.post-body h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.post-body p{margin:0 0 18px;color:var(--paper-dim);font-size:15.5px}
+.post-body strong{color:var(--paper);font-weight:600}
+.post-body a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.post-body a:hover{text-decoration-color:var(--brass)}
+.post-body ul,.post-body ol{margin:0 0 18px;padding-left:26px;color:var(--paper-dim);font-size:15.5px}
+.post-body li{margin:6px 0}
+.post-body li::marker{color:var(--brass)}
+.post-body blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:16px 20px;border-radius:0 10px 10px 0;margin:0 0 20px;font-family:var(--font-d);font-size:1.1rem;color:var(--paper-dim)}
+.post-body blockquote p{margin:0 0 6px}
+.post-body blockquote p:last-child{margin:0}
+.post-body hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+.post-body code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.post-end{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.post-end .tag{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.post-end .tag b{color:var(--brass-2);font-weight:500}
+/* related reading */
+.related{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.related h4{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:860px){.related-grid{grid-template-columns:1fr}}
+.rel-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.rel-card:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.rel-card .rel-t{font-family:var(--font-d);font-size:14px;font-weight:500;color:var(--paper);line-height:1.35}
+.rel-card .rel-go{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-2);margin-top:8px;display:block}
+
+/* post nav */
+.post-nav{display:flex;gap:12px;margin-top:20px}
+.post-nav .pnav{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.post-nav .pnav:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.post-nav .pn-dir{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:4px}
+.post-nav .pn-t{font-family:var(--font-d);font-size:13.5px;font-weight:500;color:var(--paper);line-height:1.3;display:block}
+.post-nav .pnav.next{text-align:right}
+@media(max-width:640px){.post-nav{flex-direction:column}}
+
+/* post FAQ */
+.post-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.post-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.post-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+/* promo */
+.promo{margin-top:56px;padding:34px 30px;background:radial-gradient(700px 300px at 80% -20%,rgba(201,163,92,.12),transparent 65%),var(--panel);border:1px solid var(--line);border-radius:16px}
+.promo-eyebrow{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:10px}
+.promo h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;color:var(--paper);margin:0 0 8px}
+.promo p{color:var(--muted);font-size:13.5px;margin:0 0 20px;max-width:62ch}
+.promo-links{display:flex;gap:10px;flex-wrap:wrap}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:var(--font-s);font-size:12.5px;font-weight:600;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.promo-btn:hover{text-decoration:none;transform:translateY(-2px)}
+.promo-btn-brass{background:linear-gradient(135deg,#d8b468,#c9a35c 55%,#b08a35);color:#0b110e;box-shadow:0 4px 18px rgba(201,163,92,.25)}
+.promo-btn-brass:hover{box-shadow:0 8px 26px rgba(201,163,92,.35)}
+.promo-btn-ghost{border:1px solid var(--line-bright);color:var(--paper-dim)}
+.promo-btn-ghost:hover{border-color:var(--brass);color:var(--brass-2)}
+@media(max-width:640px){.promo{padding:26px 20px}}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:860px){.nav-links{display:none}}
+@media(max-width:640px){.wrap{padding:0 16px}.post{padding:34px 0 60px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How AI Legal Research Works Under the Hood: Retrieval, Reranking, and Why It Matters",
+  "description": "The retrieval pipeline behind legal AI research tools — keyword and semantic search, reranking, grounding — and why the retrieval step decides whether the answer can be trusted.",
+  "datePublished": "2026-08-14",
+  "dateModified": "2026-08-14",
+  "author": {"@type": "Person", "name": "Hussain Nazary"},
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "mainEntityOfPage": "https://lawyers-assistant.github.io/blog/how-ai-legal-research-works.html"
+}
+</script>
+
+<!-- BreadcrumbList — matches the visible breadcrumb -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Blog", "item": "https://lawyers-assistant.github.io/blog.html"},
+    {"@type": "ListItem", "position": 2, "name": "Legal research"}
+  ]
+}
+</script>
+
+<!-- FAQPage — article Q&A for AI extraction -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does retrieval mean in an AI legal research tool?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Before the AI writes anything, the system searches its corpus of cases, statutes, and regulations and pulls the most relevant passages — that is retrieval. The AI then answers using only those passages, a technique called retrieval-augmented generation (RAG), which grounds the answer in actual sources instead of the model's memory. If the retrieval step misses the controlling case, no amount of model intelligence can recover it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between keyword and semantic search?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Keyword search (BM25) matches exact terms — reliable for statutory references and distinctive phrases. Semantic search matches meaning: the query and every document are converted into mathematical vectors, and documents whose vectors are close to the query's are returned, even when they share no exact words. The two find different things, which is why production systems use both in a hybrid search."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is reranking, and why does it matter for legal research?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "First-stage retrieval is built for speed, so it returns a broad candidate list. A reranker then reads each candidate against the query in detail and reorders them, promoting the genuinely relevant authorities to the top. Reranking matters because the passages that reach the AI decide the quality of the answer — if the wrong cases float to the top, the AI reasons from the wrong law."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does grounding in retrieved sources eliminate hallucinations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Grounding reduces hallucinations dramatically, but the Stanford study of leading legal AI tools found incorrect or misgrounded answers in more than 17% of test queries, with one major tool above 34%. A misgrounded answer states a correct rule but cites a source that does not support it. Retrieval quality, citation verification, and human review all remain essential."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How should a lawyer verify what an AI research tool returns?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Read the cited passages, not just the summary — confirm the source actually supports the proposition and that the citations are real. Check whether the tool searched the sources you need (federal, state, secondary). Then use the retrieved authorities the way you always have: read them in context, check history and treatment, and apply your own judgment. ABA Formal Opinion 512 requires this verification before reliance."
+      }
+    }
+  ]
+}
+</script>
+
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html" class="active">Blog</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<article class="post">
+  <div class="wrap">
+    <div class="crumb"><a href="../blog.html">✒️ Blog</a> <span style="color:var(--faint)">/</span> <span>Legal research</span></div>
+    <header class="post-head">
+      <div class="post-meta"><span class="cat">Legal research</span><span>Aug 14, 2026</span><span>10 min read</span></div>
+      <h1>How AI Legal Research Works Under the Hood: Retrieval, Reranking, and Why It Matters</h1>
+      <p class="dek">The answer is only as good as the retrieval behind it. Here is the pipeline — keyword and semantic search, reranking, grounding — and why the step you never see decides whether you can trust what you read.</p>
+    </header>
+    <div class="post-body">
+      <p>Every legal AI research tool — Westlaw's AI-Assisted Research, Lexis+ AI, CoCounsel — does the same trick. When you ask a question, it does not answer from memory. It first searches a corpus of cases, statutes, and regulations, pulls the passages most relevant to your question, and then writes its answer using <strong>only those passages</strong>. That trick has a name: retrieval-augmented generation, or RAG. It is the single most important thing to understand about how these tools work — because the retrieval step, which you never see, decides whether the answer can be trusted at all.</p>
+      <p>This article is the under-the-hood tour: what RAG is, how the retrieval pipeline actually works (keyword search, semantic search, reranking), and why each stage matters for the quality of what lands on your desk. If you have read our earlier notes on <a href="can-you-trust-ai-legal-research.html">whether you can trust an AI for legal research</a>, this is the machinery behind those caveats.</p>
+
+      <h2>The open-book exam</h2>
+      <p>The cleanest way to think about RAG is an open-book exam. A general-purpose AI is a closed-book student: it answers from what it memorized during training, and when it does not know, it improvises. A retrieval-augmented tool is given the book — in this case, the legal corpus — and told to look things up before answering. Thomson Reuters, which builds Westlaw and CoCounsel, describes RAG exactly this way: the system "first retrieves relevant documents from a search engine and then uses those documents as inputs to the LLM in order to ground the answer," like an open-book quiz that reduces the risk of hallucination.</p>
+      <p>The technique was formalized in the <a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">2020 paper <em>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</em></a> by Lewis and colleagues — the work that gave RAG its name. The idea is simple: instead of asking the model to recall facts, retrieve them fresh at query time and feed them in as context. For law, where the answer changes with every new opinion and every amended statute, answering from a live corpus instead of a frozen training set is not a nicety — it is the difference between current law and a snapshot from the training cutoff.</p>
+
+      <h2>The corpus first</h2>
+      <p>Before any search happens, the system needs a corpus — and in legal AI, the corpus is the moat. Westlaw's AI-Assisted Research draws on the Westlaw library with its proprietary editorial layer: the West Key Number System, headnotes written by attorney-editors, and KeyCite treatment signals. Lexis+ AI sits on the Lexis library. CoCounsel runs on the combined Westlaw and Practical Law content, the latter maintained by a team of more than 650 legal expert editors.</p>
+      <p>This matters more than it sounds. RAG is only as good as the documents it retrieves from. A general-purpose model trained on the public internet will happily retrieve from random blogs and AI-generated content farms; a legal research tool retrieves from an editorialized, jurisdiction-tagged library. That is why the same underlying model technology produces radically different answers in a legal product versus a consumer chatbot. As Thomson Reuters's lead applied scientist put it, "poor retrieval and/or bad context can be just as bad as or worse than relying on an LLM's internal memory — just as a law student using an outdated textbook will give wrong legal answers."</p>
+
+      <h2>The retrieval step: two kinds of search</h2>
+      <p>Once the corpus exists, the system has to find the relevant passages for your question. Production systems run <strong>two different searches in parallel</strong>, then combine them — a design called hybrid search.</p>
+      <h3>Keyword search (BM25)</h3>
+      <p>The first search is the classic information-retrieval algorithm, BM25, a refined version of the term-matching approach search engines have used for decades. It scores documents by how often your exact words appear in them, weighted by how rare those words are across the corpus. Its strength is precision on distinctive language: a statute reference, a defined term, a quotation. If you ask about "Section 2-615 of the UCC," BM25 will find the documents that literally contain those terms, even if the surrounding language is unusual.</p>
+      <h3>Semantic search (vector embeddings)</h3>
+      <p>The second search is the newer one. Every document is converted into a vector — a long list of numbers that captures its meaning — using a model called an embedding model. Your question is converted the same way. Documents whose vectors are close to your question's vector (measured by cosine similarity) are returned, even if they share no exact words with your query. This is what lets the system understand that "can a landlord terminate a lease if the tenant stops paying" and "eviction for nonpayment of rent" are the same question.</p>
+      <p>Neither search alone is enough. BM25 misses meaning — synonyms, paraphrases, concepts expressed differently. Semantic search misses exactness — statutory references, case names, defined terms. The research literature is consistent on this: the two methods find <strong>complementary</strong> results, and merging them recovers documents that either one alone would miss. That is why the standard production architecture runs both and fuses the results.</p>
+
+      <h2>The reranker: quality control before the AI reads</h2>
+      <p>Retrieval is built for speed, so it returns a broad candidate list — perhaps the top few hundred passages. The system then runs a <strong>reranker</strong>: a more expensive model that reads each candidate together with your question and scores how genuinely relevant it is, then reorders the list. The top handful of passages — the ones the AI will actually reason over — are the survivors.</p>
+      <p>The reranker matters more than its billing suggests. The passages that reach the AI are the only law the AI sees. If the reranker lets an irrelevant district-court opinion float above the controlling Supreme Court case, the AI will reason from the wrong authority with total confidence. In the technical literature, this two-stage design — retrieve broadly, rerank precisely — is the standard recipe: a bi-encoder retriever pulls the candidates, and a cross-encoder reranker reads each candidate against the query in detail before the final list is handed to the generator.</p>
+      <p>Why not skip retrieval and just hand the whole corpus to the model? Because context has limits. Long contexts cost more, run slower, and — per the "lost in the middle" finding from Liu and colleagues — models use information at the start and end of a long context much more reliably than information buried in the middle. Precise retrieval exists precisely because feeding a model everything guarantees it will miss the one passage that matters.</p>
+
+      <h2>Grounding: the answer is built on the retrieved passages</h2>
+      <p>With the final passages selected, the system constructs a prompt containing your question, the retrieved passages, and instructions to answer only from them — and ideally to cite them. The model's job is synthesis, not recall: read the passages, state the rule, and point at the supporting text. Westlaw's AI-Assisted Research is described this way: it "focuses the LLM on the actual language of cases, statutes, and regulations" and returns "the very best cases, statutes, and regulations" — and the best portions of them — rather than generating from the question alone.</p>
+      <p>This is the grounding that gives legal AI its credibility — and its residual risk. Grounding means the answer should be traceable: every proposition should map back to a retrieved passage. But grounding is only as good as retrieval. LegalBench-RAG, the first benchmark built specifically to evaluate the retrieval step of legal RAG systems, was created precisely because researchers found the retrieval step was being taken on faith. Built from over 79 million characters of contracts and legal documents and annotated by legal experts into 6,858 query-answer pairs, it measures whether a system finds the <em>precise snippet</em> that supports an answer — not just the right document, but the right sentences within it.</p>
+
+      <h2>Where it breaks: the measured failure rates</h2>
+      <p>Grounding reduces hallucination; it does not eliminate it. The <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jels.12413" target="_blank" rel="noopener">Stanford study led by Magesh, Dahl, and Ho</a> — first released in 2024 and published in the <em>Journal of Empirical Legal Studies</em> — tested the leading commercial legal AI tools on hundreds of open-ended queries and found <strong>incorrect or misgrounded answers in more than 17% of queries, with one major tool above 34%</strong>. The study's key distinction, which we detailed in <a href="honest-limits-ai-contract-review.html">the honest limits of AI</a>, is between answers that are simply wrong and answers that are <em>misgrounded</em> — a correct rule cited to a source that does not support it.</p>
+      <p>The failures trace back to the pipeline this article describes. Retrieval misses the controlling authority; the reranker surfaces the wrong passage; the retrieved passage is stale or taken out of context; the model reads the passage but cites a different one. Each failure mode is a stage in the pipeline, which is why the fix is never "a better model" alone — it is better retrieval, better grounding, and better verification.</p>
+      <blockquote>
+        <p>"The retrieval step is invisible, and it decides everything. Get the wrong passages to the AI and the AI will write you a confident, well-cited answer — to the wrong question."</p>
+      </blockquote>
+
+      <h2>What this means for how you research</h2>
+      <p>The practical takeaways for a working lawyer:</p>
+      <ul>
+        <li><strong>Read the cited passages, not the summary.</strong> The summary is the model's synthesis; the passages are the law. Confirm the cited text actually supports the proposition — this is the direct counter to misgrounding.</li>
+        <li><strong>Check that the tool searched what you need.</strong> Different tools have different corpora — federal, state, secondary, jurisdiction coverage. A tool that never retrieved the controlling state statute cannot cite it, no matter how good its model is.</li>
+        <li><strong>Treat retrieval as a first draft.</strong> Use the AI's authorities as a starting point, then verify history and treatment the way you always have — KeyCite, Shepard's, or your own read. The AI is faster at finding; you are still responsible for the law.</li>
+        <li><strong>Ask again with different words.</strong> Because retrieval is a search, rephrasing your question retrieves different passages. One query is a sample, not a census.</li>
+        <li><strong>Verify before reliance.</strong> <a href="https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/ethics-opinions/aba-formal-opinion-512.pdf" target="_blank" rel="noopener">ABA Formal Opinion 512</a> requires competence with the tool's limits (Rule 1.1), supervision of everyone who uses it (Rules 5.1 and 5.3), and protection of confidential information (Rule 1.6) — verification is the operational form of all three.</li>
+      </ul>
+
+      <h2>How Lawyer Assistant approaches this</h2>
+      <p>Lawyer Assistant is built on the same architecture this article describes — hybrid keyword and semantic retrieval, reranking, and answers grounded strictly in retrieved passages with citations back to the source text. It runs entirely on your machine, so your queries and documents never leave your computer. The design philosophy follows from the pipeline: the tool's job is to find the right passages and cite them honestly; the lawyer's job is to verify, judge, and decide. Neither step works without the other.</p>
+
+      <h2>The bottom line</h2>
+      <p>Legal AI research is a retrieval problem wearing a language-model costume. The model that writes the answer gets the credit, but the search that finds the law — keyword and semantic retrieval, reranked and grounded — decides whether the answer is worth reading. The measured error rates and the documented failure modes all trace back to that invisible step. Use the tools for what they are: fast, broad, well-grounded researchers that still need a lawyer to read the sources, check the citations, and own the result.</p>
+
+      <h2>Sources &amp; further reading</h2>
+      <ul>
+        <li>Lewis et al., <em><a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a></em> (NeurIPS 2020) — the paper that introduced RAG.</li>
+        <li>Thomson Reuters, <a href="https://legal.thomsonreuters.com/blog/retrieval-augmented-generation-in-legal-tech/" target="_blank" rel="noopener">"Intro to Retrieval-Augmented Generation in Legal Tech"</a> (Dec. 2024) — RAG as open-book grounding; Westlaw AI-Assisted Research mechanics; CoCounsel's Trust Team benchmarking; the &gt;650-editor Practical Law team.</li>
+        <li>Pipitone &amp; Houir Alami, <em><a href="https://arxiv.org/html/2408.10343v1" target="_blank" rel="noopener">LegalBench-RAG: A Benchmark for Retrieval-Augmented Generation in the Legal Domain</a></em> (2024) — 6,858 expert-annotated query-answer pairs over a 79M-character legal corpus; the first benchmark for the legal retrieval step.</li>
+        <li>Liu, Lin, Hewitt, Paranjape, Bevilacqua, Petroni &amp; Liang, <em><a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Lost in the Middle: How Language Models Use Long Contexts</a></em> (TACL vol. 12, 2024) — position of relevant information in long contexts affects accuracy.</li>
+        <li>Magesh, Surani, Dahl, Suzgun, Manning &amp; Ho, <em><a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jels.12413" target="_blank" rel="noopener">Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools</a></em> (Stanford RegLab / HAI; Journal of Empirical Legal Studies, 2025) — Lexis+ AI and Ask Practical Law AI &gt;17% incorrect or misgrounded; Westlaw AI-Assisted Research &gt;34%.</li>
+        <li>ABA Formal Opinion 512, "Generative Artificial Intelligence Tools" (July 29, 2024) — competence, confidentiality, candor, and supervision (<a href="https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/ethics-opinions/aba-formal-opinion-512.pdf" target="_blank" rel="noopener">full text (PDF)</a>).</li>
+      </ul>
+      <p style="color:var(--faint);font-size:13px"><em>This article is general information about technology and professional practice. It is not legal advice for any specific matter, and rules vary by jurisdiction — verify against the authority applicable to your matter.</em></p>
+    </div>
+
+    <div class="post-faq">
+      <h2>Questions, answered</h2>
+      <p class="sub">The key questions from this article, answered plainly.</p>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>What does retrieval mean in an AI legal research tool?</h3>
+          <p>Before the AI writes anything, the system searches its corpus of cases, statutes, and regulations and pulls the most relevant passages — that is retrieval. The AI then answers using only those passages, a technique called retrieval-augmented generation (RAG), which grounds the answer in actual sources instead of the model's memory. If the retrieval step misses the controlling case, no amount of model intelligence can recover it.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What is the difference between keyword and semantic search?</h3>
+          <p>Keyword search (BM25) matches exact terms — reliable for statutory references and distinctive phrases. Semantic search matches meaning: the query and every document are converted into mathematical vectors, and documents whose vectors are close to the query's are returned, even when they share no exact words. The two find different things, which is why production systems use both in a hybrid search.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What is reranking, and why does it matter for legal research?</h3>
+          <p>First-stage retrieval is built for speed, so it returns a broad candidate list. A reranker then reads each candidate against the query in detail and reorders them, promoting the genuinely relevant authorities to the top. Reranking matters because the passages that reach the AI decide the quality of the answer — if the wrong cases float to the top, the AI reasons from the wrong law.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Does grounding in retrieved sources eliminate hallucinations?</h3>
+          <p>No. Grounding reduces hallucinations dramatically, but the Stanford study of leading legal AI tools found incorrect or misgrounded answers in more than 17% of test queries, with one major tool above 34%. A misgrounded answer states a correct rule but cites a source that does not support it. Retrieval quality, citation verification, and human review all remain essential.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How should a lawyer verify what an AI research tool returns?</h3>
+          <p>Read the cited passages, not just the summary — confirm the source actually supports the proposition and that the citations are real. Check whether the tool searched the sources you need (federal, state, secondary). Then use the retrieved authorities the way you always have: read them in context, check history and treatment, and apply your own judgment. ABA Formal Opinion 512 requires this verification before reliance.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="related">
+      <h4>Related reading</h4>
+      <div class="related-grid">
+      <a class="rel-card" href="can-you-trust-ai-legal-research.html">
+        <span class="rel-t">Can You Trust an AI for Legal Research?</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="how-to-use-ai-for-legal-research.html">
+        <span class="rel-t">How to Use AI for Legal Research Ethically</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="honest-limits-ai-contract-review.html">
+        <span class="rel-t">The Honest Limits of AI Contract Review</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="verifying-ai-case-citation.html">
+        <span class="rel-t">Verifying an AI's Case Citation in Five Minutes</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      </div>
+    </div>
+    <div class="post-nav">
+      <a class="pnav prev" href="honest-limits-ai-contract-review.html"><span class="pn-dir">← Older</span><span class="pn-t">The Honest Limits of AI Contract Review: What Still Needs a Human Eye</span></a>
+      <a class="pnav next" href="verifying-ai-case-citation.html"><span class="pn-dir">Newer →</span><span class="pn-t">Verifying an AI's Case Citation in Five Minutes</span></a>
+    </div>
+    <div class="post-end">
+      <span class="tag">Filed under <b>Legal research</b> · <b>AI reliability</b> · <b>Retrieval</b></span>
+      <span class="tag"><a href="../blog.html">← All articles</a></span>
+    </div>
+
+    <div class="promo">
+      <div class="promo-eyebrow">Next steps</div>
+      <h2>Put it to work on your own documents.</h2>
+      <p>Lawyer Assistant runs entirely on your machine — install it in minutes, read the documentation, or browse more notes from the Legal Desk.</p>
+      <div class="promo-links">
+        <a class="promo-btn promo-btn-brass" href="../install.html">Install the app →</a>
+        <a class="promo-btn promo-btn-ghost" href="../docs.html">Read the docs</a>
+        <a class="promo-btn promo-btn-ghost" href="../blog.html">All articles</a>
+        <a class="promo-btn promo-btn-ghost" href="../index.html">Back to home</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../install.html">Install</a><a href="../blog.html">Blog</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

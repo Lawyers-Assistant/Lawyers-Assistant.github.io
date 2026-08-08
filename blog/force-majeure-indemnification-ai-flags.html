@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Force Majeure, Indemnification, and What AI Actually Flags in a Review | Lawyer Assistant</title>
+<meta name="description" content="The two clauses lawyers fight over most — force majeure and indemnification — and what AI contract review actually flags in them, plus the judgment calls it still leaves to you."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://lawyers-assistant.github.io/blog/force-majeure-indemnification-ai-flags.html"/>
+<meta name="keywords" content="force majeure clause, indemnification clause, ai contract review flags, force majeure covid cases, indemnity liability cap, ai flag contract clauses, contract review red flags"/>
+<meta name="author" content="Hussain Nazary"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Force Majeure, Indemnification, and What AI Actually Flags in a Review"/>
+<meta property="og:description" content="The two clauses lawyers fight over most — force majeure and indemnification — and what AI contract review actually flags in them, plus the judgment calls it still leaves to you."/>
+<meta property="og:url" content="https://lawyers-assistant.github.io/blog/force-majeure-indemnification-ai-flags.html"/>
+<meta property="og:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Force Majeure, Indemnification, and What AI Flags"/>
+<meta name="twitter:description" content="The clauses lawyers fight over most — and what AI contract review actually flags in them."/>
+<meta name="twitter:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* article */
+.post{padding:50px 0 80px}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:26px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.post-head{margin-bottom:40px;max-width:780px}
+.post-meta{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+.post-meta .cat{color:var(--brass)}
+.post h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4.2vw,2.8rem);line-height:1.16;letter-spacing:-.01em;margin:0 0 16px}
+.post .dek{color:var(--paper-dim);font-size:1.1rem;max-width:64ch}
+.post-body{max-width:760px}
+.post-body h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.post-body h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.post-body p{margin:0 0 18px;color:var(--paper-dim);font-size:15.5px}
+.post-body strong{color:var(--paper);font-weight:600}
+.post-body a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.post-body a:hover{text-decoration-color:var(--brass)}
+.post-body ul,.post-body ol{margin:0 0 18px;padding-left:26px;color:var(--paper-dim);font-size:15.5px}
+.post-body li{margin:6px 0}
+.post-body li::marker{color:var(--brass)}
+.post-body blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:16px 20px;border-radius:0 10px 10px 0;margin:0 0 20px;font-family:var(--font-d);font-size:1.1rem;color:var(--paper-dim)}
+.post-body blockquote p{margin:0 0 6px}
+.post-body blockquote p:last-child{margin:0}
+.post-body hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+.post-body code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.post-end{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.post-end .tag{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.post-end .tag b{color:var(--brass-2);font-weight:500}
+/* related reading */
+.related{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.related h4{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:860px){.related-grid{grid-template-columns:1fr}}
+.rel-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.rel-card:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.rel-card .rel-t{font-family:var(--font-d);font-size:14px;font-weight:500;color:var(--paper);line-height:1.35}
+.rel-card .rel-go{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-2);margin-top:8px;display:block}
+
+/* post nav */
+.post-nav{display:flex;gap:12px;margin-top:20px}
+.post-nav .pnav{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.post-nav .pnav:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.post-nav .pn-dir{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:4px}
+.post-nav .pn-t{font-family:var(--font-d);font-size:13.5px;font-weight:500;color:var(--paper);line-height:1.3;display:block}
+.post-nav .pnav.next{text-align:right}
+@media(max-width:640px){.post-nav{flex-direction:column}}
+
+/* post FAQ */
+.post-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.post-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.post-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+/* promo */
+.promo{margin-top:56px;padding:34px 30px;background:radial-gradient(700px 300px at 80% -20%,rgba(201,163,92,.12),transparent 65%),var(--panel);border:1px solid var(--line);border-radius:16px}
+.promo-eyebrow{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:10px}
+.promo h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;color:var(--paper);margin:0 0 8px}
+.promo p{color:var(--muted);font-size:13.5px;margin:0 0 20px;max-width:62ch}
+.promo-links{display:flex;gap:10px;flex-wrap:wrap}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:var(--font-s);font-size:12.5px;font-weight:600;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.promo-btn:hover{text-decoration:none;transform:translateY(-2px)}
+.promo-btn-brass{background:linear-gradient(135deg,#d8b468,#c9a35c 55%,#b08a35);color:#0b110e;box-shadow:0 4px 18px rgba(201,163,92,.25)}
+.promo-btn-brass:hover{box-shadow:0 8px 26px rgba(201,163,92,.35)}
+.promo-btn-ghost{border:1px solid var(--line-bright);color:var(--paper-dim)}
+.promo-btn-ghost:hover{border-color:var(--brass);color:var(--brass-2)}
+@media(max-width:640px){.promo{padding:26px 20px}}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:860px){.nav-links{display:none}}
+@media(max-width:640px){.wrap{padding:0 16px}.post{padding:34px 0 60px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Force Majeure, Indemnification, and What AI Actually Flags in a Review",
+  "description": "The two clauses lawyers fight over most — force majeure and indemnification — and what AI contract review actually flags in them, plus the judgment calls it still leaves to you.",
+  "datePublished": "2026-08-11",
+  "dateModified": "2026-08-11",
+  "author": {"@type": "Person", "name": "Hussain Nazary"},
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "mainEntityOfPage": "https://lawyers-assistant.github.io/blog/force-majeure-indemnification-ai-flags.html"
+}
+</script>
+
+<!-- BreadcrumbList — matches the visible breadcrumb -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Blog", "item": "https://lawyers-assistant.github.io/blog.html"},
+    {"@type": "ListItem", "position": 2, "name": "Practice notes"}
+  ]
+}
+</script>
+
+<!-- FAQPage — article Q&A for AI extraction -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does a force majeure clause actually do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It excuses or suspends performance when a specified, extraordinary event outside a party's control occurs — but only for events the clause actually lists. Courts construe force majeure clauses narrowly, so a pandemic does not excuse performance unless the clause says it does, or plainly covers government orders. It is a contract-based defense, not a general impossibility catch-all."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the most common force majeure red flags?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An event list that omits the risks that matter for your business — post-2020, many firms require express mention of pandemic or epidemic, or of government orders; a weak causation standard (hindered rather than prevented); missing notice deadlines; no mitigation duty; no duration cap before termination; and, from the landlord's side, language that lets force majeure excuse the payment of money."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is an indemnification clause, and when is it one-sided?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An indemnity shifts defined losses from one party to another, typically for third-party claims. It becomes a red flag when it is unilateral — your client indemnifies everything and receives nothing reciprocal — when causation language is so broad (arising out of or relating to this Agreement) that it covers losses with no link to fault, or when it lacks the machinery that makes it workable: notice, tender of defense, and cooperation obligations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does AI flag force majeure and indemnification issues?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "AI classifies the clauses, compares them against your playbook rules, and flags deviations with severity ratings — for example, a missing pandemic trigger in a force majeure clause, a unilateral indemnity, or an indemnity with no carve-out language for the risks that matter. It is excellent at completeness and consistency across a portfolio. What it cannot do is judge the cross-clause interplay and commercial context — that is the lawyer's verification step."
+      }
+    }
+  ]
+}
+</script>
+
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html" class="active">Blog</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<article class="post">
+  <div class="wrap">
+    <div class="crumb"><a href="../blog.html">✒️ Blog</a> <span style="color:var(--faint)">/</span> <span>Practice notes</span></div>
+    <header class="post-head">
+      <div class="post-meta"><span class="cat">Practice notes</span><span>Aug 11, 2026</span><span>8 min read</span></div>
+      <h1>Force Majeure, Indemnification, and What AI Actually Flags in a Review</h1>
+      <p class="dek">Of all the clauses in a contract, these two produce the most litigation and the most negotiation heat. Here's what to look for — and what the AI in your review tool genuinely can and cannot tell you about them.</p>
+    </header>
+    <div class="post-body">
+      <p>Contract review is a search for exceptions: clauses that deviate from your standard, that shift risk in ways you didn't intend, that will matter if the deal goes sideways. Two clause families produce most of the work — <strong>force majeure</strong> and <strong>indemnification</strong>. They are also the two where AI flagging is at its most useful and, simultaneously, its most incomplete. This article walks through what each clause actually does, the red flags that matter, and the honest boundary of what a machine can find.</p>
+
+      <h2>Force majeure: the clause that got famous in 2020</h2>
+      <p>Before the pandemic, most lawyers skimmed force majeure. Then every litigator in the country learned the same lesson at once: <strong>force majeure is a contract-based defense, construed narrowly, and it excuses performance only for events the clause actually lists.</strong> It is not a general impossibility or frustration catch-all. If a pandemic is not in the clause, a pandemic is not covered.</p>
+      <h3>Anatomy of a force majeure clause</h3>
+      <ul>
+        <li><strong>The event definition.</strong> The heart of the clause: which events count — commonly "acts of God, war, terrorism, strikes, governmental orders," and increasingly, post-2020, "pandemic or epidemic."</li>
+        <li><strong>The causation standard.</strong> Does the event need to <em>prevent</em> performance, or merely <em>delay or hinder</em> it? "Hindered" is a much weaker trigger and favors the party seeking relief.</li>
+        <li><strong>Notice.</strong> A deadline to notify the other side (commonly a set number of days), with consequences for missing it.</li>
+        <li><strong>Mitigation.</strong> A duty to use reasonable efforts to resume performance.</li>
+        <li><strong>Duration and termination.</strong> If the event lasts beyond a defined period (often 60–90 days), either party's right to terminate.</li>
+        <li><strong>Exclusions.</strong> The most important part. Most well-drafted clauses exclude the payment of money from what can be excused — because a party can almost always pay, even in a crisis.</li>
+      </ul>
+      <h3>The COVID record, in two cases</h3>
+      <p>The pandemic produced a body of decisions that reads like a drafting seminar. In <a href="https://www.quimbee.com/cases/1600-walnut-corp-v-cole-haan-company-store" target="_blank" rel="noopener"><em>1600 Walnut Corp. v. Cole Haan Co.</em>, 530 F. Supp. 3d 555 (E.D. Pa. 2021)</a>, a tenant argued that government shutdown orders excused its rent. The court disagreed: the lease's force majeure clause suspended performance for listed events, but expressly did <em>not</em> relieve the tenant of its obligation to pay rent — so the rent was still owed. In <a href="https://www.quimbee.com/cases/in-re-hitz-restaurant-group" target="_blank" rel="noopener"><em>In re Hitz Restaurant Group</em>, 616 B.R. 374 (Bankr. N.D. Ill. 2020)</a>, by contrast, a bankruptcy court held that a government stay-at-home order triggered a lease clause covering "laws, governmental action or inaction, orders of government," and partially excused the rent. The Hitz result is widely treated as the outlier; the rule the cases together teach is plain: <strong>if you want a pandemic trigger, write it in; if you are the party receiving payment, keep money out of the clause.</strong></p>
+      <h3>Force majeure red flags</h3>
+      <ul>
+        <li>An event list that omits the risks that actually threaten your business — no "pandemic or epidemic," no "governmental orders."</li>
+        <li>A causation standard so loose ("hindered") that almost any disruption qualifies.</li>
+        <li>No notice deadline, no mitigation duty, no duration cap before termination.</li>
+        <li>Payment obligations not excluded — or, conversely, a clause that lets force majeure excuse money obligations.</li>
+        <li>For sellers of goods, remember UCC § 2-615 governs commercial impracticability separately — the contract clause and the statute interact.</li>
+      </ul>
+
+      <h2>Indemnification: the clause lawyers fight over most</h2>
+      <p>Indemnity is risk allocation: one party agrees to carry defined losses so the other doesn't have to. It sounds simple; it is where deals routinely hang. The structure has four parts — who indemnifies whom, for what trigger, covering which losses, subject to what carve-outs.</p>
+      <h3>Third-party claims vs. first-party claims</h3>
+      <p>The classic indemnity covers <strong>third-party claims</strong>: a stranger sues your client because of the other party's product or conduct, and the other party pays the judgment and fees. The trap is the <strong>first-party</strong> indemnity — language like "Party A shall indemnify Party B for all losses arising out of this Agreement" — which quietly converts an ordinary breach remedy into an indemnity. That matters because indemnities often carry special rules and, critically, often carve out of the liability cap (more on that below). Courts generally presume indemnity covers third-party claims and require clear language to extend it to direct claims.</p>
+      <h3>Duty to defend vs. right to defend</h3>
+      <p>Two distinct things are often bundled in one sentence. The <strong>duty to defend</strong> obliges the indemnitor to step in and fund the defense immediately, triggered by the allegations, before liability is proved — broader than the duty to pay. The <strong>right to defend</strong> is the indemnitor's privilege to control counsel, strategy, and settlement. A red flag is either half missing: an indemnity with no defense machinery, or a right to settle that doesn't require the indemnitee's consent where an injunction or admission of fault is involved.</p>
+      <h3>IP and data indemnities</h3>
+      <p>In technology and SaaS contracts, the two most contested indemnities are <strong>intellectual property infringement</strong> (the vendor indemnifies the customer if the software infringes a third party's rights, with a right to procure replacement or terminate) and <strong>data security</strong> (indemnity for breaches arising from the vendor's platform). A missing IP indemnity in a software deal is a classic AI-detectable gap — and a classic negotiation battleground.</p>
+      <h3>Enforceability limits</h3>
+      <p>Not everything is indemnifiable. Many states — particularly in construction and oil and gas — have <strong>anti-indemnity statutes</strong> that void clauses requiring a contractor to indemnify an owner for the owner's own negligence: the Texas Oilfield Anti-Indemnity Act, Tex. Civ. Prac. &amp; Rem. Code § 127.003, and the Texas Construction Anti-Indemnity Act, Tex. Ins. Code § 151.102, are the best-known examples. And across virtually every jurisdiction, you cannot contract away liability for your own gross negligence, recklessness, or intentional misconduct. These limits are jurisdiction-specific — which is exactly why a clause that looks benign in one state can be unenforceable in another.</p>
+      <h3>Indemnification red flags</h3>
+      <ul>
+        <li><strong>Unilateral indemnity.</strong> Your client indemnifies everything; the other side indemnifies nothing reciprocal.</li>
+        <li><strong>Broad causation.</strong> "Any losses arising out of or relating in any way to this Agreement" — no link to fault at all.</li>
+        <li><strong>Missing IP or data indemnity</strong> in a deal where the risk plainly exists.</li>
+        <li><strong>No notice, tender of defense, or cooperation obligations</strong> — machinery without which the indemnity is unworkable.</li>
+        <li><strong>The cap interplay ignored</strong> — see below.</li>
+      </ul>
+
+      <h2>The indemnity–cap interplay: the flag AI can find but only you can judge</h2>
+      <p>Here is the most instructive example of where AI flagging stops and lawyering begins. Most commercial contracts cap total liability — commonly at one times annual fees in B2B deals. The market compromise is that <strong>general indemnities sit inside the cap, while specific high-risk indemnities are carved out of it</strong> — IP infringement, confidentiality and data security breaches, gross negligence, and bodily injury or property damage are the usual carve-outs. An indemnity that is subject to the same cap as everything else is, for the risks that matter, hollow. An indemnity that escapes the cap entirely is the reverse risk.</p>
+      <p>An AI review tool will reliably flag whether an indemnity exists and whether it references the cap. It will tell you the carve-out language is present or absent. What it cannot do — what no model can do — is tell you whether <em>this</em> deal justifies an uncapped IP indemnity, whether the counterparty's willingness to give one changes the commercial balance, or whether your client's insurance and the counterparty's creditworthiness make the exposure theoretical. Those are judgment calls about the transaction, and they belong to the lawyer.</p>
+
+      <h2>What AI actually flags — and what it still needs you for</h2>
+      <p>Within its lane, the machine is excellent. Encoded with your playbook, an AI scan will, across an entire portfolio:</p>
+      <ul>
+        <li>Locate and classify every force majeure and indemnity clause with consistent attention — no tired reading on page 37.</li>
+        <li>Flag a force majeure clause with no pandemic or epidemic trigger, if that is your rule.</li>
+        <li>Flag a unilateral indemnity, a missing IP indemnity in a software deal, or an indemnity with no notice or control-of-defense provisions.</li>
+        <li>Rate each deviation for severity and explain it, against your own standards.</li>
+      </ul>
+      <p>What it still needs you for is the part that litigators and deal lawyers know best: the <strong>interplay</strong> between clauses, the <strong>jurisdictional</strong> context that can void an indemnity, and the <strong>commercial</strong> judgment about whether a flagged deviation actually matters in this deal. The reliability research reviewed in <a href="how-ai-reads-a-contract.html">our explainer of the review pipeline</a> applies here without modification: grounding reduces hallucination but does not eliminate it, and courts have sanctioned lawyers for unverified AI output. A flag is a hypothesis; verification is the practice of law.</p>
+
+      <h2>A playbook example</h2>
+      <p>This is what the workflow looks like with real rules. A firm might encode these standards for a portfolio of supplier agreements:</p>
+      <ul>
+        <li>Force majeure must expressly include "pandemic or epidemic" and "governmental orders," must require notice within 14 days, and must not excuse the payment of money.</li>
+        <li>Indemnities must be mutual for IP infringement and confidentiality breaches.</li>
+        <li>Liability cap at one times annual fees, with carve-outs for IP indemnity, confidentiality and data security, and gross negligence.</li>
+        <li>Every indemnity must include notice, tender of defense, and cooperation obligations.</li>
+      </ul>
+      <p>Run sixty contracts against those rules and the scan returns an exception list, rated by severity — contract 12 has no pandemic trigger, contract 27's indemnity is unilateral, contracts 4 and 31 cap their IP indemnities. The lawyer then works the list in order of materiality, opening each flagged clause in the source document to confirm the flag and judge the risk. That is the division of labor at its most defensible: the machine guarantees nothing gets missed; the lawyer decides what matters.</p>
+
+      <h2>How Lawyer Assistant implements this</h2>
+      <p>This is the pattern Lawyer Assistant's <strong>compliance playbook scan</strong> is built around. You define the rules above in plain language, the app classifies every clause in the document and checks each against your playbook, and findings come back with severity ratings and explanations — each one linked to the source text so your verification step is a click away. Because everything runs locally on your machine, <a href="../blog/attorney-client-privilege-and-ai.html">the confidentiality of the contracts themselves is preserved by architecture</a>, not by promise.</p>
+
+      <h2>The bottom line</h2>
+      <p>Force majeure and indemnification are where contract risk actually lives, and they are precisely the clauses where the review workflow matters most. Use the machine for what it is: a tireless, consistent classifier and comparer that turns a stack of contracts into a rated exception list. Keep for yourself what it cannot touch: the interplay between clauses, the law of the jurisdiction, and the judgment about which exceptions are worth fighting for. The tools get better every year; that boundary does not move.</p>
+      <blockquote>
+        <p>"The machine finds the exceptions. The lawyer decides which ones are the deal."</p>
+      </blockquote>
+
+      <h2>Sources &amp; further reading</h2>
+      <ul>
+        <li><em><a href="https://www.quimbee.com/cases/1600-walnut-corp-v-cole-haan-company-store" target="_blank" rel="noopener">1600 Walnut Corp. v. Cole Haan Co.</a></em>, 530 F. Supp. 3d 555 (E.D. Pa. 2021).</li>
+        <li><em><a href="https://www.quimbee.com/cases/in-re-hitz-restaurant-group" target="_blank" rel="noopener">In re Hitz Restaurant Group</a></em>, 616 B.R. 374 (Bankr. N.D. Ill. 2020) — widely cited as the outlier reading of a broad government-orders clause.</li>
+        <li>UCC § 2-615 — commercial impracticability for contracts for the sale of goods (<a href="https://www.law.cornell.edu/ucc/2/2-615" target="_blank" rel="noopener">text</a>).</li>
+        <li>Texas Oilfield Anti-Indemnity Act, Tex. Civ. Prac. &amp; Rem. Code § 127.003 (<a href="https://statutes.capitol.texas.gov/Docs/CP/htm/CP.127.htm" target="_blank" rel="noopener">text</a>); Texas Construction Anti-Indemnity Act, Tex. Ins. Code § 151.102 (<a href="https://statutes.capitol.texas.gov/Docs/IN/htm/IN.151.htm" target="_blank" rel="noopener">text</a>).</li>
+        <li>ABA Formal Opinion 512, "Generative Artificial Intelligence Tools" (July 29, 2024) — competence, confidentiality, candor, and supervision when lawyers use AI (<a href="https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/ethics-opinions/aba-formal-opinion-512.pdf" target="_blank" rel="noopener">full text (PDF)</a>).</li>
+      </ul>
+      <p style="color:var(--faint);font-size:13px"><em>This article is general information about technology and professional practice. It is not legal advice for any specific matter, and rules vary by jurisdiction — verify against the authority applicable to your matter.</em></p>
+    </div>
+
+    <div class="post-faq">
+      <h2>Questions, answered</h2>
+      <p class="sub">The key questions from this article, answered plainly.</p>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>What does a force majeure clause actually do?</h3>
+          <p>It excuses or suspends performance when a specified, extraordinary event outside a party's control occurs — but only for events the clause actually lists. Courts construe force majeure clauses narrowly, so a pandemic does not excuse performance unless the clause says it does, or plainly covers government orders. It is a contract-based defense, not a general impossibility catch-all.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What are the most common force majeure red flags?</h3>
+          <p>An event list that omits the risks that matter for your business — post-2020, many firms require express mention of pandemic or epidemic, or of government orders; a weak causation standard (hindered rather than prevented); missing notice deadlines; no mitigation duty; no duration cap before termination; and, from the landlord's side, language that lets force majeure excuse the payment of money.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What is an indemnification clause, and when is it one-sided?</h3>
+          <p>An indemnity shifts defined losses from one party to another, typically for third-party claims. It becomes a red flag when it is unilateral — your client indemnifies everything and receives nothing reciprocal — when causation language is so broad (arising out of or relating to this Agreement) that it covers losses with no link to fault, or when it lacks the machinery that makes it workable: notice, tender of defense, and cooperation obligations.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How does AI flag force majeure and indemnification issues?</h3>
+          <p>AI classifies the clauses, compares them against your playbook rules, and flags deviations with severity ratings — for example, a missing pandemic trigger in a force majeure clause, a unilateral indemnity, or an indemnity with no carve-out language for the risks that matter. It is excellent at completeness and consistency across a portfolio. What it cannot do is judge the cross-clause interplay and commercial context — that is the lawyer's verification step.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="related">
+      <h4>Related reading</h4>
+      <div class="related-grid">
+      <a class="rel-card" href="building-a-clause-playbook.html">
+        <span class="rel-t">Building a Clause Playbook: How to Make AI Review Your Firm's Way</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="how-ai-reads-a-contract.html">
+        <span class="rel-t">How AI Reads a Contract: From Raw Text to Risk Flags</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="ai-contract-review-for-lawyers.html">
+        <span class="rel-t">AI for Contract Review: What Machines Get Right and What They Miss</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="attorney-client-privilege-and-ai.html">
+        <span class="rel-t">Attorney–client privilege and AI</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      </div>
+    </div>
+    <div class="post-nav">
+      <a class="pnav prev" href="how-ai-reads-a-contract.html"><span class="pn-dir">← Older</span><span class="pn-t">How AI Reads a Contract: From Raw Text to Risk Flags</span></a>
+      <a class="pnav next" href="building-a-clause-playbook.html"><span class="pn-dir">Newer →</span><span class="pn-t">Building a Clause Playbook</span></a>
+    </div>
+    <div class="post-end">
+      <span class="tag">Filed under <b>Practice notes</b> · <b>Contract review</b> · <b>Force majeure</b> · <b>Indemnification</b></span>
+      <span class="tag"><a href="../blog.html">← All articles</a></span>
+    </div>
+
+    <div class="promo">
+      <div class="promo-eyebrow">Next steps</div>
+      <h2>Put it to work on your own documents.</h2>
+      <p>Lawyer Assistant runs entirely on your machine — install it in minutes, read the documentation, or browse more notes from the Legal Desk.</p>
+      <div class="promo-links">
+        <a class="promo-btn promo-btn-brass" href="../install.html">Install the app →</a>
+        <a class="promo-btn promo-btn-ghost" href="../docs.html">Read the docs</a>
+        <a class="promo-btn promo-btn-ghost" href="../blog.html">All articles</a>
+        <a class="promo-btn promo-btn-ghost" href="../index.html">Back to home</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../install.html">Install</a><a href="../blog.html">Blog</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

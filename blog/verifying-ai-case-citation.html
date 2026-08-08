@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Verifying an AI's Case Citation in Five Minutes | Lawyer Assistant</title>
+<meta name="description" content="A fast, reliable workflow for checking whether an AI-generated case citation is real — existence, holding, treatment, context — with free tools and the red flags that catch fabrications."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://lawyers-assistant.github.io/blog/verifying-ai-case-citation.html"/>
+<meta name="keywords" content="verify ai case citation, ai hallucinated case, fake case citation checker, courtlistener citation lookup, shepardize ai citation, keycite ai, verify ai legal research, mata v avianca"/>
+<meta name="author" content="Hussain Nazary"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="Verifying an AI's Case Citation in Five Minutes"/>
+<meta property="og:description" content="A fast, reliable workflow for checking whether an AI-generated case citation is real — with free tools and the red flags that catch fabrications."/>
+<meta property="og:url" content="https://lawyers-assistant.github.io/blog/verifying-ai-case-citation.html"/>
+<meta property="og:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Verifying an AI's Case Citation in Five Minutes"/>
+<meta name="twitter:description" content="A fast, reliable workflow for checking whether an AI-generated case citation is real."/>
+<meta name="twitter:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* article */
+.post{padding:50px 0 80px}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:26px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.post-head{margin-bottom:40px;max-width:780px}
+.post-meta{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+.post-meta .cat{color:var(--brass)}
+.post h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4.2vw,2.8rem);line-height:1.16;letter-spacing:-.01em;margin:0 0 16px}
+.post .dek{color:var(--paper-dim);font-size:1.1rem;max-width:64ch}
+.post-body{max-width:760px}
+.post-body h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.post-body h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.post-body p{margin:0 0 18px;color:var(--paper-dim);font-size:15.5px}
+.post-body strong{color:var(--paper);font-weight:600}
+.post-body a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.post-body a:hover{text-decoration-color:var(--brass)}
+.post-body ul,.post-body ol{margin:0 0 18px;padding-left:26px;color:var(--paper-dim);font-size:15.5px}
+.post-body li{margin:6px 0}
+.post-body li::marker{color:var(--brass)}
+.post-body blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:16px 20px;border-radius:0 10px 10px 0;margin:0 0 20px;font-family:var(--font-d);font-size:1.1rem;color:var(--paper-dim)}
+.post-body blockquote p{margin:0 0 6px}
+.post-body blockquote p:last-child{margin:0}
+.post-body hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+.post-body code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.post-end{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.post-end .tag{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.post-end .tag b{color:var(--brass-2);font-weight:500}
+/* related reading */
+.related{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.related h4{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:860px){.related-grid{grid-template-columns:1fr}}
+.rel-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.rel-card:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.rel-card .rel-t{font-family:var(--font-d);font-size:14px;font-weight:500;color:var(--paper);line-height:1.35}
+.rel-card .rel-go{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-2);margin-top:8px;display:block}
+
+/* post nav */
+.post-nav{display:flex;gap:12px;margin-top:20px}
+.post-nav .pnav{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.post-nav .pnav:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.post-nav .pn-dir{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:4px}
+.post-nav .pn-t{font-family:var(--font-d);font-size:13.5px;font-weight:500;color:var(--paper);line-height:1.3;display:block}
+.post-nav .pnav.next{text-align:right}
+@media(max-width:640px){.post-nav{flex-direction:column}}
+
+/* post FAQ */
+.post-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.post-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.post-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+/* promo */
+.promo{margin-top:56px;padding:34px 30px;background:radial-gradient(700px 300px at 80% -20%,rgba(201,163,92,.12),transparent 65%),var(--panel);border:1px solid var(--line);border-radius:16px}
+.promo-eyebrow{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:10px}
+.promo h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;color:var(--paper);margin:0 0 8px}
+.promo p{color:var(--muted);font-size:13.5px;margin:0 0 20px;max-width:62ch}
+.promo-links{display:flex;gap:10px;flex-wrap:wrap}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:var(--font-s);font-size:12.5px;font-weight:600;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.promo-btn:hover{text-decoration:none;transform:translateY(-2px)}
+.promo-btn-brass{background:linear-gradient(135deg,#d8b468,#c9a35c 55%,#b08a35);color:#0b110e;box-shadow:0 4px 18px rgba(201,163,92,.25)}
+.promo-btn-brass:hover{box-shadow:0 8px 26px rgba(201,163,92,.35)}
+.promo-btn-ghost{border:1px solid var(--line-bright);color:var(--paper-dim)}
+.promo-btn-ghost:hover{border-color:var(--brass);color:var(--brass-2)}
+@media(max-width:640px){.promo{padding:26px 20px}}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:860px){.nav-links{display:none}}
+@media(max-width:640px){.wrap{padding:0 16px}.post{padding:34px 0 60px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Verifying an AI's Case Citation in Five Minutes",
+  "description": "A fast, reliable workflow for checking whether an AI-generated case citation is real — existence, holding, treatment, context — with free tools and the red flags that catch fabrications.",
+  "datePublished": "2026-08-15",
+  "dateModified": "2026-08-15",
+  "author": {"@type": "Person", "name": "Hussain Nazary"},
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "mainEntityOfPage": "https://lawyers-assistant.github.io/blog/verifying-ai-case-citation.html"
+}
+</script>
+
+<!-- BreadcrumbList — matches the visible breadcrumb -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Blog", "item": "https://lawyers-assistant.github.io/blog.html"},
+    {"@type": "ListItem", "position": 2, "name": "Legal research"}
+  ]
+}
+</script>
+
+<!-- FAQPage — article Q&A for AI extraction -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How can you tell if a case citation is fake?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Look up the citation in a real legal database. If the case name, reporter volume, page, court, and year do not all line up with a real decision — or the cited page does not contain the proposition — it is fabricated or misgrounded. Red flags include nonexistent reporters, party names that feel generic, holdings attributed to real cases that never said them, and citations the AI insists are correct even when the lookup fails."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between a fabricated and a misgrounded citation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A fabricated citation is invented entirely — the case does not exist, as in Mata v. Avianca. A misgrounded citation is a real case cited for a proposition it does not support. Stanford's study of legal AI tools found misgrounded answers may be more dangerous than fabrication because they survive a superficial check: the case is real, so the error only surfaces when someone actually reads the source."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which free tools can verify a case citation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "CourtListener (and its Citation Lookup API from the Free Law Project) matches citations against a database of millions of opinions and flags invalid ones. Google Scholar's case search covers federal and much state case law, including unpublished decisions. Court websites themselves are authoritative for their own opinions. Paid services like Westlaw, Lexis, and Fastcase add citator treatment signals such as KeyCite and Shepard's."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does citation verification actually take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A single citation takes seconds to minutes: existence checks are near-instant in a lookup tool, reading the holding takes a minute or two, and treatment checks are quick with a citator. The honest answer is that a full brief's worth of citations takes proportionally longer — and substantive verification of holding, context, and treatment always takes more time than the existence check alone."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the consequences of filing an unverified AI citation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Courts have imposed monetary sanctions — Mata v. Avianca brought a $5,000 sanction plus a referral to the grievance committee — and the researcher Damien Charlotin's database has tracked more than 1,600 court decisions worldwide dealing with AI-hallucinated citations. Beyond sanctions, unverified citations risk malpractice claims, credibility damage, and dismissal of the argument they supposedly support."
+      }
+    }
+  ]
+}
+</script>
+
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html" class="active">Blog</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<article class="post">
+  <div class="wrap">
+    <div class="crumb"><a href="../blog.html">✒️ Blog</a> <span style="color:var(--faint)">/</span> <span>Legal research</span></div>
+    <header class="post-head">
+      <div class="post-meta"><span class="cat">Legal research</span><span>Aug 15, 2026</span><span>9 min read</span></div>
+      <h1>Verifying an AI's Case Citation in Five Minutes</h1>
+      <p class="dek">The citation either exists or it doesn't, and the check is fast — if you know what to look for and where to look. Here is the workflow, the free tools, and the red flags that catch fabrications before they reach a court.</p>
+    </header>
+    <div class="post-body">
+      <p>Every citation an AI hands you deserves the same treatment as a citation a junior associate hands you: verify it before it goes anywhere near a filing. The difference is that AI fabricates citations in distinctive, predictable ways — and courts have shown they will sanction lawyers who file them. The good news is that verification is not a research project. For a single citation, the whole check takes minutes, and most of it takes seconds. This article is the workflow: what to check, in what order, with which tools, and the red flags that tell you something is wrong before you even look it up.</p>
+      <p>It follows our notes on <a href="can-you-trust-ai-legal-research.html">whether you can trust an AI for legal research</a> and the <a href="how-ai-legal-research-works.html">retrieval pipeline behind it</a>. If you have read those, you know the stakes; this is the operational version.</p>
+
+      <h2>Why the check is non-negotiable</h2>
+      <p>The landmark case is <a href="https://www.courtlistener.com/docket/63107798/mata-v-avianca-inc/" target="_blank" rel="noopener"><em>Mata v. Avianca, Inc.</em>, 678 F. Supp. 3d 443 (S.D.N.Y. 2023)</a>. Two lawyers filed a brief containing six citations generated by ChatGPT. All six were fabricated — convincing names, plausible reporter cites, detailed holdings, and none of them real. The court sanctioned the lawyers <strong>$5,000</strong> and referred them to the grievance committee. The lawyers' defense — that they had asked the AI whether the cases were real and it had insisted they were — did not carry the day.</p>
+      <p>Mata was not the end of the story; it was the beginning. The researcher Damien Charlotin maintains a <a href="https://www.damiencharlotin.com/hallucinations/" target="_blank" rel="noopener">public database of court decisions dealing with AI-hallucinated citations</a>. It has grown from roughly 640 entries in late 2024 to <strong>more than 1,600 decisions worldwide by mid-2026</strong>, with new entries added regularly. Courts have responded not just case-by-case but structurally: by mid-2024, tracking by <a href="https://www.ropesgray.com/en/sites/artificial-intelligence-court-order-tracker" target="_blank" rel="noopener">Ropes &amp; Gray</a> counted <strong>at least 36 standing orders</strong> from state and federal judges across 13 states requiring attorneys to disclose AI use, certify citation accuracy, or both. The first, from Judge Brantley Starr of the Northern District of Texas, requires a certificate that any AI-generated content in a filing was verified by a human. The direction of travel is unambiguous.</p>
+
+      <h2>The two failure modes</h2>
+      <p>Before the checklist, know what you are looking for. AI citation errors come in two distinct flavors, and they require different checks:</p>
+      <ul>
+        <li><strong>Fabrication.</strong> The authority does not exist. The case name, reporter, volume, page, court, or year is invented. This is what happened in Mata — and it is the failure mode a basic existence check catches instantly.</li>
+        <li><strong>Misgrounding.</strong> The case is real, but it does not support the proposition attributed to it — or the pinpoint page is wrong, or the holding is overstated. Stanford's research on legal AI tools describes misgrounding as potentially <em>more dangerous</em> than fabrication, because the citation passes a superficial check: the case exists, so the error only surfaces when someone actually reads the source.</li>
+      </ul>
+      <p>This is why the checklist has two halves: prove the case exists, then prove it says what the AI claims.</p>
+
+      <h2>The five-minute workflow</h2>
+      <h3>Step 1 — Existence check (seconds)</h3>
+      <p>Take the citation and look it up. The fastest free option is <a href="https://www.courtlistener.com" target="_blank" rel="noopener"><strong>CourtListener</strong></a>, run by the Free Law Project, which hosts millions of opinions and — since April 2024 — a <strong><a href="https://free.law/2024/04/16/citation-lookup-api/" target="_blank" rel="noopener">Citation Lookup API</a></strong> Lookup API</strong> built on a database of roughly ten million citations. You paste a block of text, and it extracts the citations, matches them against its database, flags invalid and ambiguous ones, and returns the corrected form and the matched opinion. Google Scholar's case search is the other good free tool: search the case name or the reporter cite, and it will find the decision — including many unpublished ones. For a specific court's opinion, the court's own website is authoritative.</p>
+      <p>What a passing existence check looks like: the case name matches a real decision, the reporter volume and page exist, the court and year are consistent, and the decision actually involves the parties named.</p>
+      <h3>Step 2 — Pinpoint check (one to two minutes)</h3>
+      <p>Existence is not enough. Open the decision and check the cited page — the pinpoint. Does the proposition the AI attributed to the case actually appear at that page? This is the check that catches misgrounding, and it is the one most often skipped. A real case cited for the wrong holding is a real citation and a real error; it will survive Step 1 and fail here.</p>
+      <h3>Step 3 — Holding check (one to two minutes)</h3>
+      <p>Read the holding in context. Courts frequently state a rule in one section and qualify it in another. The AI may have lifted a sentence that, read alone, overstates the law. Confirm the proposition matches not just a sentence in the case, but the case's actual holding — what the court decided, not what it said along the way.</p>
+      <h3>Step 4 — Treatment check (seconds with a citator)</h3>
+      <p>Has the case been reversed, vacated, or criticized? Westlaw's KeyCite and Lexis's Shepard's do this in one click, and treatment signals are exactly what a citator exists for. A case that once stood for a proposition and now stands for its opposite is the most dangerous citation of all: it was real, it said what the AI claimed, and it is still wrong today.</p>
+      <h3>Step 5 — Context and applicability check (as long as the issue demands)</h3>
+      <p>The citation is real, the pinpoint is right, the holding is accurate, and the treatment is clean. Now the judgment call: is this authority applicable to your issue? Same jurisdiction, analogous facts, still good law for the proposition you need. This step is where verification stops being mechanical and becomes lawyering — and it is the step no tool can do for you.</p>
+
+      <h2>Red flags that shortcut the process</h2>
+      <p>Some citations announce their own untrustworthiness. Flag these immediately:</p>
+      <ul>
+        <li><strong>Reporter or volume that does not exist.</strong> AI has invented plausible-sounding reporters and volume numbers. If the citation format looks off, it probably is.</li>
+        <li><strong>Generic-sounding party names.</strong> Fabrications often pair bland plaintiff names with plausible defendants — the Mata cases had convincing but generic party names.</li>
+        <li><strong>Perfect formatting.</strong> A citation that is suspiciously flawlessly Bluebook-formatted, with no quirks of real-world citation practice, deserves extra scrutiny.</li>
+        <li><strong>Unusual citations clustered together.</strong> Multiple unfamiliar citations supporting one proposition is how the Mata brief was built.</li>
+        <li><strong>The AI insists when challenged.</strong> Asking the AI whether a citation is real and getting reassurance is not verification — the AI cannot check its own output. This is the exact trap the Mata lawyers fell into.</li>
+        <li><strong>Unpublished or hard-to-find cases cited for major propositions.</strong> Big rules are usually supported by leading, citable authority. A minor or obscure case carrying the weight of a novel proposition is worth a hard look.</li>
+      </ul>
+
+      <h2>The verification loop for research memos</h2>
+      <p>For a single citation, Steps 1–4 are genuinely a five-minute job. For a whole research memo, structure it: batch-check existence for all citations first (seconds each), then work through the pinpoints and holdings for the citations that will actually carry your argument, then run treatment checks on everything. The citations that matter most — the controlling authority for your proposition — get the full treatment; the citations that merely support a background point still get the existence check. The point is not to verify everything to the same depth; it is to verify everything to at least the depth the argument depends on.</p>
+      <blockquote>
+        <p>"Ask the AI what the case says. Then ask the case."</p>
+      </blockquote>
+
+      <h2>Documenting the verification</h2>
+      <p>Verification you cannot show is verification you did not do. Keep the audit trail: the date of the check, the tool used, and what was confirmed at each step. This serves three purposes. It protects you if a citation is ever challenged — the standing orders that require certification of AI content will ask you to show your work. It satisfies the professional-conduct framework that ABA Formal Opinion 512 lays out: competence with the tool's limits (Rule 1.1), candor to the tribunal (Rules 3.3 and 8.4), and supervision of everyone who touches the AI output (Rules 5.1 and 5.3). And it makes the verification loop a habit instead of a scramble.</p>
+
+      <h2>What Lawyer Assistant does about this</h2>
+      <p>Lawyer Assistant is built around the principle that every AI claim should be checkable in one click: its answers cite the exact source text they were grounded in, so the Step 1 through Step 3 checks — does the source exist, does it say this, does it support this — start from the passage itself rather than from a bare citation. The tool does the retrieval and the citing; the verification and the judgment stay with you, exactly where the standing orders and the ethics rules put them.</p>
+
+      <h2>The bottom line</h2>
+      <p>Verifying a citation is not a burden; it is a two-minute habit with a five-minute ceiling for the hard cases. Existence, pinpoint, holding, treatment, applicability — each check is fast, each uses tools you already have, and each one is exactly the step the sanctioned lawyers skipped. The AI is a faster researcher, not a licensed source. Every citation it produces is a claim to be checked, and the check is cheap insurance against the most expensive mistake in modern legal practice.</p>
+
+      <h2>Sources &amp; further reading</h2>
+      <ul>
+        <li><em><a href="https://www.courtlistener.com/docket/63107798/mata-v-avianca-inc/" target="_blank" rel="noopener">Mata v. Avianca, Inc.</a></em>, 678 F. Supp. 3d 443 (S.D.N.Y. 2023) — $5,000 sanction and grievance-committee referral for filing six ChatGPT-fabricated citations.</li>
+        <li>Damien Charlotin, <em><a href="https://www.damiencharlotin.com/hallucinations/" target="_blank" rel="noopener">AI Hallucination Cases Database</a></em> — public tracker of court decisions dealing with AI-hallucinated citations; roughly 640 entries in late 2024, more than 1,600 by mid-2026.</li>
+        <li>Ropes &amp; Gray LLP, <a href="https://www.ropesgray.com/en/sites/artificial-intelligence-court-order-tracker" target="_blank" rel="noopener">AI Court Order Tracker</a> — at least 36 standing orders across 13 states as of mid-2024; Judge Brantley Starr (N.D. Tex.) first to require human verification of AI-generated content.</li>
+        <li>Free Law Project, <em><a href="https://free.law/2024/04/16/citation-lookup-api/" target="_blank" rel="noopener">Citation Lookup and Verification API</a></em> (April 2024) — CourtListener's free API for extracting, validating, and matching citations against a database of roughly ten million citations.</li>
+        <li>Magesh, Surani, Dahl, Suzgun, Manning &amp; Ho, <em><a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jels.12413" target="_blank" rel="noopener">Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools</a></em> (Stanford RegLab / HAI; Journal of Empirical Legal Studies, 2025) — fabrication versus misgrounding; more than 17% of queries incorrect or misgrounded in leading tools.</li>
+        <li>ABA Formal Opinion 512, "Generative Artificial Intelligence Tools" (July 29, 2024) — competence, confidentiality, candor, and supervision (<a href="https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/ethics-opinions/aba-formal-opinion-512.pdf" target="_blank" rel="noopener">full text (PDF)</a>).</li>
+        <li>CourtListener (<a href="https://www.courtlistener.com" target="_blank" rel="noopener">courtlistener.com</a>) and Google Scholar case search — free tools for existence and pinpoint checks.</li>
+      </ul>
+      <p style="color:var(--faint);font-size:13px"><em>This article is general information about technology and professional practice. It is not legal advice for any specific matter, and rules vary by jurisdiction — verify against the authority applicable to your matter.</em></p>
+    </div>
+
+    <div class="post-faq">
+      <h2>Questions, answered</h2>
+      <p class="sub">The key questions from this article, answered plainly.</p>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>How can you tell if a case citation is fake?</h3>
+          <p>Look up the citation in a real legal database. If the case name, reporter volume, page, court, and year do not all line up with a real decision — or the cited page does not contain the proposition — it is fabricated or misgrounded. Red flags include nonexistent reporters, party names that feel generic, holdings attributed to real cases that never said them, and citations the AI insists are correct even when the lookup fails.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What is the difference between a fabricated and a misgrounded citation?</h3>
+          <p>A fabricated citation is invented entirely — the case does not exist, as in Mata v. Avianca. A misgrounded citation is a real case cited for a proposition it does not support. Stanford's study of legal AI tools found misgrounded answers may be more dangerous than fabrication because they survive a superficial check: the case is real, so the error only surfaces when someone actually reads the source.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Which free tools can verify a case citation?</h3>
+          <p>CourtListener (and its Citation Lookup API from the Free Law Project) matches citations against a database of millions of opinions and flags invalid ones. Google Scholar's case search covers federal and much state case law, including unpublished decisions. Court websites themselves are authoritative for their own opinions. Paid services like Westlaw, Lexis, and Fastcase add citator treatment signals such as KeyCite and Shepard's.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How long does citation verification actually take?</h3>
+          <p>A single citation takes seconds to minutes: existence checks are near-instant in a lookup tool, reading the holding takes a minute or two, and treatment checks are quick with a citator. The honest answer is that a full brief's worth of citations takes proportionally longer — and substantive verification of holding, context, and treatment always takes more time than the existence check alone.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What are the consequences of filing an unverified AI citation?</h3>
+          <p>Courts have imposed monetary sanctions — Mata v. Avianca brought a $5,000 sanction plus a referral to the grievance committee — and the researcher Damien Charlotin's database has tracked more than 1,600 court decisions worldwide dealing with AI-hallucinated citations. Beyond sanctions, unverified citations risk malpractice claims, credibility damage, and dismissal of the argument they supposedly support.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="related">
+      <h4>Related reading</h4>
+      <div class="related-grid">
+      <a class="rel-card" href="how-ai-legal-research-works.html">
+        <span class="rel-t">How AI Legal Research Works Under the Hood</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="can-you-trust-ai-legal-research.html">
+        <span class="rel-t">Can You Trust an AI for Legal Research?</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="how-to-use-ai-for-legal-research.html">
+        <span class="rel-t">How to Use AI for Legal Research Ethically</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="ai-vs-westlaw-lexis.html">
+        <span class="rel-t">AI vs. Westlaw and Lexis: What Actually Changed</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      </div>
+    </div>
+    <div class="post-nav">
+      <a class="pnav prev" href="how-ai-legal-research-works.html"><span class="pn-dir">← Older</span><span class="pn-t">How AI Legal Research Works Under the Hood: Retrieval, Reranking, and Why It Matters</span></a>
+      <a class="pnav next" href="ai-vs-westlaw-lexis.html"><span class="pn-dir">Newer →</span><span class="pn-t">AI vs. Westlaw and Lexis: What Actually Changed</span></a>
+    </div>
+    <div class="post-end">
+      <span class="tag">Filed under <b>Legal research</b> · <b>AI reliability</b> · <b>Verification</b></span>
+      <span class="tag"><a href="../blog.html">← All articles</a></span>
+    </div>
+
+    <div class="promo">
+      <div class="promo-eyebrow">Next steps</div>
+      <h2>Put it to work on your own documents.</h2>
+      <p>Lawyer Assistant runs entirely on your machine — install it in minutes, read the documentation, or browse more notes from the Legal Desk.</p>
+      <div class="promo-links">
+        <a class="promo-btn promo-btn-brass" href="../install.html">Install the app →</a>
+        <a class="promo-btn promo-btn-ghost" href="../docs.html">Read the docs</a>
+        <a class="promo-btn promo-btn-ghost" href="../blog.html">All articles</a>
+        <a class="promo-btn promo-btn-ghost" href="../index.html">Back to home</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../install.html">Install</a><a href="../blog.html">Blog</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>

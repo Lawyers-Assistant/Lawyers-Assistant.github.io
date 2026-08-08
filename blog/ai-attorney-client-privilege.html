@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI and Attorney-Client Privilege: What Happens When the Machine Sees the File | Lawyer Assistant</title>
+<meta name="description" content="When you feed client material to an AI tool, is the privilege still intact? The doctrine, the first ruling on point, and what makes the expectation of confidentiality reasonable."/>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
+<link rel="canonical" href="https://lawyers-assistant.github.io/blog/ai-attorney-client-privilege.html"/>
+<meta name="keywords" content="ai attorney-client privilege, privilege waiver ai tool, united states v heppner, kovel doctrine ai, ai confidentiality model rule 1.6, aba opinion 512 privilege, ai client data privilege risk"/>
+<meta name="author" content="Hussain Nazary"/>
+<meta name="theme-color" content="#0b110e"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="Lawyer Assistant"/>
+<meta property="og:title" content="AI and Attorney-Client Privilege: What Happens When the Machine Sees the File"/>
+<meta property="og:description" content="The doctrine, the first ruling on point, and what makes the expectation of confidentiality reasonable when AI sees client material."/>
+<meta property="og:url" content="https://lawyers-assistant.github.io/blog/ai-attorney-client-privilege.html"/>
+<meta property="og:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<meta property="og:locale" content="en_US"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="AI and Attorney-Client Privilege"/>
+<meta name="twitter:description" content="The doctrine, the first ruling on point, and what makes the expectation of confidentiality reasonable."/>
+<meta name="twitter:image" content="https://lawyers-assistant.github.io/assets/Screen.png"/>
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#0b110e; --ink-2:#101a15; --panel:#14201a; --panel-2:#18261f;
+  --line:#23352c; --line-bright:#33503f; --paper:#f3ecdd; --paper-dim:#c9bfa9;
+  --muted:#93a89c; --faint:#5d7267; --brass:#c9a35c; --brass-2:#e0c088;
+  --oxblood:#a33d2e; --oxblood-2:#c65a47; --sage:#6fae8f;
+  --font-d:"Fraunces",Georgia,serif; --font-s:"IBM Plex Sans",system-ui,sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-s);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(1000px 480px at 85% -10%,rgba(201,163,92,.09),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+::selection{background:var(--brass);color:var(--ink)}
+a{color:var(--brass-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1240px;margin:0 auto;padding:0 26px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-size:1.14rem;color:var(--paper)}
+.brand img{width:28px;height:28px}
+.brand .dot{color:var(--brass)}
+.nav-links{display:flex;gap:24px;font-size:13.5px;color:var(--paper-dim)}
+.nav-links a{padding:4px 0;color:var(--paper-dim)}
+.nav-links a:hover{color:var(--brass-2);text-decoration:none}
+.nav-links .active{color:var(--brass-2)}
+
+/* article */
+.post{padding:50px 0 80px}
+.crumb{font-family:var(--font-m);font-size:11px;letter-spacing:.12em;color:var(--faint);margin-bottom:26px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--brass-2)}
+.post-head{margin-bottom:40px;max-width:780px}
+.post-meta{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+.post-meta .cat{color:var(--brass)}
+.post h1{font-family:var(--font-d);font-weight:500;font-size:clamp(1.9rem,4.2vw,2.8rem);line-height:1.16;letter-spacing:-.01em;margin:0 0 16px}
+.post .dek{color:var(--paper-dim);font-size:1.1rem;max-width:64ch}
+.post-body{max-width:760px}
+.post-body h2{font-family:var(--font-d);font-weight:500;font-size:1.55rem;margin:42px 0 14px;padding-top:18px;border-top:1px solid var(--line);letter-spacing:-.01em}
+.post-body h3{font-family:var(--font-d);font-weight:500;font-size:1.22rem;margin:30px 0 10px;color:var(--brass-2)}
+.post-body p{margin:0 0 18px;color:var(--paper-dim);font-size:15.5px}
+.post-body strong{color:var(--paper);font-weight:600}
+.post-body a{text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(201,163,92,.35)}
+.post-body a:hover{text-decoration-color:var(--brass)}
+.post-body ul,.post-body ol{margin:0 0 18px;padding-left:26px;color:var(--paper-dim);font-size:15.5px}
+.post-body li{margin:6px 0}
+.post-body li::marker{color:var(--brass)}
+.post-body blockquote{border-left:3px solid var(--brass);background:var(--panel);padding:16px 20px;border-radius:0 10px 10px 0;margin:0 0 20px;font-family:var(--font-d);font-size:1.1rem;color:var(--paper-dim)}
+.post-body blockquote p{margin:0 0 6px}
+.post-body blockquote p:last-child{margin:0}
+.post-body hr{border:none;border-top:1px solid var(--line);margin:36px 0}
+.post-body code{font-family:var(--font-m);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;color:var(--brass-2)}
+.post-end{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.post-end .tag{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.post-end .tag b{color:var(--brass-2);font-weight:500}
+/* related reading */
+.related{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.related h4{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:860px){.related-grid{grid-template-columns:1fr}}
+.rel-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.rel-card:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.rel-card .rel-t{font-family:var(--font-d);font-size:14px;font-weight:500;color:var(--paper);line-height:1.35}
+.rel-card .rel-go{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-2);margin-top:8px;display:block}
+
+/* post nav */
+.post-nav{display:flex;gap:12px;margin-top:20px}
+.post-nav .pnav{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.post-nav .pnav:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.post-nav .pn-dir{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:4px}
+.post-nav .pn-t{font-family:var(--font-d);font-size:13.5px;font-weight:500;color:var(--paper);line-height:1.3;display:block}
+.post-nav .pnav.next{text-align:right}
+@media(max-width:640px){.post-nav{flex-direction:column}}
+
+/* post FAQ */
+.post-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.post-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.post-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+/* promo */
+.promo{margin-top:56px;padding:34px 30px;background:radial-gradient(700px 300px at 80% -20%,rgba(201,163,92,.12),transparent 65%),var(--panel);border:1px solid var(--line);border-radius:16px}
+.promo-eyebrow{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:10px}
+.promo h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;color:var(--paper);margin:0 0 8px}
+.promo p{color:var(--muted);font-size:13.5px;margin:0 0 20px;max-width:62ch}
+.promo-links{display:flex;gap:10px;flex-wrap:wrap}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:var(--font-s);font-size:12.5px;font-weight:600;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.promo-btn:hover{text-decoration:none;transform:translateY(-2px)}
+.promo-btn-brass{background:linear-gradient(135deg,#d8b468,#c9a35c 55%,#b08a35);color:#0b110e;box-shadow:0 4px 18px rgba(201,163,92,.25)}
+.promo-btn-brass:hover{box-shadow:0 8px 26px rgba(201,163,92,.35)}
+.promo-btn-ghost{border:1px solid var(--line-bright);color:var(--paper-dim)}
+.promo-btn-ghost:hover{border-color:var(--brass);color:var(--brass-2)}
+@media(max-width:640px){.promo{padding:26px 20px}}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
+.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-brand{display:flex;align-items:center;gap:9px;font-family:var(--font-d);font-size:1rem;color:var(--paper)}
+.foot-brand img{width:22px;height:22px}
+.foot-links{display:flex;gap:22px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--brass-2);text-decoration:none}
+.foot-note{width:100%;text-align:center;font-family:var(--font-m);font-size:10.5px;color:var(--faint);margin-top:28px}
+
+@media(max-width:860px){.nav-links{display:none}}
+@media(max-width:640px){.wrap{padding:0 16px}.post{padding:34px 0 60px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "AI and Attorney-Client Privilege: What Happens When the Machine Sees the File",
+  "description": "When you feed client material to an AI tool, is the privilege still intact? The doctrine, the first ruling on point, and what makes the expectation of confidentiality reasonable.",
+  "datePublished": "2026-08-17",
+  "dateModified": "2026-08-17",
+  "author": {"@type": "Person", "name": "Hussain Nazary"},
+  "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
+  "mainEntityOfPage": "https://lawyers-assistant.github.io/blog/ai-attorney-client-privilege.html"
+}
+</script>
+
+<!-- BreadcrumbList — matches the visible breadcrumb -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Blog", "item": "https://lawyers-assistant.github.io/blog.html"},
+    {"@type": "ListItem", "position": 2, "name": "The profession"}
+  ]
+}
+</script>
+
+<!-- FAQPage — article Q&A for AI extraction -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does using an AI tool waive the attorney-client privilege?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not automatically. Waiver turns on whether the disclosure destroyed the confidentiality that privilege requires. The first ruling on point — United States v. Heppner (S.D.N.Y. 2026) — applied traditional principles: a consumer AI platform whose privacy policy allowed training on inputs and disclosure to third parties defeated any reasonable expectation of confidentiality, so no privilege attached. The tool did not waive privilege; the disclosure through an unsecured channel did."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What makes client data shared with an AI tool confidential enough to protect privilege?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The same things that protect it with any third-party vendor: a contractual commitment that the provider will not use the data to train models or share it, technical security that prevents unauthorized access, and an arrangement where the provider functions like an agent of the lawyer. Tools whose terms allow training on inputs, disclosure to third parties, or retention for other purposes are the ones that destroy the expectation of confidentiality — exactly what happened in Heppner."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the Kovel doctrine, and does it protect AI vendors?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Kovel doctrine protects privilege when a third party is necessary to facilitate the lawyer's legal advice — the classic examples are translators and accountants. Courts have not held that a general-purpose AI vendor is a necessary intermediary in that sense, and the safer assumption is that consumer AI tools are ordinary third parties: disclosure to them is waiver risk unless the arrangement is structured with confidentiality protections."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does ABA Formal Opinion 512 require for confidentiality?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Model Rule 1.6 requires reasonable efforts to prevent disclosure of information relating to the representation. Applied to AI, that means evaluating the tool's data practices before use — whether inputs are used for training, whether they are shared, how they are secured — and declining to use tools that cannot protect client information. North Carolina's 2024 ethics opinion makes the same point: competence (Rule 1.1), confidentiality (Rule 1.6(c)), and supervision (Rule 5.3) all apply to AI."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "If the AI runs locally on my machine, is the privilege question different?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, in practice. The privilege risk is a disclosure risk: it comes from sending client material to a third party that may retain, train on, or share it. A tool that processes everything locally, sends nothing to a vendor, and stores nothing in the cloud eliminates the third-party disclosure that drives the waiver analysis. The ethics analysis still applies — competence and supervision never go away — but the confidentiality half of the problem is handled by architecture."
+      }
+    }
+  ]
+}
+</script>
+
+</head>
+<body>
+<nav><div class="wrap nav-in">
+  <a class="brand" href="../index.html"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span class="dot">.</span></a>
+  <div class="nav-links"><a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html" class="active">Blog</a><a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a></div>
+</div></nav>
+
+<article class="post">
+  <div class="wrap">
+    <div class="crumb"><a href="../blog.html">✒️ Blog</a> <span style="color:var(--faint)">/</span> <span>The profession</span></div>
+    <header class="post-head">
+      <div class="post-meta"><span class="cat">The profession</span><span>Aug 17, 2026</span><span>9 min read</span></div>
+      <h1>AI and Attorney-Client Privilege: What Happens When the Machine Sees the File</h1>
+      <p class="dek">The privilege question is not whether the AI is a lawyer. It is whether the disclosure destroyed the confidentiality that privilege requires — and a February 2026 ruling is the first court to say it clearly.</p>
+    </header>
+    <div class="post-body">
+      <p>Every lawyer who has run client material through an AI tool has asked the same question: did I just waive the privilege? The instinct is right, and the answer is more precise than the fear. Using AI does not automatically waive privilege. Disclosing client information to a third party that can retain, train on, or share it — that is what destroys the confidentiality the privilege requires. In February 2026, a federal court in New York became the first to apply that framework squarely to AI. This article walks through the doctrine, the ruling, and what it means for how you use these tools.</p>
+      <p>It is the doctrinal companion to our earlier piece on <a href="attorney-client-privilege-and-ai.html">where your client's data goes</a> — that article covered the chain of custody and the practical checklist; this one covers the law.</p>
+
+      <h2>The elements privilege rests on</h2>
+      <p>The attorney-client privilege protects confidential communications between a lawyer and client made for the purpose of obtaining legal advice. Three elements matter for the AI question:</p>
+      <ul>
+        <li><strong>Confidentiality.</strong> The communication must be made with a reasonable expectation that it stays private. This is the element AI tests hardest.</li>
+        <li><strong>The relationship.</strong> The communication must be with a lawyer — a licensed professional in a trusting relationship. An AI tool is not a lawyer and cannot form an attorney-client relationship.</li>
+        <li><strong>The purpose.</strong> The communication must be for the purpose of obtaining legal advice, not something else.</li>
+      </ul>
+      <p>The general rule that flows from the first element: <strong>disclosure to a third party waives the privilege</strong>, unless the disclosure was necessary to obtain legal advice or the third party is functioning as the lawyer's agent. That is the rule that has governed translators, accountants, and consultants for decades, and it is the rule courts are now applying to AI.</p>
+
+      <h2>The Kovel doctrine and the agent question</h2>
+      <p>There is a well-known exception. Under the <a href="https://law.justia.com/cases/federal/appellate-courts/F2/296/918/131265/" target="_blank" rel="noopener"><em>Kovel</em> doctrine</a>, privilege survives when a third party is <strong>necessary to facilitate the lawyer's legal advice</strong> — the classic cases are translators and accountants working at the lawyer's direction, functioning as an extension of the lawyer. Courts have also protected disclosure to vendors that are the functional equivalent of in-house staff, working under the lawyer's control with confidentiality guaranteed.</p>
+      <p>This is where the AI analysis gets honest. No court has held that a general-purpose AI vendor is a <em>Kovel</em>-style necessary intermediary. A consumer chatbot is not a translator or an accountant; it is a software service. Whether the agent exception could ever protect an AI arrangement will depend on facts no consumer tool provides: the vendor acting at the lawyer's direction, bound by confidentiality, with the client's material not used for anything else. The safe assumption for every AI tool is the default rule: <strong>the vendor is a third party, and disclosure to it is waiver risk unless the arrangement is structured to protect confidentiality.</strong></p>
+
+      <h2>The first ruling on point: United States v. Heppner</h2>
+      <p>In February 2026, Judge Jed Rakoff of the Southern District of New York decided the question in <a href="https://www.gibsondunn.com/ai-privilege-waivers-sdny-rules-against-privilege-protection-for-consumer-ai-outputs/" target="_blank" rel="noopener"><em>United States v. Heppner</em></a>eppner</em> — described by the court as a "nationwide" matter of first impression: whether communications with a publicly available AI platform during a pending criminal investigation are protected by privilege or work product.</p>
+      <p>The facts: a criminal defendant, aware he was a target of a federal investigation, used a consumer AI platform on his own — not at his lawyers' direction — to organize and synthesize information for his defense. The government seized 31 AI-generated documents, and his lawyers asserted privilege over them. Judge Rakoff ruled they were not protected, and his reasoning is the template for the whole field:</p>
+      <ul>
+        <li><strong>No attorney-client relationship.</strong> The AI tool is not a lawyer. Its own terms disclaimed that it provides legal advice.</li>
+        <li><strong>No reasonable expectation of confidentiality.</strong> The platform's privacy policy disclosed that user inputs and outputs could be used for model training and disclosed to third parties. Under those terms, the communications were not confidential — and this finding rested on the tool's actual data practices, not on the mere fact that a third party was involved.</li>
+        <li><strong>Not for the purpose of obtaining legal advice.</strong> Heppner used the tool to organize his own thoughts, independently of counsel.</li>
+        <li><strong>No work product protection.</strong> The materials were not prepared at counsel's direction, so they did not reflect counsel's strategy.</li>
+      </ul>
+      <p>The court was careful to say the ruling was not a new anti-AI rule: it applied "longstanding legal principles" to a new intermediary. It even noted the result might have differed had counsel directed the client's use of the tool. The lesson of <em>Heppner</em> is precise: <strong>the privilege failed because the disclosure channel was not confidential — the platform trained on inputs and reserved the right to share them — not because the tool was an AI.</strong></p>
+      <blockquote>
+        <p>"The tool did not waive the privilege. The disclosure through a channel that trained on the client's file did. That distinction is the whole ballgame."</p>
+      </blockquote>
+
+      <h2>What the ethics opinions say</h2>
+      <p>The ethics framework has been consistent since <a href="https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/ethics-opinions/aba-formal-opinion-512.pdf" target="_blank" rel="noopener">ABA Formal Opinion 512</a> (July 2024), which held that generative AI is governed by the existing rules: competence (Rule 1.1), confidentiality (Rule 1.6), candor to the tribunal (Rule 3.3), and supervision (Rules 5.1 and 5.3). On confidentiality, the opinion requires <strong>reasonable efforts</strong> to protect client information — which, applied to AI, means evaluating the tool's data practices before use and declining to use tools that cannot keep client material confidential.</p>
+      <p>State bars have said the same thing. <a href="https://www.ncbar.gov/for-lawyers/ethics-and-governing-rules/ethics-opinions/opinions/2024-formal-ethics-opinion-1/" target="_blank" rel="noopener">North Carolina's 2024 Formal Ethics Opinion 1</a> — the first comprehensive state treatment — holds that a lawyer may use AI if it is used competently, securely, and with proper supervision. It applies Rule 1.6(c)'s "reasonable efforts" standard to the choice of AI tools, applies Rule 5.3 to third-party AI providers, and adds a pointed note: whether sharing information with an AI tool violates the attorney-client privilege is a legal question outside the ethics rules, and the lawyer should <strong>research and resolve privilege questions before engaging a third-party AI program with client-specific information</strong>.</p>
+      <p>Notice what the ethics opinions do not say: they do not say AI use is unethical, and they do not say AI use waives privilege. They say the opposite — that the lawyer remains in control, and the obligations adapt to the tool. The privilege risk is a function of how the tool handles the data, which the lawyer can and must investigate.</p>
+
+      <h2>The practical test: three questions before you paste</h2>
+      <p>Before client material goes into any AI tool, ask three questions — they map exactly onto the elements the courts and opinions care about:</p>
+      <ol>
+        <li><strong>Can the vendor see it?</strong> Does the provider's policy allow training on inputs, retention beyond the session, or disclosure to third parties? If yes, the expectation of confidentiality is already undermined — the <em>Heppner</em> fact pattern.</li>
+        <li><strong>Is there a contract that says otherwise?</strong> Enterprise agreements with no-training and no-disclosure commitments change the analysis materially. Consumer terms almost never provide these protections.</li>
+        <li><strong>Is the tool acting as your agent, or as an independent service?</strong> If the tool is an independent service that reuses your data, it is a third party for waiver purposes. If it processes locally, retains nothing, and shares nothing, the third-party disclosure that drives the waiver analysis simply does not happen.</li>
+      </ol>
+
+      <h2>Local processing and the architecture answer</h2>
+      <p>This is where the architecture argument gets concrete. The privilege risk is a <em>disclosure</em> risk: it exists because client material leaves the firm and enters a system that may retain, train on, or share it. A tool that processes everything on the lawyer's own machine — no cloud, no vendor, no training on client data, nothing retained after the session — removes the disclosure that the waiver analysis depends on. That does not make the lawyer's other duties disappear: competence and supervision apply to every tool, local or cloud. But it removes the single risk that the courts have actually enforced: the client's file ending up in a system the client never agreed to share it with.</p>
+
+      <h2>What Lawyer Assistant does about this</h2>
+      <p>Lawyer Assistant is built on exactly this logic. It runs entirely on your machine — documents, queries, and results never leave your computer. There is no vendor with access to your files, no training on your data, no cloud retention. The Rule 1.6 half of the confidentiality problem is handled by architecture rather than by a promise in a privacy policy. That is not a claim that privilege is automatic — privilege is a legal conclusion for a court to reach, and no software can guarantee it. It is a claim that the disclosure risk the courts have enforced is designed out of the system. The competence and supervision duties remain yours, as they always are.</p>
+
+      <h2>The bottom line</h2>
+      <p>The privilege question has a clear answer, and it is not the scary one. Using AI does not waive the privilege; disclosing client information through a channel that is not confidential does. <em>Heppner</em> is the first court to say so on the record: the tool's terms — training on inputs, sharing with third parties — defeated the expectation of confidentiality. The ethics opinions say the rest: the lawyer must evaluate the tool, keep control, and resolve privilege questions before client data goes in. A tool that never sees the data in a way that can be shared, trained on, or retained is a tool that takes the waiver question off the table — which is the entire design philosophy behind Lawyer Assistant.</p>
+
+      <h2>Sources &amp; further reading</h2>
+      <ul>
+        <li><em>United States v. Heppner</em>, No. 25 Cr. 503 (S.D.N.Y. Feb. 17, 2026) — Judge Rakoff; bench ruling Feb. 10, 2026; consumer AI outputs not protected by privilege or work product; "nationwide" matter of first impression (analysis via <a href="https://www.gibsondunn.com/ai-privilege-waivers-sdny-rules-against-privilege-protection-for-consumer-ai-outputs/" target="_blank" rel="noopener">Gibson Dunn client alert</a>).</li>
+        <li>Gibson Dunn client alert, <a href="https://www.gibsondunn.com/ai-privilege-waivers-sdny-rules-against-privilege-protection-for-consumer-ai-outputs/" target="_blank" rel="noopener">"AI Privilege Waivers: SDNY Rules Against Privilege Protection for Consumer AI Outputs"</a> (Feb. 20, 2026) — detailed analysis of the ruling and its takeaways.</li>
+        <li>ABA Formal Opinion 512, "Generative Artificial Intelligence Tools" (July 29, 2024) — competence, confidentiality, candor, and supervision (<a href="https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/ethics-opinions/aba-formal-opinion-512.pdf" target="_blank" rel="noopener">full text (PDF)</a>).</li>
+        <li>North Carolina State Bar, <a href="https://www.ncbar.gov/for-lawyers/ethics-and-governing-rules/ethics-opinions/opinions/2024-formal-ethics-opinion-1/" target="_blank" rel="noopener">2024 Formal Ethics Opinion 1, "Use of Artificial Intelligence in a Law Practice"</a> (Nov. 1, 2024) — competence, security, and supervision; privilege questions must be researched before using third-party AI with client information.</li>
+        <li><em><a href="https://law.justia.com/cases/federal/appellate-courts/F2/296/918/131265/" target="_blank" rel="noopener">United States v. Kovel</a></em>, 296 F.2d 918 (2d Cir. 1961) — the third-party-necessary-to-legal-advice doctrine.</li>
+      </ul>
+      <p style="color:var(--faint);font-size:13px"><em>This article is general information about technology and professional practice. It is not legal advice for any specific matter, and rules vary by jurisdiction — verify against the authority applicable to your matter.</em></p>
+    </div>
+
+    <div class="post-faq">
+      <h2>Questions, answered</h2>
+      <p class="sub">The key questions from this article, answered plainly.</p>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>Does using an AI tool waive the attorney-client privilege?</h3>
+          <p>Not automatically. Waiver turns on whether the disclosure destroyed the confidentiality that privilege requires. The first ruling on point — United States v. Heppner (S.D.N.Y. 2026) — applied traditional principles: a consumer AI platform whose privacy policy allowed training on inputs and disclosure to third parties defeated any reasonable expectation of confidentiality, so no privilege attached. The tool did not waive privilege; the disclosure through an unsecured channel did.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What makes client data shared with an AI tool confidential enough to protect privilege?</h3>
+          <p>The same things that protect it with any third-party vendor: a contractual commitment that the provider will not use the data to train models or share it, technical security that prevents unauthorized access, and an arrangement where the provider functions like an agent of the lawyer. Tools whose terms allow training on inputs, disclosure to third parties, or retention for other purposes are the ones that destroy the expectation of confidentiality — exactly what happened in Heppner.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What is the Kovel doctrine, and does it protect AI vendors?</h3>
+          <p>The Kovel doctrine protects privilege when a third party is necessary to facilitate the lawyer's legal advice — the classic examples are translators and accountants. Courts have not held that a general-purpose AI vendor is a necessary intermediary in that sense, and the safer assumption is that consumer AI tools are ordinary third parties: disclosure to them is waiver risk unless the arrangement is structured with confidentiality protections.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What does ABA Formal Opinion 512 require for confidentiality?</h3>
+          <p>Model Rule 1.6 requires reasonable efforts to prevent disclosure of information relating to the representation. Applied to AI, that means evaluating the tool's data practices before use — whether inputs are used for training, whether they are shared, how they are secured — and declining to use tools that cannot protect client information. North Carolina's 2024 ethics opinion makes the same point: competence (Rule 1.1), confidentiality (Rule 1.6(c)), and supervision (Rule 5.3) all apply to AI.</p>
+        </div>
+        <div class="faq-item">
+          <h3>If the AI runs locally on my machine, is the privilege question different?</h3>
+          <p>Yes, in practice. The privilege risk is a disclosure risk: it comes from sending client material to a third party that may retain, train on, or share it. A tool that processes everything locally, sends nothing to a vendor, and stores nothing in the cloud eliminates the third-party disclosure that drives the waiver analysis. The ethics analysis still applies — competence and supervision never go away — but the confidentiality half of the problem is handled by architecture.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="related">
+      <h4>Related reading</h4>
+      <div class="related-grid">
+      <a class="rel-card" href="attorney-client-privilege-and-ai.html">
+        <span class="rel-t">Attorney-Client Privilege and AI: Where Does Your Client's Data Go?</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="ai-vs-westlaw-lexis.html">
+        <span class="rel-t">AI vs. Westlaw and Lexis: What Actually Changed</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="how-to-use-ai-for-legal-research.html">
+        <span class="rel-t">How to Use AI for Legal Research Ethically</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="aba-formal-opinion-512-in-practice.html">
+        <span class="rel-t">ABA Formal Opinion 512 in Practice</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      </div>
+    </div>
+    <div class="post-nav">
+      <a class="pnav prev" href="ai-vs-westlaw-lexis.html"><span class="pn-dir">← Older</span><span class="pn-t">AI vs. Westlaw and Lexis: What Actually Changed</span></a>
+      <a class="pnav next" href="aba-formal-opinion-512-in-practice.html"><span class="pn-dir">Newer →</span><span class="pn-t">ABA Formal Opinion 512 in Practice: What It Means at Your Desk</span></a>
+    </div>
+    <div class="post-end">
+      <span class="tag">Filed under <b>The profession</b> · <b>Privilege</b> · <b>Confidentiality</b></span>
+      <span class="tag"><a href="../blog.html">← All articles</a></span>
+    </div>
+
+    <div class="promo">
+      <div class="promo-eyebrow">Next steps</div>
+      <h2>Put it to work on your own documents.</h2>
+      <p>Lawyer Assistant runs entirely on your machine — install it in minutes, read the documentation, or browse more notes from the Legal Desk.</p>
+      <div class="promo-links">
+        <a class="promo-btn promo-btn-brass" href="../install.html">Install the app →</a>
+        <a class="promo-btn promo-btn-ghost" href="../docs.html">Read the docs</a>
+        <a class="promo-btn promo-btn-ghost" href="../blog.html">All articles</a>
+        <a class="promo-btn promo-btn-ghost" href="../index.html">Back to home</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+<footer><div class="wrap foot">
+  <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
+  <div class="foot-links">
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../install.html">Install</a><a href="../blog.html">Blog</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
+  </div>
+  <p class="foot-note">© 2026 Lawyer Assistant · Local-first legal research · Free &amp; open source</p>
+</div></footer>
+</body>
+</html>
