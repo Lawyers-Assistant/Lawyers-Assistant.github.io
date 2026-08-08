@@ -574,6 +574,7 @@ def page_shell(title: str, body: str, active_doc: str | None, prefix: str = "", 
 
     nav_links = "".join(
         f'<a href="{prefix}index.html">Home</a><a href="{prefix}docs.html" class="active">Docs</a>'
+        f'<a href="{prefix}blog.html">Blog</a>'
         f'<a href="{REPO_URL}" target="_blank" rel="noopener">GitHub</a>'
     )
     return f"""<!DOCTYPE html>
@@ -616,7 +617,7 @@ def page_shell(title: str, body: str, active_doc: str | None, prefix: str = "", 
 <footer><div class="wrap foot">
   <div class="foot-brand"><img src="{prefix}assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
   <div class="foot-links">
-    <a href="{prefix}index.html">Home</a><a href="{prefix}docs.html">Docs</a>
+    <a href="{prefix}index.html">Home</a><a href="{prefix}docs.html">Docs</a><a href="{prefix}install.html">Install</a><a href="{prefix}blog.html">Blog</a>
     <a href="{REPO_URL}" target="_blank" rel="noopener">GitHub</a>
     <a href="{REPO_URL}/issues" target="_blank" rel="noopener">Report an issue</a>
   </div>

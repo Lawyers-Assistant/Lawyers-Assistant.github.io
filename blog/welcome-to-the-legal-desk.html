@@ -83,6 +83,48 @@ nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filt
 .post-end{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
 .post-end .tag{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 .post-end .tag b{color:var(--brass-2);font-weight:500}
+/* related reading */
+.related{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.related h4{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:860px){.related-grid{grid-template-columns:1fr}}
+.rel-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.rel-card:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.rel-card .rel-t{font-family:var(--font-d);font-size:14px;font-weight:500;color:var(--paper);line-height:1.35}
+.rel-card .rel-go{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-2);margin-top:8px;display:block}
+
+/* post nav */
+.post-nav{display:flex;gap:12px;margin-top:20px}
+.post-nav .pnav{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.post-nav .pnav:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.post-nav .pn-dir{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:4px}
+.post-nav .pn-t{font-family:var(--font-d);font-size:13.5px;font-weight:500;color:var(--paper);line-height:1.3;display:block}
+.post-nav .pnav.next{text-align:right}
+@media(max-width:640px){.post-nav{flex-direction:column}}
+
+/* post FAQ */
+.post-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.post-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.post-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+/* promo */
+.promo{margin-top:56px;padding:34px 30px;background:radial-gradient(700px 300px at 80% -20%,rgba(201,163,92,.12),transparent 65%),var(--panel);border:1px solid var(--line);border-radius:16px}
+.promo-eyebrow{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:10px}
+.promo h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;color:var(--paper);margin:0 0 8px}
+.promo p{color:var(--muted);font-size:13.5px;margin:0 0 20px;max-width:62ch}
+.promo-links{display:flex;gap:10px;flex-wrap:wrap}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:var(--font-s);font-size:12.5px;font-weight:600;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.promo-btn:hover{text-decoration:none;transform:translateY(-2px)}
+.promo-btn-brass{background:linear-gradient(135deg,#d8b468,#c9a35c 55%,#b08a35);color:#0b110e;box-shadow:0 4px 18px rgba(201,163,92,.25)}
+.promo-btn-brass:hover{box-shadow:0 8px 26px rgba(201,163,92,.35)}
+.promo-btn-ghost{border:1px solid var(--line-bright);color:var(--paper-dim)}
+.promo-btn-ghost:hover{border-color:var(--brass);color:var(--brass-2)}
+@media(max-width:640px){.promo{padding:26px 20px}}
 
 /* footer */
 footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
@@ -113,6 +155,60 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
 }
 </script>
 
+<!-- BreadcrumbList — matches the visible breadcrumb -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Blog", "item": "https://lawyers-assistant.github.io/blog.html"},
+    {"@type": "ListItem", "position": 2, "name": "Welcome to the Legal Desk"}
+  ]
+}
+</script>
+
+<!-- FAQPage — article Q&A for AI extraction -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the Legal Desk blog about?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Legal Desk is a blog for lawyers: short, plain, and practical notes on the craft of law. Every article falls into one of four honest categories — practice notes, legal research, legal writing, and the profession."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How are the articles on the Legal Desk written?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Three rules govern everything here: say it once and say it plainly, cite what you rely on, and respect the reader's time. If a note can be three paragraphs, it is not stretched to five."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who is the Legal Desk written for?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Lawyers and the people who work alongside them — practitioners who value their time and their craft. The notes are written plainly, with no filler and no marketing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I find more articles like this one?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Browse the full collection on the Lawyer Assistant blog, or follow the related-reading links at the end of every article. New notes cover practice, research technique, and the changing shape of legal work."
+      }
+    }
+  ]
+}
+</script>
+
 </head>
 <body>
 <nav><div class="wrap nav-in">
@@ -134,10 +230,10 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       <h2>What you'll find here</h2>
       <p>Every article falls into one of a few honest categories:</p>
       <ul>
-        <li><strong>Practice notes</strong> — how to run a file, manage a matter, or handle the day-to-day realities of practice.</li>
-        <li><strong>Legal research</strong> — technique: finding, reading, and reasoning from authority, and verifying before you rely.</li>
+        <li><strong><a href="../blog/ai-contract-review-for-lawyers.html">Practice notes</a></strong> — how to run a file, manage a matter, or handle the day-to-day realities of practice.</li>
+        <li><strong><a href="../blog/can-you-trust-ai-legal-research.html">Legal research</a></strong> — technique: finding, reading, and reasoning from authority, and verifying before you rely.</li>
         <li><strong>Legal writing</strong> — drafting that persuades, from memos to submissions, with examples worth stealing.</li>
-        <li><strong>The profession</strong> — the wider questions: technology, ethics, and the changing shape of legal work.</li>
+        <li><strong><a href="../blog/will-ai-replace-lawyers.html">The profession</a></strong> — the wider questions: technology, ethics, and the changing shape of legal work.</li>
       </ul>
 
       <h2>How these notes are written</h2>
@@ -154,9 +250,65 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
 
       <p>If you practice law, or work alongside those who do, pull up a chair. The next note will be worth your time — or it won't be published.</p>
     </div>
+
+    <div class="post-faq">
+      <h2>Questions, answered</h2>
+      <p class="sub">The key questions from this article, answered plainly.</p>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>What is the Legal Desk blog about?</h3>
+          <p>The Legal Desk is a blog for lawyers: short, plain, and practical notes on the craft of law. Every article falls into one of four honest categories — practice notes, legal research, legal writing, and the profession.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How are the articles on the Legal Desk written?</h3>
+          <p>Three rules govern everything here: say it once and say it plainly, cite what you rely on, and respect the reader's time. If a note can be three paragraphs, it is not stretched to five.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Who is the Legal Desk written for?</h3>
+          <p>Lawyers and the people who work alongside them — practitioners who value their time and their craft. The notes are written plainly, with no filler and no marketing.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Where can I find more articles like this one?</h3>
+          <p>Browse the full collection on the Lawyer Assistant blog, or follow the related-reading links at the end of every article. New notes cover practice, research technique, and the changing shape of legal work.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="related">
+      <h4>Related reading</h4>
+      <div class="related-grid">
+      <a class="rel-card" href="how-to-use-ai-for-legal-research.html">
+        <span class="rel-t">How to use AI for legal research ethically</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="will-ai-replace-lawyers.html">
+        <span class="rel-t">Will AI replace lawyers?</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="can-you-trust-ai-legal-research.html">
+        <span class="rel-t">Can you trust an AI for legal research?</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      </div>
+    </div>
+    <div class="post-nav">
+      <a class="pnav next" href="can-you-trust-ai-legal-research.html"><span class="pn-dir">Newer →</span><span class="pn-t">Can You Trust an AI for Legal Research?</span></a>
+    </div>
     <div class="post-end">
       <span class="tag">Filed under <b>Practice notes</b> · <b>Welcome</b></span>
       <span class="tag"><a href="../blog.html">← All articles</a></span>
+    </div>
+
+    <div class="promo">
+      <div class="promo-eyebrow">Next steps</div>
+      <h2>Put it to work on your own documents.</h2>
+      <p>Lawyer Assistant runs entirely on your machine — install it in minutes, read the documentation, or browse more notes from the Legal Desk.</p>
+      <div class="promo-links">
+        <a class="promo-btn promo-btn-brass" href="../install.html">Install the app →</a>
+        <a class="promo-btn promo-btn-ghost" href="../docs.html">Read the docs</a>
+        <a class="promo-btn promo-btn-ghost" href="../blog.html">All articles</a>
+        <a class="promo-btn promo-btn-ghost" href="../index.html">Back to home</a>
+      </div>
     </div>
   </div>
 </article>
@@ -164,7 +316,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
 <footer><div class="wrap foot">
   <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
   <div class="foot-links">
-    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html">Blog</a>
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../install.html">Install</a><a href="../blog.html">Blog</a>
     <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
     <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
   </div>

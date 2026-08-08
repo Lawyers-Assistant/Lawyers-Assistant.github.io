@@ -83,6 +83,48 @@ nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filt
 .post-end{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
 .post-end .tag{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 .post-end .tag b{color:var(--brass-2);font-weight:500}
+/* related reading */
+.related{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.related h4{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:860px){.related-grid{grid-template-columns:1fr}}
+.rel-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.rel-card:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.rel-card .rel-t{font-family:var(--font-d);font-size:14px;font-weight:500;color:var(--paper);line-height:1.35}
+.rel-card .rel-go{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-2);margin-top:8px;display:block}
+
+/* post nav */
+.post-nav{display:flex;gap:12px;margin-top:20px}
+.post-nav .pnav{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.post-nav .pnav:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.post-nav .pn-dir{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:4px}
+.post-nav .pn-t{font-family:var(--font-d);font-size:13.5px;font-weight:500;color:var(--paper);line-height:1.3;display:block}
+.post-nav .pnav.next{text-align:right}
+@media(max-width:640px){.post-nav{flex-direction:column}}
+
+/* post FAQ */
+.post-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.post-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.post-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+/* promo */
+.promo{margin-top:56px;padding:34px 30px;background:radial-gradient(700px 300px at 80% -20%,rgba(201,163,92,.12),transparent 65%),var(--panel);border:1px solid var(--line);border-radius:16px}
+.promo-eyebrow{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:10px}
+.promo h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;color:var(--paper);margin:0 0 8px}
+.promo p{color:var(--muted);font-size:13.5px;margin:0 0 20px;max-width:62ch}
+.promo-links{display:flex;gap:10px;flex-wrap:wrap}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:var(--font-s);font-size:12.5px;font-weight:600;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.promo-btn:hover{text-decoration:none;transform:translateY(-2px)}
+.promo-btn-brass{background:linear-gradient(135deg,#d8b468,#c9a35c 55%,#b08a35);color:#0b110e;box-shadow:0 4px 18px rgba(201,163,92,.25)}
+.promo-btn-brass:hover{box-shadow:0 8px 26px rgba(201,163,92,.35)}
+.promo-btn-ghost{border:1px solid var(--line-bright);color:var(--paper-dim)}
+.promo-btn-ghost:hover{border-color:var(--brass);color:var(--brass-2)}
+@media(max-width:640px){.promo{padding:26px 20px}}
 
 /* footer */
 footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
@@ -110,6 +152,60 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
   "author": {"@type": "Person", "name": "Hussain Nazary"},
   "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
   "mainEntityOfPage": "https://lawyers-assistant.github.io/blog/can-you-trust-ai-legal-research.html"
+}
+</script>
+
+<!-- BreadcrumbList — matches the visible breadcrumb -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Blog", "item": "https://lawyers-assistant.github.io/blog.html"},
+    {"@type": "ListItem", "position": 2, "name": "Legal research"}
+  ]
+}
+</script>
+
+<!-- FAQPage — article Q&A for AI extraction -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can you trust an AI for legal research?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — with the same caveats you apply to any research source: verify the authority, check the citation, and keep your own judgment in the driver's seat. Trustworthy tools refuse to answer from memory, cite what they retrieve, and let you look behind the answer. If a tool cannot show you its sources, it is not doing research."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does legal AI hallucinate fake citations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A large language model does not look anything up. It generates text by predicting, word by word, what is most plausible given everything it has read — so when asked for a case it produces what looks like a case: a name, a citation format, a holding. This is the difference between generation and retrieval, and it is why cases like Mata v. Avianca happen."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does grounded retrieval prevent hallucinations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Retrieval-Augmented Generation (RAG) searches an index of real documents first, retrieves the actual source text, and answers only from what was retrieved — every claim must cite a retrieved passage. Combined with hybrid retrieval (exact keyword matching plus semantic search, then reranking), grounded retrieval turns an AI from a drafting assistant into a research assistant."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What verification workflow should lawyers use with AI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use the AI to surface plausibly relevant passages, then use your judgment to conclude: read the cited passages, confirm they say what the answer claims, check the date and jurisdiction, and document your verification. Never cite an AI answer without reading the sources it cites — no citation, no reliance."
+      }
+    }
+  ]
 }
 </script>
 
@@ -163,7 +259,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       <ol>
         <li><strong>Use the AI to surface</strong> — to find the passages, statutes, and arguments that are plausibly relevant to your question. This is where AI saves hours.</li>
         <li><strong>Use your judgment to conclude</strong> — read the cited passages, confirm they say what the answer claims, check the date and jurisdiction, and decide what actually applies to your matter.</li>
-        <li><strong>Document your verification</strong> — if you relied on an AI research tool, you should be able to say exactly which sources you checked and how. Courts are increasingly asking.</li>
+        <li><strong>Document your verification</strong> — if you relied on an AI research tool, you should be able to say exactly which sources you checked and how. Courts are increasingly asking. For the full ethics-first version of this workflow, see our guide to <a href="../blog/how-to-use-ai-for-legal-research.html">using AI for legal research ethically</a>.</li>
       </ol>
       <p>Notice what this workflow <em>doesn't</em> include: asking a general chatbot to invent case law, citing an answer without reading its sources, or treating an AI summary as a substitute for primary authority. Those are the habits that produce <em>Mata v. Avianca</em> stories.</p>
 
@@ -175,9 +271,66 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       <p>Can you trust an AI for legal research? Yes — with the same caveats you apply to any research source: verify the authority, check the citation, and keep your own judgment in the driver's seat. The tools that deserve your trust are the ones that refuse to answer from memory, that cite what they retrieve, and that let you look behind the answer.</p>
       <p>If a tool cannot show you its sources, it is not doing research. It is doing creative writing with a legal vocabulary.</p>
     </div>
+
+    <div class="post-faq">
+      <h2>Questions, answered</h2>
+      <p class="sub">The key questions from this article, answered plainly.</p>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>Can you trust an AI for legal research?</h3>
+          <p>Yes — with the same caveats you apply to any research source: verify the authority, check the citation, and keep your own judgment in the driver's seat. Trustworthy tools refuse to answer from memory, cite what they retrieve, and let you look behind the answer. If a tool cannot show you its sources, it is not doing research.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Why does legal AI hallucinate fake citations?</h3>
+          <p>A large language model does not look anything up. It generates text by predicting, word by word, what is most plausible given everything it has read — so when asked for a case it produces what looks like a case: a name, a citation format, a holding. This is the difference between generation and retrieval, and it is why cases like Mata v. Avianca happen.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How does grounded retrieval prevent hallucinations?</h3>
+          <p>Retrieval-Augmented Generation (RAG) searches an index of real documents first, retrieves the actual source text, and answers only from what was retrieved — every claim must cite a retrieved passage. Combined with hybrid retrieval (exact keyword matching plus semantic search, then reranking), grounded retrieval turns an AI from a drafting assistant into a research assistant.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What verification workflow should lawyers use with AI?</h3>
+          <p>Use the AI to surface plausibly relevant passages, then use your judgment to conclude: read the cited passages, confirm they say what the answer claims, check the date and jurisdiction, and document your verification. Never cite an AI answer without reading the sources it cites — no citation, no reliance.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="related">
+      <h4>Related reading</h4>
+      <div class="related-grid">
+      <a class="rel-card" href="how-to-use-ai-for-legal-research.html">
+        <span class="rel-t">How to use AI for legal research ethically</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="attorney-client-privilege-and-ai.html">
+        <span class="rel-t">Attorney–client privilege and AI</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="ai-contract-review-for-lawyers.html">
+        <span class="rel-t">AI for contract review</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      </div>
+    </div>
+    <div class="post-nav">
+      <a class="pnav prev" href="welcome-to-the-legal-desk.html"><span class="pn-dir">← Older</span><span class="pn-t">Welcome to the Legal Desk</span></a>
+      <a class="pnav next" href="attorney-client-privilege-and-ai.html"><span class="pn-dir">Newer →</span><span class="pn-t">Attorney–Client Privilege and AI</span></a>
+    </div>
     <div class="post-end">
       <span class="tag">Filed under <b>Legal research</b> · <b>AI reliability</b> · <b>RAG</b></span>
       <span class="tag"><a href="../blog.html">← All articles</a></span>
+    </div>
+
+    <div class="promo">
+      <div class="promo-eyebrow">Next steps</div>
+      <h2>Put it to work on your own documents.</h2>
+      <p>Lawyer Assistant runs entirely on your machine — install it in minutes, read the documentation, or browse more notes from the Legal Desk.</p>
+      <div class="promo-links">
+        <a class="promo-btn promo-btn-brass" href="../install.html">Install the app →</a>
+        <a class="promo-btn promo-btn-ghost" href="../docs.html">Read the docs</a>
+        <a class="promo-btn promo-btn-ghost" href="../blog.html">All articles</a>
+        <a class="promo-btn promo-btn-ghost" href="../index.html">Back to home</a>
+      </div>
     </div>
   </div>
 </article>
@@ -185,7 +338,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
 <footer><div class="wrap foot">
   <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
   <div class="foot-links">
-    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html">Blog</a>
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../install.html">Install</a><a href="../blog.html">Blog</a>
     <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
     <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
   </div>

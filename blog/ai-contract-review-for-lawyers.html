@@ -83,6 +83,48 @@ nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filt
 .post-end{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
 .post-end .tag{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 .post-end .tag b{color:var(--brass-2);font-weight:500}
+/* related reading */
+.related{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.related h4{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:860px){.related-grid{grid-template-columns:1fr}}
+.rel-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.rel-card:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.rel-card .rel-t{font-family:var(--font-d);font-size:14px;font-weight:500;color:var(--paper);line-height:1.35}
+.rel-card .rel-go{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-2);margin-top:8px;display:block}
+
+/* post nav */
+.post-nav{display:flex;gap:12px;margin-top:20px}
+.post-nav .pnav{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.post-nav .pnav:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.post-nav .pn-dir{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:4px}
+.post-nav .pn-t{font-family:var(--font-d);font-size:13.5px;font-weight:500;color:var(--paper);line-height:1.3;display:block}
+.post-nav .pnav.next{text-align:right}
+@media(max-width:640px){.post-nav{flex-direction:column}}
+
+/* post FAQ */
+.post-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.post-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.post-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+/* promo */
+.promo{margin-top:56px;padding:34px 30px;background:radial-gradient(700px 300px at 80% -20%,rgba(201,163,92,.12),transparent 65%),var(--panel);border:1px solid var(--line);border-radius:16px}
+.promo-eyebrow{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:10px}
+.promo h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;color:var(--paper);margin:0 0 8px}
+.promo p{color:var(--muted);font-size:13.5px;margin:0 0 20px;max-width:62ch}
+.promo-links{display:flex;gap:10px;flex-wrap:wrap}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:var(--font-s);font-size:12.5px;font-weight:600;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.promo-btn:hover{text-decoration:none;transform:translateY(-2px)}
+.promo-btn-brass{background:linear-gradient(135deg,#d8b468,#c9a35c 55%,#b08a35);color:#0b110e;box-shadow:0 4px 18px rgba(201,163,92,.25)}
+.promo-btn-brass:hover{box-shadow:0 8px 26px rgba(201,163,92,.35)}
+.promo-btn-ghost{border:1px solid var(--line-bright);color:var(--paper-dim)}
+.promo-btn-ghost:hover{border-color:var(--brass);color:var(--brass-2)}
+@media(max-width:640px){.promo{padding:26px 20px}}
 
 /* footer */
 footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
@@ -113,6 +155,60 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
 }
 </script>
 
+<!-- BreadcrumbList — matches the visible breadcrumb -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Blog", "item": "https://lawyers-assistant.github.io/blog.html"},
+    {"@type": "ListItem", "position": 2, "name": "Practice notes"}
+  ]
+}
+</script>
+
+<!-- FAQPage — article Q&A for AI extraction -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can AI review contracts accurately?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "AI is highly accurate at the completeness work of contract review: finding, extracting, and classifying every clause — indemnity, limitation of liability, assignment, termination, governing law, confidentiality — across an entire portfolio with perfect consistency, and flagging deviations from your standard. It does not get tired on page 37. The reliable pattern is to use it as a completeness engine and keep the judgment with the lawyer."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does AI miss in contract review?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "AI can tell you what a clause says, but not what the parties meant, which side it favors in context, or whether a deviation is actually the point of the deal. Whether a clause is enforceable depends on governing law, local practice, and the specific transaction. AI flags; it does not opine — and it will not tell you how hard to push back in a negotiation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a compliance playbook scan?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A compliance playbook scan encodes your firm's own standards — for example, no unlimited liability clauses, or termination for convenience must require 30 days' notice — and classifies every clause in a document by type, checking each against those rules. Violations come back with severity ratings and explanations, turning a document review into a compliance audit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How should lawyers use AI for contract review?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Four steps: define your playbook first, let the AI scan the documents against it, read every flag against the source document to confirm its accuracy and judge its materiality, then use the documented flags to negotiate. The machine guarantees completeness and consistency; the lawyer supplies context and judgment."
+      }
+    }
+  ]
+}
+</script>
+
 </head>
 <body>
 <nav><div class="wrap nav-in">
@@ -136,7 +232,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       <h3>Finding every clause, consistently</h3>
       <p>A 50-page agreement has dozens of clauses, and an AI doesn't get tired on page 37. It can locate, extract, and classify clauses — indemnity, limitation of liability, assignment, termination, governing law, confidentiality — across an entire portfolio with perfect consistency. No human reads a 200-contract due-diligence batch with uniform attention.</p>
       <h3>Comparing against a standard</h3>
-      <p>Give an AI a "market standard" or "acceptable range" for a provision, and it will flag every deviation across a thousand contracts. This is the core of risk assessment: not reading the contracts, but finding the ones that matter.</h3>
+      <p>Give an AI a "market standard" or "acceptable range" for a provision, and it will flag every deviation across a thousand contracts. This is the core of risk assessment: not reading the contracts, but finding the ones that matter.</p>
       <h3>Scanning against your own rules</h3>
       <p>The most useful application isn't generic review — it's review against <em>your</em> rules. A firm can encode its own standards: "no unlimited liability clauses," "termination for convenience must require 30 days' notice," "governing law must be our home jurisdiction." The AI then classifies every clause by type and checks it against the playbook, flagging violations with severity ratings. This turns a document review into a compliance audit.</p>
 
@@ -168,9 +264,65 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       <p>AI contract review is not a magic bullet, and it was never meant to be. It is a completeness engine: it guarantees nothing gets missed and everything gets compared to your standard. The judgment — what the flags mean, what's worth fighting for, how the deal should close — remains the lawyer's, and it always will.</p>
       <p>The firms that win with AI won't be the ones with the most impressive demos. They'll be the ones with the clearest playbooks, the most disciplined verification, and the best judgment on top of the machine's consistency.</p>
     </div>
+
+    <div class="post-faq">
+      <h2>Questions, answered</h2>
+      <p class="sub">The key questions from this article, answered plainly.</p>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>Can AI review contracts accurately?</h3>
+          <p>AI is highly accurate at the completeness work of contract review: finding, extracting, and classifying every clause — indemnity, limitation of liability, assignment, termination, governing law, confidentiality — across an entire portfolio with perfect consistency, and flagging deviations from your standard. It does not get tired on page 37. The reliable pattern is to use it as a completeness engine and keep the judgment with the lawyer.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What does AI miss in contract review?</h3>
+          <p>AI can tell you what a clause says, but not what the parties meant, which side it favors in context, or whether a deviation is actually the point of the deal. Whether a clause is enforceable depends on governing law, local practice, and the specific transaction. AI flags; it does not opine — and it will not tell you how hard to push back in a negotiation.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What is a compliance playbook scan?</h3>
+          <p>A compliance playbook scan encodes your firm's own standards — for example, no unlimited liability clauses, or termination for convenience must require 30 days' notice — and classifies every clause in a document by type, checking each against those rules. Violations come back with severity ratings and explanations, turning a document review into a compliance audit.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How should lawyers use AI for contract review?</h3>
+          <p>Four steps: define your playbook first, let the AI scan the documents against it, read every flag against the source document to confirm its accuracy and judge its materiality, then use the documented flags to negotiate. The machine guarantees completeness and consistency; the lawyer supplies context and judgment.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="related">
+      <h4>Related reading</h4>
+      <div class="related-grid">
+      <a class="rel-card" href="can-you-trust-ai-legal-research.html">
+        <span class="rel-t">Can you trust an AI for legal research?</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="will-ai-replace-lawyers.html">
+        <span class="rel-t">Will AI replace lawyers?</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="attorney-client-privilege-and-ai.html">
+        <span class="rel-t">Attorney–client privilege and AI</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      </div>
+    </div>
+    <div class="post-nav">
+      <a class="pnav prev" href="how-to-use-ai-for-legal-research.html"><span class="pn-dir">← Older</span><span class="pn-t">How to Use AI for Legal Research Ethically</span></a>
+    </div>
     <div class="post-end">
       <span class="tag">Filed under <b>Practice notes</b> · <b>Contract review</b> · <b>Compliance</b></span>
       <span class="tag"><a href="../blog.html">← All articles</a></span>
+    </div>
+
+    <div class="promo">
+      <div class="promo-eyebrow">Next steps</div>
+      <h2>Put it to work on your own documents.</h2>
+      <p>Lawyer Assistant runs entirely on your machine — install it in minutes, read the documentation, or browse more notes from the Legal Desk.</p>
+      <div class="promo-links">
+        <a class="promo-btn promo-btn-brass" href="../install.html">Install the app →</a>
+        <a class="promo-btn promo-btn-ghost" href="../docs.html">Read the docs</a>
+        <a class="promo-btn promo-btn-ghost" href="../blog.html">All articles</a>
+        <a class="promo-btn promo-btn-ghost" href="../index.html">Back to home</a>
+      </div>
     </div>
   </div>
 </article>
@@ -178,7 +330,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
 <footer><div class="wrap foot">
   <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
   <div class="foot-links">
-    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html">Blog</a>
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../install.html">Install</a><a href="../blog.html">Blog</a>
     <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
     <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
   </div>

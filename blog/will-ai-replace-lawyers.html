@@ -83,6 +83,48 @@ nav{position:sticky;top:0;z-index:50;background:rgba(11,17,14,.85);backdrop-filt
 .post-end{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
 .post-end .tag{font-family:var(--font-m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 .post-end .tag b{color:var(--brass-2);font-weight:500}
+/* related reading */
+.related{margin-top:44px;padding-top:24px;border-top:1px solid var(--line)}
+.related h4{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);margin-bottom:14px}
+.related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:860px){.related-grid{grid-template-columns:1fr}}
+.rel-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.rel-card:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.rel-card .rel-t{font-family:var(--font-d);font-size:14px;font-weight:500;color:var(--paper);line-height:1.35}
+.rel-card .rel-go{font-family:var(--font-m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass-2);margin-top:8px;display:block}
+
+/* post nav */
+.post-nav{display:flex;gap:12px;margin-top:20px}
+.post-nav .pnav{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:block;transition:border-color .2s ease,background .2s ease}
+.post-nav .pnav:hover{border-color:var(--line-bright);background:var(--panel-2);text-decoration:none}
+.post-nav .pn-dir{font-family:var(--font-m);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:4px}
+.post-nav .pn-t{font-family:var(--font-d);font-size:13.5px;font-weight:500;color:var(--paper);line-height:1.3;display:block}
+.post-nav .pnav.next{text-align:right}
+@media(max-width:640px){.post-nav{flex-direction:column}}
+
+/* post FAQ */
+.post-faq{margin-top:56px;padding-top:34px;border-top:1px solid var(--line)}
+.post-faq h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;margin:0 0 6px;padding:0;border:none}
+.post-faq .sub{color:var(--faint);font-size:13px;margin-bottom:22px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.faq-item h3{font-family:var(--font-d);font-size:1.02rem;color:var(--paper);margin:0 0 8px;font-weight:500}
+.faq-item p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.65}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+/* promo */
+.promo{margin-top:56px;padding:34px 30px;background:radial-gradient(700px 300px at 80% -20%,rgba(201,163,92,.12),transparent 65%),var(--panel);border:1px solid var(--line);border-radius:16px}
+.promo-eyebrow{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:10px}
+.promo h2{font-family:var(--font-d);font-weight:500;font-size:1.5rem;color:var(--paper);margin:0 0 8px}
+.promo p{color:var(--muted);font-size:13.5px;margin:0 0 20px;max-width:62ch}
+.promo-links{display:flex;gap:10px;flex-wrap:wrap}
+.promo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-family:var(--font-s);font-size:12.5px;font-weight:600;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.promo-btn:hover{text-decoration:none;transform:translateY(-2px)}
+.promo-btn-brass{background:linear-gradient(135deg,#d8b468,#c9a35c 55%,#b08a35);color:#0b110e;box-shadow:0 4px 18px rgba(201,163,92,.25)}
+.promo-btn-brass:hover{box-shadow:0 8px 26px rgba(201,163,92,.35)}
+.promo-btn-ghost{border:1px solid var(--line-bright);color:var(--paper-dim)}
+.promo-btn-ghost:hover{border-color:var(--brass);color:var(--brass-2)}
+@media(max-width:640px){.promo{padding:26px 20px}}
 
 /* footer */
 footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink-2)}
@@ -110,6 +152,60 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
   "author": {"@type": "Person", "name": "Hussain Nazary"},
   "publisher": {"@type": "Organization", "name": "Haal Lab", "url": "https://github.com/haal-lab"},
   "mainEntityOfPage": "https://lawyers-assistant.github.io/blog/will-ai-replace-lawyers.html"
+}
+</script>
+
+<!-- BreadcrumbList — matches the visible breadcrumb -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Blog", "item": "https://lawyers-assistant.github.io/blog.html"},
+    {"@type": "ListItem", "position": 2, "name": "The profession"}
+  ]
+}
+</script>
+
+<!-- FAQPage — article Q&A for AI extraction -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Will AI replace lawyers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The data says no — the profession is being redistributed, not replaced. Legal AI adoption roughly doubled between 2024 and 2026, with 40 to 47 percent of firms actively using generative AI, yet legal hiring did not collapse and bar associations responded with ethics opinions on responsible use rather than warnings to abandon the technology. AI replaces tasks, not judgment."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What legal tasks does AI actually replace?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The production layer: finding cases, drafting first passes, summarizing documents, extracting clauses, and checking citations. It does not replace the judgment layer — deciding which facts matter, which arguments persuade this judge, what risk a client should accept, and what settlement is worth taking."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why can't AI replace the lawyer's accountability?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Accountability does not transfer. When a brief contains a fabricated citation, the court sanctions the lawyer, not the model. Under the ABA ethics framework an AI is legally a subordinate: it can draft, but the lawyer must review, verify, and take responsibility. You cannot delegate a license."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How should lawyers adapt to AI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Move from production to judgment: use the reclaimed hours for client relationships, substantive development, and strategy. The lawyers at risk are those who confuse production volume with professional value — because the production volume is precisely what is being commoditized."
+      }
+    }
+  ]
 }
 </script>
 
@@ -154,7 +250,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       <h3>Large-firm associates</h3>
       <p>The honest caution is here. First-pass production work — the traditional training ground — is shrinking fastest. The firms that thrive will be the ones that use the reclaimed hours for substantive development: closer client relationships, deeper judgment, earlier responsibility. The associates who adapt fastest to supervising AI output rather than resenting it will have the advantage.</p>
       <h3>In-house counsel</h3>
-      <p>Corporate legal teams report the sharpest ROI from AI on contract review and compliance work. The counsel who can answer "what did this AI miss?" will be worth more than the counsel who can answer "what did this AI write?"</p>
+      <p>Corporate legal teams report the sharpest ROI from AI on <a href="../blog/ai-contract-review-for-lawyers.html">contract review</a> and compliance work. The counsel who can answer "what did this AI miss?" will be worth more than the counsel who can answer "what did this AI write?"</p>
 
       <h2>What a modern practice looks like</h2>
       <p>None of this is hypothetical. The workflow already exists in the tools being adopted across the profession: a lawyer asks a question in plain English, the tool searches the firm's own documents with retrieval and reranking, returns cited answers, and streams its reasoning — and the lawyer verifies the sources and applies judgment. The hours saved go to the work machines can't do: strategy, client counseling, negotiation, and the human judgment at the center of the practice.</p>
@@ -164,9 +260,66 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
       <p>Will AI replace lawyers? Not the lawyers who understand what the data shows: that the profession is being redistributed toward judgment, verification, and relationship — the work a machine cannot sign its name to. The lawyers at risk are the ones who confuse production volume with professional value, because the production volume is precisely what is being commoditized.</p>
       <p>The future doesn't have fewer lawyers. It has better-supported ones — if they adopt the tools, keep the judgment, and stay accountable for the output.</p>
     </div>
+
+    <div class="post-faq">
+      <h2>Questions, answered</h2>
+      <p class="sub">The key questions from this article, answered plainly.</p>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>Will AI replace lawyers?</h3>
+          <p>The data says no — the profession is being redistributed, not replaced. Legal AI adoption roughly doubled between 2024 and 2026, with 40 to 47 percent of firms actively using generative AI, yet legal hiring did not collapse and bar associations responded with ethics opinions on responsible use rather than warnings to abandon the technology. AI replaces tasks, not judgment.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What legal tasks does AI actually replace?</h3>
+          <p>The production layer: finding cases, drafting first passes, summarizing documents, extracting clauses, and checking citations. It does not replace the judgment layer — deciding which facts matter, which arguments persuade this judge, what risk a client should accept, and what settlement is worth taking.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Why can't AI replace the lawyer's accountability?</h3>
+          <p>Accountability does not transfer. When a brief contains a fabricated citation, the court sanctions the lawyer, not the model. Under the ABA ethics framework an AI is legally a subordinate: it can draft, but the lawyer must review, verify, and take responsibility. You cannot delegate a license.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How should lawyers adapt to AI?</h3>
+          <p>Move from production to judgment: use the reclaimed hours for client relationships, substantive development, and strategy. The lawyers at risk are those who confuse production volume with professional value — because the production volume is precisely what is being commoditized.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="related">
+      <h4>Related reading</h4>
+      <div class="related-grid">
+      <a class="rel-card" href="how-to-use-ai-for-legal-research.html">
+        <span class="rel-t">How to use AI for legal research ethically</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="ai-contract-review-for-lawyers.html">
+        <span class="rel-t">AI for contract review</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      <a class="rel-card" href="welcome-to-the-legal-desk.html">
+        <span class="rel-t">Welcome to the Legal Desk</span>
+        <span class="rel-go">Read article →</span>
+      </a>
+      </div>
+    </div>
+    <div class="post-nav">
+      <a class="pnav prev" href="attorney-client-privilege-and-ai.html"><span class="pn-dir">← Older</span><span class="pn-t">Attorney–Client Privilege and AI</span></a>
+      <a class="pnav next" href="how-to-use-ai-for-legal-research.html"><span class="pn-dir">Newer →</span><span class="pn-t">How to Use AI for Legal Research Ethically</span></a>
+    </div>
     <div class="post-end">
       <span class="tag">Filed under <b>The profession</b> · <b>Future of legal work</b></span>
       <span class="tag"><a href="../blog.html">← All articles</a></span>
+    </div>
+
+    <div class="promo">
+      <div class="promo-eyebrow">Next steps</div>
+      <h2>Put it to work on your own documents.</h2>
+      <p>Lawyer Assistant runs entirely on your machine — install it in minutes, read the documentation, or browse more notes from the Legal Desk.</p>
+      <div class="promo-links">
+        <a class="promo-btn promo-btn-brass" href="../install.html">Install the app →</a>
+        <a class="promo-btn promo-btn-ghost" href="../docs.html">Read the docs</a>
+        <a class="promo-btn promo-btn-ghost" href="../blog.html">All articles</a>
+        <a class="promo-btn promo-btn-ghost" href="../index.html">Back to home</a>
+      </div>
     </div>
   </div>
 </article>
@@ -174,7 +327,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 34px;background:var(--ink
 <footer><div class="wrap foot">
   <div class="foot-brand"><img src="../assets/icon.svg" alt="Lawyer Assistant logo"/>Lawyer Assistant<span style="color:var(--brass)">.</span></div>
   <div class="foot-links">
-    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../blog.html">Blog</a>
+    <a href="../index.html">Home</a><a href="../docs.html">Docs</a><a href="../install.html">Install</a><a href="../blog.html">Blog</a>
     <a href="https://github.com/haal-lab/Lawyer-Assistant" target="_blank" rel="noopener">GitHub</a>
     <a href="https://github.com/haal-lab/Lawyer-Assistant/issues" target="_blank" rel="noopener">Report an issue</a>
   </div>
